@@ -1,0 +1,42 @@
+// game.less
+
+@game-width: 600px;
+@game-height: 500px;
+@chat-width: 280px;
+@status-height: 16px;
+
+html {
+	margin: 0;
+	background-color: #000000;
+}
+
+body { margin: 0; }
+
+@import "chat";
+
+.canvas-wrap {
+	width: @game-width + @chat-width;
+	margin-top: 4px;
+	margin-left: auto;
+	margin-right: auto;
+	background-color: #ffffff;
+}
+
+#gamescreen {
+	float: left;
+	width: @game-width;
+	height: @game-height;
+}
+
+#sidebar {
+	float: right;
+	width: @chat-width;
+	height: @game-height + @status-height;
+}
+
+#statusbar {
+	float: left;
+	width: @game-width - (2px * 2);
+	height: @status-height - (2px * 2);
+	border: ridge 2px #cccccc;
+}

@@ -1,9 +1,13 @@
 {
   "name": "TPPPark",
   "version": "2.0.0",
-  "main": "./index.html",
+  "main": "./game.html",
+  "browser": {
+    "src/game.js": "js/game.min.js",
+    "src/chat.js": "js/chat.min.js"
+  },
   "window": {
-    "width": 900,
+    "width": 910,
     "height": 600,
     "toolbar": true
   },
@@ -11,10 +15,13 @@
     "browserify": "^7.0.0",
     "extend": "2.0.0",
     "inherits": "1.0.0",
+    "less": "^2.1.1",
+    "minifyify": "^4.4.0",
     "ndarray": "^1.0.16",
     "three": "~0.69.0"
   },
   "scripts": {
-    "build": "browserify game.js --exclude three -o js/bundle.js"
+    "pretest": "built.bat less",
+    "build": "build.bat"
   }
 }

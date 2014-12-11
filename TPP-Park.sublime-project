@@ -15,9 +15,11 @@
 		},
 		{
 			"name" : "Run in Node-Webkit",
-			"cmd" : ["nw.exe", "--enable-logging", "${project_path:${file_path}}"],
+			"cmd" : [
+				"build.bat", "less", "&&",
+				".\\node-webkit\\nw.exe", "--enable-logging", "${project_path:${file_path}}"
+			],
 			"working_dir" : "${project_path:${file_path}}",
-			"path" : "./node-webkit/",
 			"shell" : true
 		}
 	]
