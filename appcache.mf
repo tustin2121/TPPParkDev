@@ -1,0 +1,21 @@
+CACHE MANIFEST
+# 2014-12-07:v1
+
+# Explicitly cached 'master entries'.
+CACHE:
+index.html
+game.html
+
+css/game.css
+
+js/game.js
+js/jquery-2.1.1.min.js
+js/jquery.cookie.js
+js/three.min.js
+
+
+# Resources that require the user to be online.
+NETWORK:
+*
+
+FALLBACK:

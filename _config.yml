@@ -1,1 +1,2 @@
-exclude: [ 'work-files' ]
+exclude: ["node_modules"]
+include: []

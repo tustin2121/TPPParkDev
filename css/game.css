@@ -1,0 +1,29 @@
+/* game.css */
+
+html {
+	margin: 0;
+	background-color: #000000;
+}
+
+.canvas-wrap {
+	width: 880px;
+	margin-left: auto;
+	margin-right: auto;
+	background-color: #ffffff;
+}
+
+#gamescreen {
+	float: left;
+	width: 640px;
+	height: 500px;
+}
+
+#sidebar {
+	float: right;
+	width: 240px;
+	height: 500px;
+}
+
+#statusbar {
+	clear: both;
+}

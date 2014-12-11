@@ -4,5 +4,21 @@
 		{
 			"path": "."
 		}
+	],
+	"build_systems" : 
+	[
+		{
+			"name" : "Browserify",
+			"cmd" : ["npm", "run", "build"],
+			"working_dir" : "${project_path:${file_path}}",
+			"shell" : true
+		},
+		{
+			"name" : "Run in Node-Webkit",
+			"cmd" : ["nw.exe", "--enable-logging", "${project_path:${file_path}}"],
+			"working_dir" : "${project_path:${file_path}}",
+			"path" : "./node-webkit/",
+			"shell" : true
+		}
 	]
 }
