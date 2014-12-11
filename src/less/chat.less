@@ -1,0 +1,103 @@
+// chat.less
+
+#chat-container {
+	position: relative;
+	background-color: #F2F2F2;
+	padding: 0px 15px;
+	height: 100%;
+	font: 12px/1.5 "Helvetica Neue",Helvetica,Arial,sans-serif;
+	
+	@head-height: 20px;
+	.header {
+		padding: 10px 0px;
+		font-size: 14px;
+		box-shadow: 0px -1px 0px 0px rgba(0, 0, 0, 0.2) inset;
+		height: @head-height;
+	}
+	
+	@foot-height: 110px;
+	.interface {
+		position: absolute;
+		bottom: 0px; 
+		left: 15px; right: 15px;
+		border-top: 1px solid rgba(0, 0, 0, 0.2);
+		height: @foot-height - (@vert-padding * 2);
+		@vert-padding: 10px;
+		padding: @vert-padding 0px;
+	}
+	
+	.messages {
+		position: absolute;
+		top: @head-height; bottom: @foot-height;
+		left: 0px; right: 0px;
+		overflow: hidden;
+	}
+	
+	.chatbox {
+		width: 100%; height: 50px;
+		padding: 7px;
+		color: #666666;
+		border: 1px solid rgba(0, 0, 0, 0.25);
+		background-color: #ffffff;
+		margin-bottom: 5px;
+		
+		resize: none;
+		box-sizing: border-box;
+	}
+	
+	.send-chat-button {
+		background-color: #6441A5;
+		color: #FFFFFF;
+		font-size: 12px;
+		padding: 0px 10px;
+		display: inline-block;
+		cursor: pointer;
+		line-height: 30px;
+		border: 0px none;
+		float: right;
+	}
+	
+	.more-messages {
+		cursor: pointer; // You can click this message to scroll to the bottom. 
+		position: absolute;
+		z-index: 1;
+		text-align: center;
+		top: -22; left: 0px; right: 0px;
+		padding: 2px 0px;
+		color: #ffffff; background-color: rgba(0, 0, 0, 0.7);
+		
+		transition: opacity 0.2s ease-in-out 0s;
+	}
+	
+	.chat-lines {
+		padding: 0 15px;
+	}
+	
+	.chat-line {
+		line-height: 20px;
+		padding: 4px 0px;
+		list-style-position: unset;
+		list-style-type: none;
+		
+		&.admin {
+			padding: 10px 0px;
+		}
+		
+		.badges {
+			float: left;
+		}
+		
+		.from {
+			font-weight: bold;
+		}
+		
+		.colon {
+			margin-right: 2px;
+		}
+		
+		.message {
+			color: #666666;
+		}
+	}
+}
+
