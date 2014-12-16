@@ -7,40 +7,49 @@
 	<script src="src/main.js"></script>
 </head>
 <body>
-	<div class="canvas-wrap">
-		<canvas id="gamescreen"></canvas>
-		
-		<div id="sidebar">
-			<div id="chat-container">
-				<div class="header">TPP Park</div>
-				<div class="messages">
-					<ul class="chat-lines" id="chat-lines">
-						<li class="chat-line admin">
-							<span class="message">Welcome to the chat room!</span>
-						</li>
-						<li class="chat-line">
-							<span class="badges"></span>
-							<span class="from" style="color:#008000">Tustin2121</span><span class="colon">:</span><span class="message">Hello World Kappa</span>
-						</li>
-						<li class="chat-line">
-							<span class="badges"></span>
-							<span class="from" style="color:#B22222">Tustin2121</span>
-							<span class="colon">:</span>
-							<span class="message">Hello World Kappa</span>
-						</li>
-					</ul>
+	<table id="overtable">
+		<tr>
+			<td>
+				<div class="canvas-wrap">
+					<canvas id="gamescreen"></canvas>
+					<div id="statusbar">Testing</div>
+					<div id="padding"></div>
 				</div>
-				<div class="interface">
-					<div class="more-messages">More messages below.</div>
-					<textarea class="chatbox"></textarea>
-					<div class="chat-buttons">
-						<button class="send-chat-button">Chat</button>
+			</td>
+			<td id="right-sidebar">
+				<div id="chat-container">
+					<div class="header">TPP Park</div>
+					<div class="messages">
+						<ul class="chat-lines" id="chat-lines">
+							<li class="chat-line admin">
+								<span class="message">Welcome to the chat room!</span>
+							</li>
+							<li class="chat-line">
+								<span class="badges"></span>
+								<span class="from" style="color:#008000">Tustin2121</span><span class="colon">:</span><span class="message">Hello World Kappa</span>
+							</li>
+							<li class="chat-line">
+								<span class="badges"></span>
+								<span class="from" style="color:#B22222">Tustin2121</span>
+								<span class="colon">:</span>
+								<span class="message">Hello World Kappa</span>
+							</li>
+						</ul>
+					</div>
+					<div class="interface">
+						<div class="more-messages">More messages below.</div>
+						<textarea class="chatbox"></textarea>
+						<div class="chat-buttons">
+							<button class="send-chat-button">Chat</button>
+						</div>
 					</div>
 				</div>
-			</div>
-		</div>
+			</td>
+		</tr>
+	</table>
+	
+	<div class="canvas-wrap">
 		
-		<div id="statusbar"></div>
 	</div>
 </body>
 </html>

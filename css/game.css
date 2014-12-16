@@ -95,25 +95,253 @@ body {
   color: #666666;
 }
 .canvas-wrap {
-  width: 880px;
-  margin-top: 4px;
+  width: 600px;
   margin-left: auto;
   margin-right: auto;
   background-color: #ffffff;
+}
+#overtable {
+  width: 100%;
+  height: 100%;
+  border-spacing: 0;
+  border: none;
+}
+#overtable td {
+  padding: 0;
 }
 #gamescreen {
   float: left;
   width: 600px;
   height: 500px;
 }
-#sidebar {
-  float: right;
-  width: 280px;
-  height: 516px;
+#right-sidebar {
+  display: block;
+  background-color: blue;
+  width: 360px;
+  min-width: 260px;
+}
+#left-sidebar {
+  float: left;
+  width: 360px;
+  max-width: 360px;
+  min-width: 260px;
 }
 #statusbar {
   float: left;
   width: 596px;
-  height: 12px;
+  min-height: 12px;
+  height: 76px;
   border: ridge 2px #cccccc;
+  background-color: #eeeeee;
+  color: #000000;
+}
+.twitchemote {
+  display: inline-block;
+  overflow: hidden;
+  background-repeat: no-repeat;
+  background-image: url('twitch_emotes.png');
+}
+.em-DansGame {
+  width: 25px;
+  height: 32px;
+  margin: -7px 0;
+  background-position: -2px -2px;
+}
+.em-PraiseIt {
+  width: 26px;
+  height: 26px;
+  margin: -4px 0;
+  background-position: -2px -36px;
+}
+.em-BibleThump {
+  width: 36px;
+  height: 30px;
+  margin: -6px 0;
+  background-position: -29px -2px;
+}
+.em-BloodTrail {
+  width: 41px;
+  height: 28px;
+  margin: -5px 0;
+  background-position: -30px -34px;
+}
+.em-PJSalt {
+  width: 36px;
+  height: 30px;
+  margin: -6px 0;
+  background-position: -67px -2px;
+}
+.em-BabyRage {
+  width: 28px;
+  height: 28px;
+  margin: -5px 0;
+  background-position: -73px -34px;
+}
+.em-HeyGuys {
+  width: 28px;
+  height: 28px;
+  margin: -5px 0;
+  background-position: -103px -34px;
+}
+.em-BionicBunion {
+  width: 30px;
+  height: 30px;
+  margin: -6px 0;
+  background-position: -105px -2px;
+}
+.em-ResidentSleeper {
+  width: 28px;
+  height: 28px;
+  margin: -5px 0;
+  background-position: -133px -34px;
+}
+.em-WinWaker {
+  width: 27px;
+  height: 30px;
+  margin: -6px 0;
+  background-position: -137px -2px;
+}
+.em-ShibeZ {
+  width: 28px;
+  height: 28px;
+  margin: -5px 0;
+  background-position: -163px -34px;
+}
+.em-BigBrother {
+  width: 24px;
+  height: 30px;
+  margin: -6px 0;
+  background-position: -166px -2px;
+}
+.em-DatSheffy {
+  width: 24px;
+  height: 30px;
+  margin: -6px 0;
+  background-position: -192px -2px;
+}
+.em-BrokeBack {
+  width: 22px;
+  height: 28px;
+  margin: -5px 0;
+  background-position: -193px -34px;
+}
+.em-EleGiggle {
+  width: 22px;
+  height: 28px;
+  margin: -5px 0;
+  background-position: -217px -34px;
+}
+.em-TriHard {
+  width: 24px;
+  height: 30px;
+  margin: -6px 0;
+  background-position: -218px -2px;
+}
+.em-OMGScoots {
+  width: 22px;
+  height: 28px;
+  margin: -5px 0;
+  background-position: -241px -34px;
+}
+.em-PogChamp {
+  width: 23px;
+  height: 30px;
+  margin: -6px 0;
+  background-position: -244px -2px;
+}
+.em-Kappa {
+  width: 21px;
+  height: 28px;
+  margin: -5px 0;
+  background-position: -265px -34px;
+}
+.em-SoonerLater {
+  width: 23px;
+  height: 30px;
+  margin: -6px 0;
+  background-position: -269px -2px;
+}
+.em-KappaHD {
+  width: 21px;
+  height: 28px;
+  margin: -5px 0;
+  background-position: -288px -34px;
+}
+.em-BrainSlug {
+  width: 22px;
+  height: 30px;
+  margin: -6px 0;
+  background-position: -294px -2px;
+}
+.em-SwiftRage {
+  width: 21px;
+  height: 28px;
+  margin: -5px 0;
+  background-position: -311px -34px;
+}
+.em-FailFish {
+  width: 22px;
+  height: 30px;
+  margin: -6px 0;
+  background-position: -318px -2px;
+}
+.em-MrDestructoid {
+  width: 39px;
+  height: 27px;
+  margin: -4.5px 0;
+  background-position: -334px -34px;
+}
+.em-DBStyle {
+  width: 21px;
+  height: 30px;
+  margin: -6px 0;
+  background-position: -342px -2px;
+}
+.em-OpieOP {
+  width: 21px;
+  height: 30px;
+  margin: -6px 0;
+  background-position: -365px -2px;
+}
+.em-GasJoker {
+  width: 28px;
+  height: 27px;
+  margin: -4.5px 0;
+  background-position: -375px -34px;
+}
+.em-4Head {
+  width: 20px;
+  height: 30px;
+  margin: -6px 0;
+  background-position: -388px -2px;
+}
+.em-KevinTurtle {
+  width: 21px;
+  height: 27px;
+  margin: -4.5px 0;
+  background-position: -405px -34px;
+}
+.em-Keepo {
+  width: 27px;
+  height: 29px;
+  margin: -5.5px 0;
+  background-position: -410px -2px;
+}
+.em-OneHand {
+  width: 20px;
+  height: 27px;
+  margin: -4.5px 0;
+  background-position: -428px -33px;
+}
+.em-KAPOW {
+  width: 28px;
+  height: 25px;
+  margin: -3.5px 0;
+  background-position: -450px -2px;
+}
+.em-Kreygasm {
+  width: 19px;
+  height: 27px;
+  margin: -4.5px 0;
+  background-position: -450px -29px;
 }
