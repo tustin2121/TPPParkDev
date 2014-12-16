@@ -2,7 +2,7 @@
 
 @game-width: 600px;
 @game-height: 500px;
-@chat-width: 280px;
+@chat-width: 360px;
 @status-height: 16px;
 
 html {
@@ -15,11 +15,23 @@ body { margin: 0; }
 @import "chat";
 
 .canvas-wrap {
-	width: @game-width + @chat-width;
-	margin-top: 4px;
+	width: @game-width;
 	margin-left: auto;
 	margin-right: auto;
 	background-color: #ffffff;
+	
+	// .wrap2 {
+	// 	@chat-width
+	// }
+}
+
+#overtable {
+	width: 100%;
+	height: 100%;
+	border-spacing: 0;
+	border: none;
+	
+	td { padding: 0; }
 }
 
 #gamescreen {
@@ -28,15 +40,31 @@ body { margin: 0; }
 	height: @game-height;
 }
 
-#sidebar {
-	float: right;
+#right-sidebar {
+	// float: right;
+	// width: @chat-width;
+	display: block;
+	background-color: blue;
 	width: @chat-width;
-	height: @game-height + @status-height;
+	min-width: @chat-width - 100;
+}
+#left-sidebar {
+	float: left;
+	width: @chat-width;
+	max-width: @chat-width;
+	min-width: @chat-width - 100;
 }
 
 #statusbar {
 	float: left;
 	width: @game-width - (2px * 2);
-	height: @status-height - (2px * 2);
+	min-height: @status-height - (2px * 2);
+	height: (@status-height * 5) - (2px * 2);
+	
 	border: ridge 2px #cccccc;
+	background-color: #eeeeee;
+	color: #000000;
 }
+
+@import "twitch-emotes";
+

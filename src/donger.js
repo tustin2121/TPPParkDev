@@ -3,6 +3,12 @@
 
 module.exports = {
 	dongerfy : function(str) {
+		return str.replace(/\<d:(\w+)\>/ig, function(match, p1){
+			return dongers[p1] || "";
+		});
+	},
+	
+	twitchify : function(str) {
 		
 	},
 }
@@ -31,7 +37,10 @@ var dongers = {
 	"doot" : "⊹⋛⋋(◐⊝◑)⋌⋚⊹",
 	"joltik": "╭<<◕°ω°◕>>╮",
 	"megadonger" : "╲/╭༼ຈຈل͜ຈຈ༽╮/╱",
+	"trapnich": "ヽ༼✪﹏✪༽ﾉ",
 };
+
+
 
 var copypasta = {
 	"riotpolice" : [
@@ -66,5 +75,19 @@ var copypasta = {
 	"riot" : [
 		"ヽ༼ຈل͜ຈ༽ﾉ RIOT ヽ༼ຈل͜ຈ༽ﾉ",
 	],
+	"letitdong" : "ヽ༼ຈل͜ຈ༽ﾉ LET IT DONG, LET IT DONG, COULDN'T RIOT BACK ANYMORE. LET IT DONG, LET IT DONG, LET'S GET BACK TO THE LORE, I DON'T CARE THAT THE DONGERS WERE GONE, LET THE DONGS RAGE ON, THE RIOT NEVER BOTHERED ME ANYWAY. ヽ༼ຈل͜ຈ༽ﾉ",
+	
+	"dontspam" : function() {
+		var a = "spam";
+		const repl = ["RIOT", "beat misty", "༼ つ ◕_◕ ༽つ"];
+		
+		const spam = "Guys can you please not [%d] the chat. My mom bought me this new laptop and it gets really hot when the chat is being [%d]ed. Now my leg is starting to hurt because it is getting so hot. Please, if you don’t want me to get burned, then dont [%d] the chat",
+	},
+	
+	"awefulhumans" : "Humans are awful. This planet would be way better if there were no humans in it. True story. DON'T COPY THIS",
+	"ruinedchat" : "You guys are ruining my twitch chat experience. I come to the twitch chat for mature conversation about the gameplay, only to be awarded with kappa faces and frankerzs. People who spam said faces need medical attention utmost. The twitch chat is serious business, and the mods should really raise their dongers.",
+	"googleadmin" : "Hello everyone, this is the Google Admin here to remind you all that while we love the chat experience, please refrain from copy pasting in the chat. This ruins the atmosphere and makes everybody’s chat experience worse overall. Thank you and remember to link your Twitch and Google+ account today!",
+	"badstadiumrequest" : "Wow 0/10 to the guy who thought of this request, APPLAUSE CLAP CLAP LADY GAGA APPLAUSE APPLAUSE APPLAUSE",
 };
 
+//Starbolt_omega KZhelghast
