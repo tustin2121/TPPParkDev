@@ -36,8 +36,10 @@
  "orientation":"orthogonal",
  "properties":
     {
-
+     "Layer 0 3D":"[[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [-7.5, 0, 8.5, 1]]",
+     "Layer 1 3D":"[[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [-7.5, 0, 8.5, 1]]"
     },
+ "renderorder":"right-down",
  "tileheight":16,
  "tilesets":[
         {
