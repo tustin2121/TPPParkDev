@@ -11,6 +11,28 @@ var appCache = [
 	"js/jquery-2.1.1.min.js", "js/jquery.cookie.js", "js/three.min.js",
 ];
 
+//////////////// Globals ///////////////////
+global.MAP_DIRS = [
+	"src/maps/",
+];
+global.EVENT_DIRS = [
+	"src/events/meta.community/",
+	"src/events/meta.streamers/",
+	"src/events/s1.red/",
+	"src/events/s1.crystal/",
+	"src/events/s1.emerald/",
+	"src/events/s1.firered/",
+	"src/events/s1.platinum/",
+	"src/events/s1.heartgold/",
+	"src/events/s1.black/",
+	"src/events/s1.blazeblack2/",
+	"src/events/s1.x/",
+	"src/events/s1.omegaruby/",
+];
+
+const compileMap = require("./map-zipper.js");
+const findGlobalEvents = require("./event-compiler.js");
+
 //////////////// Main ///////////////////
 function build(){
 	console.time("Build time");
@@ -89,42 +111,26 @@ function writeCache() {
 
 
 ////////////// Map Compiling ///////////////
-const MAP_DIRS = [
-	"src/maps/",
-];
+
 function findMaps() {
 	console.log("[cMaps] Finding maps: ");
 	for (var pi = 0; pi < MAP_DIRS.length; pi++) {
-		var dirListing = fs.readdirSync(MAP_DIRS[pi]);
+		if (!fs.existsSync(MAP_DIRS[pi])) continue;
 		
+		var dirListing = fs.readdirSync(MAP_DIRS[pi]);
 		for (var di = 0; di < dirListing.length; di++) {
 			var file = dirListing[di];
-			// if (file.)
+			console.log("[cMaps] Found map:", file, ">", MAP_DIRS[pi]+file);
 			
-			console.log("[cMaps] Found map:", file);
-			
-			
+			compileMap()
 		}
 	}
 }
 
-const EVENT_DIRS = [
-	"src/events/meta.community/",
-	"src/events/meta.streamers/",
-	"src/events/s1.red/",
-	"src/events/s1.crystal/",
-	"src/events/s1.emerald/",
-	"src/events/s1.firered/",
-	"src/events/s1.platinum/",
-	"src/events/s1.heartgold/",
-	"src/events/s1.black/",
-	"src/events/s1.blazeblack2/",
-	"src/events/s1.x/",
-	"src/events/s1.omegaruby/",
-];
-function findGlobalEvents(mapid) {
-	
-}
+
+
+
+
 
 
 
