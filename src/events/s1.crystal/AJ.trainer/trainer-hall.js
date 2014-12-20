@@ -2,7 +2,7 @@
 // Defines AJ's event for the "Trainer Hall" map
 
 var base = require("./base.js")
-var Actor = require("../actor");
+var Actor = require("/src/js/events/actor");
 var inherits = require("inherits");
 var extend = require("extend");
 

@@ -4,6 +4,7 @@
 var fs = require("fs");
 var ndarray = require("ndarray");
 var extend = require("extend");
+var Fiber = require("synchronize").Fiber;
 
 /**
  * Verifies and compiles the given map id at the given file.
@@ -14,8 +15,15 @@ function compileMap(id, file) {
 	if (!fs.existsSync(file+"/"+id+".obj")) throw "No map wavefront obj file!";
 	if (!fs.existsSync(file+"/"+id+".mtl")) throw "No map obj material file!";
 	
-	var json = compressMapJson(id, file);
+	if (!fs.existsSync(BUILD_TEMP)) fs.mkdirSync(BUILD_TEMP);
+	if (!fs.existsSync(BUILD_TEMP+id)) fs.mkdirSync(BUILD_TEMP+id);
 	
+	var json = compressMapJson(id, file);
+	console.log("json is as follows:"); sleep(10);
+	console.log(json);
+	fs.writeFileSync(BUILD_TEMP+id+"/map.json", json);
+	
+	console.log("Write complete");
 };
 module.exports = compileMap;
 
@@ -41,8 +49,8 @@ function compressMapJson(id, file) {
 	
 	// Map JSON sanity checks
 	if (json.version != 1) throw "Invalid map version: Was expecting version 1, found version "+json.version+"!";
-	if (json.orientation != "orthogonal") throw "Invalid map orientation: must be 'orthogonal'!";
-	if (json.renderorder != "right-down") throw "Invalid map render order: must be 'right-down'";
+	if (json.orientation && json.orientation != "orthogonal") throw "Invalid map orientation: must be 'orthogonal', is "+json.orientation;
+	if (json.renderorder && json.renderorder != "right-down") throw "Invalid map render order: must be 'right-down', is "+json.renderorder;
 	for (var li = 0; li < json.layers.length; li++) {
 		if (json.layers[li].x != 0) throw "Invalid map: Layer "+li+" is mis-aligned!";
 		if (json.layers[li].y != 0) throw "Invalid map: Layer "+li+" is mis-aligned!";
@@ -50,14 +58,15 @@ function compressMapJson(id, file) {
 		if (json.layers[li].height != json.height) throw "Invalid map: Layer is wrong size!";
 		
 		//also convert to ndarray for easier access
-		json.layers[i].data = ndarray(json.layers[i].data, {json.width, json.height});
+		json.layers[li].data = ndarray(json.layers[li].data, [json.width, json.height]);
 	}
+	console.log("Sanity Checks passed!"); sleep(10);
 	
-	// construct the compressed map, which strips all of the uneeded visuals
+	// construct the compressed map, which strips all of the unneeded visuals
 	var cmap = {
 		width: json.width,
 		height: json.height,
-		map : ndarray(new Uint16Array(json.width * json.height), {json.width, json.height}),
+		map : ndarray(new Uint16Array(json.width * json.height), [json.width, json.height]),
 		layers : [ //Layer 1 = index 0 = default layer
 			// /*1*/ { "2d": [0, 0], "3d": [1,0,0,0,  0,1,0,0,  0,0,1,0,  0,0,0,1] },
 		],
@@ -66,13 +75,13 @@ function compressMapJson(id, file) {
 		],
 	};
 	
+	console.log("Beginning data loop"); sleep(10);
 	// Loop through the map, and through the layers
 	for (var x = 0; x < cmap.width; x++) {
 	for (var y = 0; y < cmap.height; y++) {
 		var tiledata = 0;
-		
-		for (var l = 0; l < json.layers.length; l++) {
-			var gid = json.layers.data.get(x, y); //gid = global id
+		for (var li = 0; li < json.layers.length; li++) {
+			var gid = json.layers[li].data.get(x, y); //gid = global id
 			if (gid === 0) continue;
 			var props;
 			
@@ -88,16 +97,16 @@ function compressMapJson(id, file) {
 				tiledata |= convertTilePropsToShort(props);
 				
 				if (props.layerorigin) {
-					var l = props.layerorigin;
-					if (l < 1 && l > 7) throw "Invalid layer id! "+l;
-					cmap.layers[l] = cmap.layers[l] || {};
-					cmap.layers[l]["2d"] = [x, y];
+					var lo = props.layerorigin;
+					if (lo < 1 && lo > 7) throw "Invalid layer id! "+lo;
+					cmap.layers[lo-1] = cmap.layers[lo-1] || {};
+					cmap.layers[lo-1]["2d"] = [x, y];
 				}
 				if (props.warppoint) {
-					var l = parseInt(props.warppoint, 16);
-					if (l < 0 && l > 16) throw "Invalid warp id! "+l;
-					cmap.warps[l] = cmap.layers[l] || {};
-					cmap.warps[l].loc = [x, y];
+					var wp = parseInt(props.warppoint, 16);
+					if (wp < 0 && wp > 16) throw "Invalid warp id! "+wp;
+					cmap.warps[wp] = cmap.warps[wp] || {};
+					cmap.warps[wp].loc = [x, y];
 					
 					if (props.entryanim) {
 						// Entry anims: as the scene fades up, the player character walks onto the tile
@@ -105,7 +114,7 @@ function compressMapJson(id, file) {
 						// 1 = walk up, 2 = walk down, 3 = walk right, 4 = walk left
 						var e = parseInt(props.entryanim, 16);
 						if (e < 0 && e > 7) throw "Invalid entry anim! "+e;
-						cmap.warps[l].anim = e;
+						cmap.warps[wp].anim = e;
 					}
 				}
 			}
@@ -114,6 +123,7 @@ function compressMapJson(id, file) {
 		cmap.map.set(x, y, tiledata);
 	}
 	}
+	console.log("completed data loop"); sleep(10);
 	
 	//Find definitions for the Layer offsets and otther properties
 	for (var p in json.properties) {
@@ -139,10 +149,12 @@ function compressMapJson(id, file) {
 				break;
 		}
 	}
+	console.log("found all properties"); sleep(10);
 	
 	//Now verify all the proper data is here
 	__verifyData(cmap);
 	
+	console.log("data verified, now stringifying"); sleep(10);
 	//Now stringify!
 	return JSON.stringify(cmap, function(key, value){
 		//We need a replacer because TypedArrays don't properly stringify into arrays
@@ -162,6 +174,7 @@ function compressMapJson(id, file) {
 	function __verifyData(cmap) {
 		// Check Layer data
 		for (var i = 0; i < cmap.layers.length; i++) {
+			console.log(cmap.layers[i]); sleep(0);
 			var _2d = !!cmap.layers[i]["2d"];
 			var _3d = !!cmap.layers[i]["3d"];
 			
@@ -171,11 +184,21 @@ function compressMapJson(id, file) {
 		
 		//Check Warp data
 		for (var i = 0; i < cmap.warps.length; i++) {
+			console.log(cmap.warps[i]); sleep(0);
 			var _loc = !!cmap.warps[i]["loc"];
-			var _anim = !!cmap.warps[i]["anim"];
+			var _anim = !!cmap.warps[i]["anim"]; //TODO provide default 0 instead
 			
 			if (!(_loc && _anim)) 
 				throw "Incomplete Layer definition: Warp "+i+", loc="+_loc+" anim="+_anim;
 		}
 	}
+}
+
+
+function sleep(ms) {
+    var fiber = Fiber.current;
+    setTimeout(function() {
+        fiber.run();
+    }, ms);
+    Fiber.yield();
 }

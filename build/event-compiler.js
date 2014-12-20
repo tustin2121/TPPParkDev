@@ -2,9 +2,10 @@
 // A function that finds compiles global events
 
 var Browserify = require("browserify");
+var sync = require("synchronize");
 
 function findGlobalEvents(mapid) {
-	var preppedEvents = {};
+	var eventPaths = [];
 	
 	for (var pi = 0; pi < EVENT_DIRS.length; pi++) {
 		if (!fs.existsSync(EVENT_DIRS[pi])) continue;
@@ -18,17 +19,23 @@ function findGlobalEvents(mapid) {
 			if (!fs.existsSync(EVENT_DIRS[pi] + file + "/"+mapid+".js")) continue;
 			console.log("[Event] Found event for map:", file, ">", MAP_DIRS[pi]+file+"/"+mapid+".js");
 			
-			//TODO browserify this event
+			eventPaths.push("/"+EVENT_DIRS[pi] + file + "/"+mapid+".js");
 		}
 	}
+	
+	//TODO browserify the events together
+	var bundler = new Browserify();
+	bundler.add(eventPaths);
+	
+	//TODO exclude Actor and the other events
+	bundler.external([
+		"/src/js/events/event",
+		"/src/js/events/trigger",
+		"/src/js/events/warp",
+		"/src/js/events/actor",
+	]);
+	
+	var data = sync.await(bundler.bundle(sync.defer()));
+	return data;
 }
 module.exports = findGlobalEvents;
-
-
-function browserifyEvent(filename) {
-	var bundler = new Browserify();
-	bundler.add(filename);
-	bundler.bundle(function(err, buf){
-		
-	});
-}

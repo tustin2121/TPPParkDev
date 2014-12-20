@@ -5,6 +5,8 @@
 node_modules
 node-webkit
 
+_outtemp
+
 #################
 ## Sublime Text
 #################

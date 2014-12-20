@@ -4,7 +4,8 @@
 var exec = require("child_process").exec;
 var fs = require("fs");
 var Browserify = require("browserify");
-var exec = require("execSync").run;
+var sync = require("synchronize");
+// var exec = require("execSync").run;
 
 var appCache = [
 	"./index.html", "./game.html",
@@ -12,6 +13,8 @@ var appCache = [
 ];
 
 //////////////// Globals ///////////////////
+global.BUILD_TEMP = "_outtemp/";
+
 global.MAP_DIRS = [
 	"src/maps/",
 ];
@@ -57,9 +60,11 @@ function build(){
 function compileLess(src, dest) {
 	console.log("[Less ] Compiling less", src, ">", dest);
 	
-	if (exec("lessc "+src+" "+dest) != 0){
-		throw new Error("Exec lessc returned non-zero!");
-	}
+	sync.await(exec("lessc "+src+" "+dest, sync.defer()));
+	
+	// if (exec("lessc "+src+" "+dest) != 0){
+	// 	throw new Error("Exec lessc returned non-zero!");
+	// }
 	appCache.push(dest);
 }
 
@@ -78,7 +83,7 @@ function bundleGame() {
 		output: "_srcmaps/game.map.json",
 	});
 	
-	bundler.add("./src/game.js");
+	bundler.add("./src/js/game.js");
 	bundler.bundle().pipe(fs.createWriteStream("./js/game.js"));
 	appCache.push("js/game.js");
 }
@@ -122,7 +127,15 @@ function findMaps() {
 			var file = dirListing[di];
 			console.log("[cMaps] Found map:", file, ">", MAP_DIRS[pi]+file);
 			
-			compileMap()
+			try {
+				compileMap(file, MAP_DIRS[pi]+file);
+			} catch (e) {
+				console.error("[cMaps] ERROR compiling map: "+file);
+				if (typeof e == "string")
+					throw new Error(e);
+				else
+					throw e;
+			}
 		}
 	}
 }
@@ -135,4 +148,4 @@ function findMaps() {
 
 
 /////////////////// Finally, call main ///////////////////
-build();
+sync.fiber(build);
