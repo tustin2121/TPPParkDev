@@ -5,6 +5,7 @@ var exec = require("child_process").exec;
 var fs = require("fs");
 var Browserify = require("browserify");
 var sync = require("synchronize");
+var Fiber = require("synchronize").Fiber;
 // var exec = require("execSync").run;
 
 var appCache = [
@@ -33,6 +34,21 @@ global.EVENT_DIRS = [
 	"src/events/s1.omegaruby/",
 ];
 
+global.nextTick = function() {
+	var fiber = Fiber.current;
+	process.nextTick(function() {
+		fiber.run();
+	});
+	Fiber.yield();
+}
+global.sleep = function(time) {
+	var fiber = Fiber.current;
+	setTimeout(function() {
+		fiber.run();
+	}, time);
+	Fiber.yield();
+}
+
 const compileMap = require("./map-zipper.js");
 const findGlobalEvents = require("./event-compiler.js");
 
@@ -57,6 +73,10 @@ function build(){
 
 
 //////////////// Build Steps //////////////////
+function clean() {
+	
+}
+
 function compileLess(src, dest) {
 	console.log("[Less ] Compiling less", src, ">", dest);
 	
@@ -84,7 +104,12 @@ function bundleGame() {
 	});
 	
 	bundler.add("./src/js/game.js");
-	bundler.bundle().pipe(fs.createWriteStream("./js/game.js"));
+	
+	var writestr = fs.createWriteStream("./js/game.js");
+	bundler.bundle().pipe(writestr);
+	writestr.on("finish", sync.defer());
+	
+	sync.await();
 	appCache.push("js/game.js");
 }
 
