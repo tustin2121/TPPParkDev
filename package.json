@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "main": "./game.html",
   "browser": {
-    "tpp.actor" : "src/js/events/actor.js"
+    "tpp.actor": "src/js/events/actor.js"
   },
   "window": {
     "width": 910,
@@ -11,6 +11,7 @@
     "toolbar": true
   },
   "devDependencies": {
+    "archiver": "^0.13.0",
     "browserify": "^7.0.0",
     "execSync": "^1.0.2",
     "extend": "2.0.0",

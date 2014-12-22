@@ -4,7 +4,12 @@
 var fs = require("fs");
 var ndarray = require("ndarray");
 var extend = require("extend");
-var Fiber = require("synchronize").Fiber;
+var sync = require("synchronize");
+var archiver = require("archiver");
+
+var evtFinder = require("./event-compiler.js");
+var ByLineReader = require("./transform-streams").ByLineReader;
+var ProcessorTransform = require("./transform-streams").ProcessorTransform;
 
 /**
  * Verifies and compiles the given map id at the given file.
@@ -18,14 +23,47 @@ function compileMap(id, file) {
 	if (!fs.existsSync(BUILD_TEMP)) fs.mkdirSync(BUILD_TEMP);
 	if (!fs.existsSync(BUILD_TEMP+id)) fs.mkdirSync(BUILD_TEMP+id);
 	
+	//Compress the map
 	var json = compressMapJson(id, file);
-	console.log("json is as follows:"); sleep(10);
-	console.log(json);
 	fs.writeFileSync(BUILD_TEMP+id+"/map.json", json);
+	nextTick();
 	
-	console.log("Write complete");
+	//Organize the model file and textures
+	processMapModel(id, file);
+	nextTick();
+	
+	//Collate the local events
+	var evtjs = evtFinder.findLocalEvents(id, file);
+	if (evtjs) {
+		fs.writeFileSync(BUILD_TEMP+id+"/l_evt.js", evtjs);
+	}
+	nextTick();
+	
+	//Collate the global events
+	evtjs = evtFinder.findGlobalEvents(id, file);
+	if (evtjs) {
+		fs.writeFileSync(BUILD_TEMP+id+"/g_evt.js", evtjs);
+	}
+	nextTick();
+	
+	//Now zip everything up
+	zipWorkingDirectory(id);
+	nextTick();
+	
+	console.log("[cMaps] Compilation of map", '"'+id+'"', "completed.");
+	
 };
 module.exports = compileMap;
+
+function copyFile(src, dest) {
+	var read = fs.createReadStream(src);
+	var write = fs.createWriteStream(dest);
+	
+	write.on("finish", sync.defer());
+	read.pipe(write);
+	
+	sync.await();
+}
 
 function convertTilePropsToShort(props) {
 	// TileData: MMMMLW00 TTTHHHHH
@@ -41,6 +79,7 @@ function convertTilePropsToShort(props) {
 	if (props.water)		{ val |= 0x1 << 10; }
 	if (props.transition)	{ val |= (props.transition & 0x7) << 5; }
 	if (props.height)		{ val |= (props.height & 0x1F); }
+	return val;
 }
 
 
@@ -60,7 +99,7 @@ function compressMapJson(id, file) {
 		//also convert to ndarray for easier access
 		json.layers[li].data = ndarray(json.layers[li].data, [json.width, json.height]);
 	}
-	console.log("Sanity Checks passed!"); sleep(10);
+	// console.log("Sanity Checks passed!"); nextTick();
 	
 	// construct the compressed map, which strips all of the unneeded visuals
 	var cmap = {
@@ -75,7 +114,7 @@ function compressMapJson(id, file) {
 		],
 	};
 	
-	console.log("Beginning data loop"); sleep(10);
+	// console.log("Beginning data loop"); nextTick();
 	// Loop through the map, and through the layers
 	for (var x = 0; x < cmap.width; x++) {
 	for (var y = 0; y < cmap.height; y++) {
@@ -123,7 +162,7 @@ function compressMapJson(id, file) {
 		cmap.map.set(x, y, tiledata);
 	}
 	}
-	console.log("completed data loop"); sleep(10);
+	// console.log("completed data loop"); nextTick();
 	
 	//Find definitions for the Layer offsets and otther properties
 	for (var p in json.properties) {
@@ -149,19 +188,20 @@ function compressMapJson(id, file) {
 				break;
 		}
 	}
-	console.log("found all properties"); sleep(10);
+	// console.log("found all properties"); nextTick();
 	
 	//Now verify all the proper data is here
 	__verifyData(cmap);
 	
-	console.log("data verified, now stringifying"); sleep(10);
+	// console.log("data verified, now stringifying"); nextTick();
 	//Now stringify!
 	return JSON.stringify(cmap, function(key, value){
 		//We need a replacer because TypedArrays don't properly stringify into arrays
-		if (value instanceof Uint16Array) {
-			var array = [];
-			for (var i = 0; i < value.length; i++) {
-				array[i] = value[i];
+		if (key == "map") {
+			var data = value.data;
+			var array = new Array(data.length);
+			for (var i = 0; i < data.length; i++) {
+				array[i] = data[i];
 			}
 			return array;
 		}
@@ -174,7 +214,6 @@ function compressMapJson(id, file) {
 	function __verifyData(cmap) {
 		// Check Layer data
 		for (var i = 0; i < cmap.layers.length; i++) {
-			console.log(cmap.layers[i]); sleep(0);
 			var _2d = !!cmap.layers[i]["2d"];
 			var _3d = !!cmap.layers[i]["3d"];
 			
@@ -184,7 +223,6 @@ function compressMapJson(id, file) {
 		
 		//Check Warp data
 		for (var i = 0; i < cmap.warps.length; i++) {
-			console.log(cmap.warps[i]); sleep(0);
 			var _loc = !!cmap.warps[i]["loc"];
 			var _anim = !!cmap.warps[i]["anim"]; //TODO provide default 0 instead
 			
@@ -194,11 +232,250 @@ function compressMapJson(id, file) {
 	}
 }
 
+function processMapModel(id, file) {
+	var mtl_in, mtl_out, obj_in, obj_out;
+	var mtl_liner, obj_liner, obj_trans;
+	
+	var numMatsDefined = 0;
+	var numMatsUsed = 0;
+	var materials = {};
+	
+	var numTextsDefined = 0;
+	var numTextsUsed = 0;
+	var textures = [];
+	
+	/////////////////////////////////////////////////////////////////////////////
+	// Step 1: Read in MTL file
+	// http://en.wikipedia.org/wiki/Wavefront_.obj_file#Introduction
+	
+	mtl_in = fs.createReadStream(file+"/"+id+".mtl", { encoding: "utf8" });
+	mtl_liner = new ByLineReader();
+	mtl_in.pipe(mtl_liner);
+	mtl_liner.on("end", sync.defer());
+	
+	mtl_liner.on("data", function(line){
+		//Process the MTL file, line-by-line
+		if (!line || !line.trim()) return;
+		if (line.indexOf("#") == 0) return;
+		var comps = line.split(" ");
+		
+		switch (comps[0]) {
+			
+			case "newmtl": //New material is being defined
+				this.currMat = { oldname: comps[1], props: {}, texs: {} };
+				materials[comps[1]] = this.currMat;
+				numMatsDefined++;
+				break;
+			
+			case "map_Kd": //handle materials specially
+			case "map_Ka":
+			case "map_Ks":
+			case "map_d":
+			case "map_bump":
+			case "bump":
+			case "disp":
+			case "decal":
+				this.currMat.texs[comps[0]] = line.substr(comps[0].length).trim();
+				numTextsDefined++;
+				break;
+			
+			default:
+				this.currMat.props[comps[0]] = line.substr(comps[0].length).trim();
+				break;
+		}
+	});
+	
+	sync.await(); //Pause here until reading is finished
+	
+	/////////////////////////////////////////////////////////////////////////////
+	// Step 2: Read and Process OBJ file
+	
+	obj_in = fs.createReadStream(file+"/"+id+".obj", { encoding: "utf8" });
+	obj_out = fs.createWriteStream(BUILD_TEMP+id+"/map.obj", { encoding: "utf8" });
+	obj_liner = new ByLineReader();
+	obj_trans = new ProcessorTransform(function(line){
+		//Process the OBJ file, line-by-line
+		var comps = line.split(" ");
+		switch (comps[0]) {
+			case "mtllib": // Rewrite the mtllib line to point to the renamed file
+				return "mtllib map.mtl";
+			
+			case "usemtl": // Rewrite the usemtl line reference the reworked file properly
+				var oldname = comps[1];
+				var mat = materials[oldname];
+				if (!mat.newname) {
+					var id = "_00"+(numMatsUsed++);
+					id = id.substr(id.length-2);
+					mat.newname = "mat_"+id;
+				}
+				return "usemtl "+mat.newname;
+			
+			default:
+				return line;
+				
+		}
+	});
+	obj_out.on("finish", sync.defer());
+	
+	obj_in.pipe(obj_liner).pipe(obj_trans).pipe(obj_out);
+	
+	sync.await(); //Pause here until the transforming is finished
+	
+	//////////////////////////////////////////////////////////////////////////////
+	// Step 3: Process and Write the MTL file
+	mtl_out = fs.createWriteStream(BUILD_TEMP+id+"/map.mtl", { encoding: "utf8" });
+	
+	for (var matname in materials) {
+		var mat = materials[matname];
+		if (!mat.newname) continue; //If the material was not used, skip it
+		
+		mtl_out.write("newmtl "+mat.newname+"\n");
+		for (var prop in mat.props) {
+			mtl_out.write(prop+" "+mat.props[prop]+"\n");
+		}
+		for (var tex in mat.texs) {
+			mtl_out.write(markTexture(tex, mat.texs[tex])+"\n");
+		}
+		mtl_out.write("\n");
+	}
+	mtl_out.end();
+	console.log("[cObjs] Wrote", BUILD_TEMP+id+"/map.obj", "and .mtl file; used", numMatsUsed, "materials out of", numMatsDefined);
+	
+	
+	////////////////////////////////////////////////////////////////////////////////
+	// Step 4: Copy image files over to the output folder
+	
+	sync.parallel(function(){
+		for (var i = 0; i < textures.length; i++) {
+			var tex = textures[i];
+			
+			var read = fs.createReadStream(tex.path);
+			var write = fs.createWriteStream(BUILD_TEMP+id+"/"+tex.newname);
+			console.log("[cObjs] Writing Texture file to", BUILD_TEMP+id+"/"+tex.newname);
+			write.on("finish", sync.defer());
+			read.pipe(write);
+		}
+	});
+	var copyres = sync.await(); //Pause here until the copying is complete
+	console.log("[cObjs] Copied", (copyres)?copyres.length:"???","files; used", numTextsUsed, "textues out of", numTextsDefined);
+	return;
+	
+	function markTexture(type, arg) {
+		var id = "_000"+(numTextsUsed++);
+		id = "tex_"+id.substr(id.length-3);
+		
+		var texDef = __splitTexArg(arg);
+		
+		
+		var path;
+		{ //attempt to find this file
+			if (texDef.src.indexOf("C:\\") == 0 || texDef.src.indexOf("/") == 0) { //if this is an absolute filename
+				var cwd = process.cwd();
+				if (texDef.src.indexOf(cwd) == 0) { //if the file is under the current working directory
+					// make a realative path
+					path = texDef.src.substr(cwd.length+1);
+				} else if ((cwd = texDef.src.indexOf("TPPParkDev")) > -1) {
+					// Match name of project to try and make things work on other computers
+					path = texDef.src.substr(cwd+"TPPParkDev".length+1);
+				} else {
+					// else, keep the absolute path
+					path = texDef.src;
+				}
+			} else {
+				// else, prepend on the mtl file's path
+				path = file+"/"+texDef.src;
+			}
+			
+			if (!fs.existsSync(path)) {
+				throw "The Material Library references an image I cannot find! "+path;
+			}
+		}
+		
+		var filename = /[^\\\/]*$/.exec(texDef.src)[0]; //grab the file name
+		var ext = /[^\.]*$/.exec(filename)[0]; //grab the meaningful extension
+		
+		textures.push({
+			type: type,
+			texDef : texDef,
+			path : path,
+			oldname : texDef.src,
+			newname : id+"."+ext,
+		});
+		return type +" "+ ((texDef.args)?texDef.args +" ":"") + id +"."+ ext;
+		
+		function __splitTexArg(arg) {
+			var comps = arg.split(" ");
+			var texDef = {};
+			// http://en.wikipedia.org/wiki/Wavefront_.obj_file#Texture_options
+			for (var i = 0; i < comps.length; i++) {
+				switch (comps[i]) {
+					case "-blendu": 
+						texDef["blendu"] = (comps[i+1] != "off");
+						i += 1; break; //consume the argument
+					case "-blendv":
+						texDef["blendv"] = (comps[i+1] != "off");
+						i += 1; break;
+					case "-boost":
+						texDef["boost"] = parseFloat(comps[i+1]);
+						i += 1; break;
+					case "-mm":
+						texDef["mm_base"] = parseFloat(comps[i+1]);
+						texDef["mm_gain"] = parseFloat(comps[i+2]);
+						i += 2; break;
+					case "-o":
+						texDef["o_u"] = parseFloat(comps[i+1]);
+						texDef["o_v"] = parseFloat(comps[i+2]); //technically optional
+						texDef["o_w"] = parseFloat(comps[i+3]); //technically optional
+						i += 3; break;
+					case "-s":
+						texDef["s_u"] = parseFloat(comps[i+1]);
+						texDef["s_v"] = parseFloat(comps[i+2]); //technically optional
+						texDef["s_w"] = parseFloat(comps[i+3]); //technically optional
+						i += 3; break;
+					case "-t":
+						texDef["t_u"] = parseFloat(comps[i+1]);
+						texDef["t_v"] = parseFloat(comps[i+2]); //technically optional
+						texDef["t_w"] = parseFloat(comps[i+3]); //technically optional
+						i += 3; break;
+					case "-texres":
+						texDef["texres"] = comps[i+1];
+						i += 1; break;
+					case "-clamp":
+						texDef["clamp"] = (comps[i+1] == "on"); //default off
+						i += 1; break;
+					case "-bm":
+						texDef["bm"] = parseFloat(comps[i+1]);
+						i += 1; break;
+					case "-imfchan":
+						texDef["imfchan"] = comps[i+1];
+						i += 1; break;
+					case "-type":
+						texDef["type"] = comps[i+1];
+						i += 1; break;
+					default:
+						//Assume the source is the last thing we'll find
+						texDef.src = comps.slice(i).join(" ");
+						texDef.args = comps.slice(0, i).join(" ");
+						return texDef;
+				}
+			}
+			return texDef;
+		}
+	}
+}
 
-function sleep(ms) {
-    var fiber = Fiber.current;
-    setTimeout(function() {
-        fiber.run();
-    }, ms);
-    Fiber.yield();
+function zipWorkingDirectory(id) {
+	var outstr = fs.createWriteStream("maps/"+id+".zip");
+	var arch = archiver("zip");
+	
+	outstr.on("finish", sync.defer());
+	arch.pipe(outstr);
+	arch.bulk([
+		{ expand: true, cwd: BUILD_TEMP+id, src: ["*"], flatten: true, },
+		//{ expand: true, cwd: 'source', src: ["**"], dest: 'source' },
+	]);
+	arch.finalize();
+	
+	sync.await();
+	console.log("[cMaps] Zipped file:", "maps/"+id+".zip", "["+arch.pointer()+" bytes]");
 }
