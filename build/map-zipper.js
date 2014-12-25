@@ -101,6 +101,11 @@ function compressMapJson(id, file) {
 	}
 	// console.log("Sanity Checks passed!"); nextTick();
 	
+	var setup = {};
+	if (fs.existsSync(file+"/setup.json")) {
+		setup = JSON.parse(fs.readFileSync(file+"/setup.json", { encoding: "utf8" }));
+	}
+	
 	// construct the compressed map, which strips all of the unneeded visuals
 	var cmap = {
 		width: json.width,
@@ -113,6 +118,7 @@ function compressMapJson(id, file) {
 			{ loc:[0, 0], anim:0, },
 		],
 	};
+	extend(cmap, setup);
 	
 	// console.log("Beginning data loop"); nextTick();
 	// Loop through the map, and through the layers
@@ -452,6 +458,17 @@ function processMapModel(id, file) {
 					case "-type":
 						texDef["type"] = comps[i+1];
 						i += 1; break;
+						
+					// Custom properties
+					case "-timeapp":  //Time applicable
+						// -timeapp [startTime] [endTime]
+						//   where the times are formatted as follows: m00[d00[h00[m00]]]
+						//   each section in sequence is optional
+						// startTime = start of the time, inclusive, when the given texture is applicable
+						// endTime = end of the time, inclusive, when the given texture is applicable
+						texDef["timeapp"] = [comps[i+1], comps[i+2]];
+						i += 2; break;
+						
 					default:
 						//Assume the source is the last thing we'll find
 						texDef.src = comps.slice(i).join(" ");
