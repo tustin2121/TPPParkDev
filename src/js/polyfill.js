@@ -13,3 +13,8 @@ if (!String.prototype.startsWith) {
 	});
 }
 
+//Adding this to allow dom elements and objects to simply have "on" and "emit" used like node.js objects can
+if (!EventTarget.prototype.on) {
+	EventTarget.prototype.on = EventTarget.prototype.addEventListener;
+	EventTarget.prototype.emit = EventTarget.prototype.dispatchEvent;
+}

@@ -6,16 +6,21 @@ var fs = require("fs");
 var Browserify = require("browserify");
 var sync = require("synchronize");
 var Fiber = require("synchronize").Fiber;
-// var exec = require("execSync").run;
+var rmdir = require("rimraf").sync;
+var util = require("util");
 
 var appCache = [
 	"./index.html", "./game.html",
 	"js/jquery-2.1.1.min.js", "js/jquery.cookie.js", "js/three.min.js",
+	"js/zip/zip.js", "js/zip/zip-fs.js", "js/zip/inflate.js", //"js/zip/deflate.js",
 ];
 
 //////////////// Globals ///////////////////
 global.BUILD_TEMP = "_outtemp/";
 
+global.SRC_DIRS = [ // Directories to be syntax checked
+	"src/",
+];
 global.MAP_DIRS = [
 	"src/maps/",
 ];
@@ -51,10 +56,16 @@ global.sleep = function(time) {
 
 const compileMap = require("./map-zipper.js");
 const findGlobalEvents = require("./event-compiler.js");
+const checkSyntax = require("./syntax-check.js");
 
 //////////////// Main ///////////////////
 function build(){
 	console.time("Build time");
+	
+	clean();
+	
+	//Syntax checking
+	syntaxCheckAllFiles();
 	
 	//Compile Less files
 	compileLess("src/less/game.less", "css/game.css");
@@ -74,7 +85,8 @@ function build(){
 
 //////////////// Build Steps //////////////////
 function clean() {
-	
+	console.log("[Clean] Deleting", BUILD_TEMP);
+	rmdir(BUILD_TEMP);
 }
 
 function compileLess(src, dest) {
@@ -105,11 +117,16 @@ function bundleGame() {
 	
 	bundler.add("./src/js/game.js");
 	
-	var writestr = fs.createWriteStream("./js/game.js");
-	bundler.bundle().pipe(writestr);
-	writestr.on("finish", sync.defer());
+	var data = sync.await(bundler.bundle(sync.defer()));
+	// console.log(data);
 	
-	sync.await();
+	fs.writeFileSync("js/game.js", data);
+	
+	// var writestr = fs.createWriteStream("./js/game.js");
+	//bundler.bundle().pipe(writestr);
+	// writestr.on("finish", sync.defer());
+		
+	// sync.await();
 	appCache.push("js/game.js");
 }
 
@@ -140,7 +157,7 @@ function writeCache() {
 }
 
 
-////////////// Map Compiling ///////////////
+////////////////////////////////////////////////////////////
 
 function findMaps() {
 	console.log("[cMaps] Finding maps: ");
@@ -165,11 +182,57 @@ function findMaps() {
 	}
 }
 
-
-
-
-
-
+function syntaxCheckAllFiles() {
+	console.log("[ESVal] Beginning syntax validation");
+	
+	for (var pi = 0; pi < SRC_DIRS.length; pi++) {
+		if (!fs.existsSync(SRC_DIRS[pi])) continue;
+		__findFilesIn(SRC_DIRS[pi]);
+	}
+	
+	console.log("[ESVal] Syntax validation completed");
+	return;
+	
+	function __findFilesIn(dir) {
+		var dirListing = fs.readdirSync(dir);
+		for (var di = 0; di < dirListing.length; di++) {
+			var file = dirListing[di];
+			
+			// console.log("[ESVal] File: ", dir+file); nextTick();
+			var stat = fs.statSync(dir+file);
+			if (stat.isFile()) 
+			{
+				var ext = file.substr(file.lastIndexOf(".")+1);
+				var res = checkSyntax(dir+file, ext);
+				if (res) {
+					if (res instanceof Error) {
+						if (res.description) {
+							console.log("[ESVal] Error found while validating", 
+								dir+file, "(line "+ res.lineNumber+":"+res.column+")");
+							console.log("    "+res.description);
+						} else {
+							console.log("[ESVal] Error found while validating", dir+file);
+							console.log(res.toString());
+						}
+						sleep(100); throw -1;
+					} else if (util.isArray(res)) {
+						console.log("[ESVal] Multiple errors found while validating", dir+file);
+						for (var i = 0; i < res.length; i++) {
+							console.log(res[i]);
+						}
+						sleep(100); throw -1;
+					} else {
+						console.log("[ESVal] Validation returned object for file", dir+file);
+						console.log(res);
+						sleep(100); throw res;
+					}
+				}
+			} else {
+				__findFilesIn(dir+file+"/");
+			}
+		}
+	}
+}
 
 
 /////////////////// Finally, call main ///////////////////

@@ -13,12 +13,15 @@
   "devDependencies": {
     "archiver": "^0.13.0",
     "browserify": "^7.0.0",
-    "execSync": "^1.0.2",
+    "esprima": "^1.2.2",
     "extend": "2.0.0",
     "inherits": "1.0.0",
+    "jsonlint": "^1.6.2",
     "less": "^2.1.1",
     "minifyify": "^4.4.0",
+    "moment": "^2.8.4",
     "ndarray": "^1.0.16",
+    "rimraf": "^2.2.8",
     "synchronize": "^0.9.9",
     "three": "~0.69.0"
   },

@@ -1,5 +1,25 @@
-# Blender MTL File: 'ChurchOfHelix_2.blend'
-# Material Count: 8
+# Blender MTL File: 'ChurchOfHelix_3.blend'
+# Material Count: 10
+
+newmtl Brick
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\ChurchOfHelix\brick_wall.png
+
+newmtl Floor
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\ChurchOfHelix\marble_floor.png
 
 newmtl None
 Ns 0
@@ -8,25 +28,16 @@ Kd 0.8 0.8 0.8
 Ks 0.8 0.8 0.8
 d 1
 illum 2
+map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\ChurchOfHelix\stainglass.png
+
+newmtl None_brick_wall.png
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
 map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\ChurchOfHelix\brick_wall.png
-
-newmtl None_carpet.png
-Ns 0
-Ka 0.000000 0.000000 0.000000
-Kd 0.8 0.8 0.8
-Ks 0.8 0.8 0.8
-d 1
-illum 2
-map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\ChurchOfHelix\carpet.png
-
-newmtl None_carpet_stairs.png
-Ns 0
-Ka 0.000000 0.000000 0.000000
-Kd 0.8 0.8 0.8
-Ks 0.8 0.8 0.8
-d 1
-illum 2
-map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\ChurchOfHelix\carpet_stairs.png
 
 newmtl None_marble_floor.png
 Ns 0
@@ -36,24 +47,6 @@ Ks 0.8 0.8 0.8
 d 1
 illum 2
 map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\ChurchOfHelix\marble_floor.png
-
-newmtl None_stainglass.png
-Ns 0
-Ka 0.000000 0.000000 0.000000
-Kd 0.8 0.8 0.8
-Ks 0.8 0.8 0.8
-d 1
-illum 2
-map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\ChurchOfHelix\stainglass.png
-
-newmtl None_stone_panels.png
-Ns 0
-Ka 0.000000 0.000000 0.000000
-Kd 0.8 0.8 0.8
-Ks 0.8 0.8 0.8
-d 1
-illum 2
-map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\ChurchOfHelix\stone_panels.png
 
 newmtl None_stone_railing.png
 Ns 0
@@ -72,3 +65,33 @@ Ks 0.8 0.8 0.8
 d 1
 illum 2
 map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\ChurchOfHelix\stone_stairs.png
+
+newmtl Rug
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\ChurchOfHelix\carpet_stairs.png
+
+newmtl Rug_carpet.png
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\ChurchOfHelix\carpet.png
+
+newmtl Rug_stone_panels.png
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\ChurchOfHelix\stone_panels.png
