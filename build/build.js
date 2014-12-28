@@ -17,6 +17,7 @@ var appCache = [
 
 //////////////// Globals ///////////////////
 global.BUILD_TEMP = "_outtemp/";
+global.MINIFY = false; //Set to true to minifiy the source
 
 global.SRC_DIRS = [ // Directories to be syntax checked
 	"src/",
@@ -109,10 +110,12 @@ function bundleGame() {
 	});
 	
 	bundler.exclude("three");
+	bundler.exclude("jquery");
 	
 	bundler.plugin("minifyify", {
-		map: "_srcmaps/game.map.json",
-		output: "_srcmaps/game.map.json",
+		map: "/_srcmaps/game.map.json",
+		output: "/_srcmaps/game.map.json",
+		minify: MINIFY,
 	});
 	
 	bundler.add("./src/js/game.js");

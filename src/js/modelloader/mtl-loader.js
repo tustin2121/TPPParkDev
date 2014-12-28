@@ -16,14 +16,14 @@ function MtlLoader(mtlfile, fileSys, opts) {
 	this.mtlfile = mtlfile;
 	this.fileSys = fileSys;
 }
-inherits(ObjLoader, EventEmitter);
+inherits(MtlLoader, EventEmitter);
 extend(MtlLoader.prototype, {
 	fileSys : null,
 	mtlfile : null,
 	
 	load: function() {
-		if (!(this.objfile && this.mtlfile)) 
-			throw new Error("No MTL file given!");
+		if (!this.mtlfile) throw new Error("No MTL file given!");
+		if (!this.fileSys) throw new Error("No FileSystem given!");
 		
 		var scope = this;
 		var parsed = scope.parse(this.mtlfile);
@@ -81,8 +81,8 @@ extend(MtlLoader.prototype, {
 function ensurePowerOfTwo_ ( image ) {
 	if ( ! THREE.Math.isPowerOfTwo( image.width ) || ! THREE.Math.isPowerOfTwo( image.height ) ) {
 		var canvas = document.createElement( "canvas" );
-		canvas.width = this.nextHighestPowerOfTwo_( image.width );
-		canvas.height = this.nextHighestPowerOfTwo_( image.height );
+		canvas.width = nextHighestPowerOfTwo_( image.width );
+		canvas.height = nextHighestPowerOfTwo_( image.height );
 		
 		var ctx = canvas.getContext("2d");
 		ctx.drawImage( image, 0, 0, image.width, image.height, 0, 0, canvas.width, canvas.height );
@@ -146,6 +146,7 @@ MaterialCreator.prototype = {
 	},
 	
 	createMaterial_ : function(matName) {
+		var scope = this;
 		var mat = this.materialsInfo[matName];
 		var params = {
 			name: matName,
@@ -241,13 +242,18 @@ MaterialCreator.prototype = {
 			// Using ".dds" format?
 			
 			var image = new Image();
-			//TODO image.src = blob url from args.src
-			var blob = this.fileSys.getChildByName(args.src).getBlob();
-			image.src = URL.createObjectURL(blob);
-			
-			image = ensurePowerOfTwo_( image );
-			
 			var texture = new THREE.Texture(image);
+			
+			var file = scope.fileSys.root.getChildByName(args.src);
+			if (!file) throw new Error("Texture "+args.src+" not found in map file!");
+			file.getBlob("image/png", function(data) {
+				image.src = URL.createObjectURL(data);
+				image = ensurePowerOfTwo_( image );
+				
+				texture.image = image;
+				texture.needsUpdate = true;
+				
+			});
 			
 			if (!args.clamp) { //undefined or false
 				texture.wrapS = THREE.RepeatWrapping;

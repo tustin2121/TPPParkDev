@@ -38,11 +38,15 @@ function findGlobalEvents(mapid) {
 	});
 	bundler.add(eventPaths);
 	
+	bundler.exclude("three");
+	bundler.exclude("jquery");
+	
 	//exclude Actor and the other events
 	bundler.external(EXTERNAL_EVENT_LIBS);
 	bundler.plugin("minifyify", {
 		map: "_srcmaps/maps/"+mapid+"/global.map.json",
 		output: "_srcmaps/maps/"+mapid+"/global.map.json",
+		minify: MINIFY,
 	});
 	
 	var data = sync.await(bundler.bundle(sync.defer()));
@@ -67,6 +71,7 @@ function findLocalEvents(mapid, path) {
 	bundler.plugin("minifyify", {
 		map: "_srcmaps/maps/"+mapid+"/local.map.json",
 		output: "_srcmaps/maps/"+mapid+"/local.map.json",
+		minify: MINIFY,
 	});
 	
 	var data = sync.await(bundler.bundle(sync.defer()));
