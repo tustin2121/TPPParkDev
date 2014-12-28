@@ -9,9 +9,11 @@ var ObjLoader = require("./modelloader/obj-loader");
 
 // The currently loaded zip file system
 var fileSys = new zip.fs.FS();
+var controls;
 
 function Map(id, opts){
-	
+	this.id = id;
+	extend(this, opts);
 }
 inherits(Map, EventEmitter);
 extend(Map.prototype, {
@@ -38,21 +40,32 @@ extend(Map.prototype, {
 		
 		var self = this;
 		var xhr = this.xhr = new XMLHttpRequest();
+		xhr.open("GET", "maps/"+this.id+".zip");
+		console.log("XHR: ", xhr);
 		xhr.responseType = "blob";
 		xhr.on("load", function(e) {
+			console.log("LOAD:", e);
 			self.file = xhr.response;
 			self.emit("downloaded");
 		});
 		xhr.on("progress", function(e){
+			console.log("PROGRESS:", e);
 			if (e.lengthComputable) {
 				var percentDone = e.loaded / e.total;
 			} else {
 				//marquee bar
 			}
 		});
+		xhr.on("error", function(e){
+			console.log("ERROR:", e);
+		});
+		xhr.on("canceled", function(e){
+			console.log("CANCELED:", e);
+		});
 		//TODO on error and on canceled
 		
-		xhr.open("GET", "maps/"+id+".zip");
+		xhr.send();
+		console.log("OPEN: ", xhr.readyState);
 	},
 	
 	/**
@@ -66,20 +79,25 @@ extend(Map.prototype, {
 			});
 			this.download();
 			//TODO throw up loading gif
+			return;
 		}
 		
 		fileSys.importBlob(this.file, function success(){
 			//TODO load up the map!
-			fileSys.root.getChildByName("map.json").getText(__jsonLoaded, true);
-			fileSys.root.getChildByName("map.obj").getText(__objLoaded, true);
-			fileSys.root.getChildByName("map.mtl").getText(__mtlLoaded, true);
+			fileSys.root.getChildByName("map.json").getText(__jsonLoaded, __logProgress);
+			fileSys.root.getChildByName("map.obj").getText(__objLoaded, __logProgress);
+			fileSys.root.getChildByName("map.mtl").getText(__mtlLoaded, __logProgress);
 			//TODO load event bundles
 			
-		}, function error(){
+		}, function error(e){
+			console.log("ERROR: ", e);
 			self.emit("load-error"); //Send to the dorito dungeon
 		});
 		return; 
 		
+		function __logProgress() {
+			console.log("PROGRESS", arguments);
+		}
 		//Callback chain below
 		function __jsonLoaded(data) {
 			self.jsondata = JSON.parse(data);
@@ -96,15 +114,17 @@ extend(Map.prototype, {
 		}
 		function __modelLoaded() {
 			if (!self.objdata || !self.mtldata) return; //don't begin parsing until they're both loaded
+			console.log("__modelLoaded");
 			var objldr = new ObjLoader(self.objdata, self.mtldata, fileSys);
 			objldr.on("load", __modelReady);
-			
+			objldr.load();
 		}
 		
 		function __modelReady(obj) {
-			this.mapmodel = obj;
+			console.log("__modelReady");
+			self.mapmodel = obj;
 			self.emit("loaded-model");
-			this.init();
+			self.init();
 		}
 	},
 	
@@ -116,22 +136,39 @@ extend(Map.prototype, {
 		
 		var scrWidth = $("#gamescreen").width();
 		var scrHeight = $("#gamescreen").height();
-		switch(tiledata.properties.camera) {
-			case "ortho":
-				this.camera = new THREE.OrthographicCamera(scrWidth/-2, scrWidth/2, scrHeight/2, scrHeight/-2, 1, 1000);
-				this.camera.position.y = 100;
-				this.camera.roation.x = -Math.PI / 2;
-				break;
-			case "gen4":
+		// switch(this.jsondata.camera) {
+		// 	case "ortho":
+		// 		this.camera = new THREE.OrthographicCamera(scrWidth/-2, scrWidth/2, scrHeight/2, scrHeight/-2, 1, 1000);
+		// 		this.camera.position.y = 100;
+		// 		this.camera.roation.x = -Math.PI / 2;
+		// 		break;
+		// 	case "gen4":
 				this.camera = new THREE.PerspectiveCamera(75, scrWidth / scrHeight, 1, 1000);
-				this.camera.position.y = 10;
-				this.camera.roation.x = -55 * (Math.PI / 180);
-				break;
-		}
+				// this.camera.position.y = 10;
+				// this.camera.rotation.x = -55 * (Math.PI / 180);
+				
+				this.camera.position.z = 10;
+	
+				controls = new THREE.OrbitControls(this.camera);
+				controls.damping = 0.2;
+		// 		break;
+		// }
 		this.scene.add(this.camera);
+		
+		light = new THREE.DirectionalLight(0xffffff, 1);
+		light.position.set(0, 1, 1);
+		this.scene.add(light);
 		
 		this.scene.add(this.mapmodel);
 	},
+	
+	cleanup : function(){
+		delete this.fileSys;
+	},
+	
+	logicLoop : function(){
+		if (controls) controls.update();
+	},
 });
-
+module.exports = Map;
 

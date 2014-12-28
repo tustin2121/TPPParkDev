@@ -38,7 +38,7 @@ extend(ObjLoader.prototype, {
 			object.traverse(function(object){
 				if (object instanceof THREE.Mesh) {
 					if (object.material.name) {
-						var mat = matLoader.create(object.material.name);
+						var mat = matLib.create(object.material.name);
 						if (mat) object.material = mat;
 					}
 				}
@@ -179,11 +179,11 @@ ObjLoader.prototype.parse = function(data) {
 		} else 
 		if ( /^mtllib /.test(line)) {
 			// mtl file
-			if ( mtllibCallback ) {
-				var mtlfile = line.substring( 7 );
-				mtlfile = mtlfile.trim();
-				mtllibCallback( mtlfile );
-			}
+			// if ( mtllibCallback ) {
+			// 	var mtlfile = line.substring( 7 );
+			// 	mtlfile = mtlfile.trim();
+			// 	mtllibCallback( mtlfile );
+			// }
 			
 		} else 
 		if ( /^s /.test(line)) {
@@ -202,8 +202,8 @@ ObjLoader.prototype.parse = function(data) {
 			geometry.vertices = vertices;
 			
 			geometry.mergeVertices();
-			geometry.computeCentroids();
 			geometry.computeFaceNormals();
+			geometry.computeBoundingBox();
 			geometry.computeBoundingSphere();
 			
 			object.add( mesh );
