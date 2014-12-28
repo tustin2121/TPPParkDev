@@ -14,6 +14,7 @@ window.currentMap = null;
 $(function(){
 	
 	window.threeRenderer = new THREE.WebGLRenderer({ canvas: document.getElementById("gamescreen") });
+	threeRenderer.setClearColorHex( 0xFF0000 );
 	
 	currentMap = new Map("iChurchOfHelix");
 	currentMap.load();

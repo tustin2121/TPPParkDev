@@ -351,6 +351,8 @@ function processMapModel(id, file) {
 	////////////////////////////////////////////////////////////////////////////////
 	// Step 4: Copy image files over to the output folder
 	
+	//TODO Check if images are Powers of Two!
+	console.warn("WARNING: TODO Check if Images are Powers of Two!!");
 	sync.parallel(function(){
 		for (var i = 0; i < textures.length; i++) {
 			var tex = textures[i];

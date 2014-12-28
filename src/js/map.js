@@ -155,8 +155,12 @@ extend(Map.prototype, {
 		// }
 		this.scene.add(this.camera);
 		
-		light = new THREE.DirectionalLight(0xffffff, 1);
-		light.position.set(0, 1, 1);
+		light = new THREE.DirectionalLight(0xffffff, 0.5);
+		light.position.set(1, 1, 1);
+		this.scene.add(light);
+		
+		light = new THREE.DirectionalLight(0xffffff, 0.5);
+		light.position.set(-1, 1, 1);
 		this.scene.add(light);
 		
 		this.scene.add(this.mapmodel);
