@@ -248,7 +248,7 @@ MaterialCreator.prototype = {
 			if (!file) throw new Error("Texture "+args.src+" not found in map file!");
 			file.getBlob("image/png", function(data) {
 				image.src = URL.createObjectURL(data);
-				image = ensurePowerOfTwo_( image );
+				// image = ensurePowerOfTwo_( image );
 				
 				texture.image = image;
 				texture.needsUpdate = true;
