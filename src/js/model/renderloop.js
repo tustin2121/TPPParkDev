@@ -71,7 +71,7 @@ function initGameLoop(ticksPerSec) {
 		if (wholeTick <= 0) return;
 		wholeTick *= _rate;
 		
-		if (currentMap.logicLoop)
+		if (currentMap && currentMap.logicLoop)
 			currentMap.logicLoop(wholeTick);
 		accum -= wholeTick;
 	}
