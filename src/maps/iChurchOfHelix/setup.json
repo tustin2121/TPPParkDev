@@ -5,6 +5,8 @@
 	],
 	"warps" : [
 		{ "loc" : [0, 0], "anim" : 0 }
-	]
-	
+	],
+	"camera" : {
+		"type" : "gen5",
+	}
 }

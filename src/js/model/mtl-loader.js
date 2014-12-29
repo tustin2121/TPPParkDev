@@ -247,6 +247,12 @@ MaterialCreator.prototype = {
 			var file = scope.fileSys.root.getChildByName(args.src);
 			if (!file) throw new Error("Texture "+args.src+" not found in map file!");
 			file.getBlob("image/png", function(data) {
+				// Even though the images are in memory, apparently they still aren't "loaded"
+				// at the point when they are assigned to the src attribute.
+				image.on("load", function(){
+					console.log("Image loaded!");
+					texture.needsUpdate = true;
+				});
 				image.src = URL.createObjectURL(data);
 				// image = ensurePowerOfTwo_( image );
 				

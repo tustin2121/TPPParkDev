@@ -8,6 +8,7 @@ var sync = require("synchronize");
 var Fiber = require("synchronize").Fiber;
 var rmdir = require("rimraf").sync;
 var util = require("util");
+var extend = require("extend");
 
 var appCache = [
 	"./index.html", "./game.html",
@@ -75,7 +76,10 @@ function build(){
 	findMaps();
 	
 	//Browseify the source code
-	bundleGame();
+	bundle("game");
+	
+	//Bundle the dev tools
+	bundle("tools/mapview", { dest:"tools/mapview.js", appcache:false });
 	
 	//Rewrite the app cache manifest
 	writeCache();
@@ -101,8 +105,14 @@ function compileLess(src, dest) {
 	appCache.push(dest);
 }
 
-function bundleGame() {
-	console.log("[Brify] Browserifying game.js");
+function bundle(file, opts) {
+	opts = extend({
+		dest: "js/"+file+".js",
+		src: "./src/js/"+file+".js",
+		map: file+".map.json",
+		appcache: true,
+	}, opts);
+	console.log("[Brify] Browserifying "+file+".js");
 	
 	var bundler = new Browserify({
 		noParse : ["three", "jquery"],
@@ -113,24 +123,18 @@ function bundleGame() {
 	bundler.exclude("jquery");
 	
 	bundler.plugin("minifyify", {
-		map: "/_srcmaps/game.map.json",
-		output: "/_srcmaps/game.map.json",
+		map: "/_srcmaps/"+opts.map,
+		output: "/_srcmaps/"+opts.map,
 		minify: MINIFY,
 	});
 	
-	bundler.add("./src/js/game.js");
+	bundler.add(opts.src);
 	
 	var data = sync.await(bundler.bundle(sync.defer()));
-	// console.log(data);
+	fs.writeFileSync(opts.dest, data);
 	
-	fs.writeFileSync("js/game.js", data);
-	
-	// var writestr = fs.createWriteStream("./js/game.js");
-	//bundler.bundle().pipe(writestr);
-	// writestr.on("finish", sync.defer());
-		
-	// sync.await();
-	appCache.push("js/game.js");
+	if (opts.appcache) 
+		appCache.push("js/"+file+".js");
 }
 
 function writeCache() {

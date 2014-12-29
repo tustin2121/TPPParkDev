@@ -8,17 +8,8 @@
 	"build_systems" : 
 	[
 		{
-			"name" : "Browserify",
+			"name" : "Build TPPPark",
 			"cmd" : ["npm", "run", "build"],
-			"working_dir" : "${project_path:${file_path}}",
-			"shell" : true
-		},
-		{
-			"name" : "Run in Node-Webkit",
-			"cmd" : [
-				"npm", "run", "build", "&&",
-				".\\node-webkit\\nw.exe", "--enable-logging", "${project_path:${file_path}}"
-			],
 			"working_dir" : "${project_path:${file_path}}",
 			"shell" : true
 		}

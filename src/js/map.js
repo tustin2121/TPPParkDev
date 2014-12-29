@@ -5,11 +5,10 @@ var extend = require("extend");
 var EventEmitter = require("events").EventEmitter;
 //var zip = zip.js
 
-var ObjLoader = require("./modelloader/obj-loader");
+var ObjLoader = require("./model/obj-loader");
 
 // The currently loaded zip file system
 var fileSys = new zip.fs.FS();
-var controls;
 
 function Map(id, opts){
 	this.id = id;
@@ -23,7 +22,7 @@ extend(Map.prototype, {
 	file: null,
 	xhr: null, //active xhr request
 	
-	jsondata : null,
+	metadata : null,
 	objdata : null,
 	mtldata : null,
 	
@@ -40,7 +39,7 @@ extend(Map.prototype, {
 		
 		var self = this;
 		var xhr = this.xhr = new XMLHttpRequest();
-		xhr.open("GET", "maps/"+this.id+".zip");
+		xhr.open("GET", "/maps/"+this.id+".zip");
 		console.log("XHR: ", xhr);
 		xhr.responseType = "blob";
 		xhr.on("load", function(e) {
@@ -65,7 +64,6 @@ extend(Map.prototype, {
 		//TODO on error and on canceled
 		
 		xhr.send();
-		console.log("OPEN: ", xhr.readyState);
 	},
 	
 	/**
@@ -100,7 +98,7 @@ extend(Map.prototype, {
 		}
 		//Callback chain below
 		function __jsonLoaded(data) {
-			self.jsondata = JSON.parse(data);
+			self.metadata = JSON.parse(data);
 			self.emit("loaded-meta");
 		}
 		
@@ -114,7 +112,6 @@ extend(Map.prototype, {
 		}
 		function __modelLoaded() {
 			if (!self.objdata || !self.mtldata) return; //don't begin parsing until they're both loaded
-			console.log("__modelLoaded");
 			var objldr = new ObjLoader(self.objdata, self.mtldata, fileSys);
 			objldr.on("load", __modelReady);
 			objldr.load();
@@ -136,23 +133,22 @@ extend(Map.prototype, {
 		
 		var scrWidth = $("#gamescreen").width();
 		var scrHeight = $("#gamescreen").height();
-		// switch(this.jsondata.camera) {
-		// 	case "ortho":
-		// 		this.camera = new THREE.OrthographicCamera(scrWidth/-2, scrWidth/2, scrHeight/2, scrHeight/-2, 1, 1000);
-		// 		this.camera.position.y = 100;
-		// 		this.camera.roation.x = -Math.PI / 2;
-		// 		break;
-		// 	case "gen4":
+		// For camera types, see the Camera types wiki page
+		switch(this.metadata.camera.type) {
+			case "ortho":
+				this.camera = new THREE.OrthographicCamera(scrWidth/-2, scrWidth/2, scrHeight/2, scrHeight/-2, 1, 1000);
+				this.camera.position.y = 100;
+				this.camera.roation.x = -Math.PI / 2;
+				break;
+			case "gen4":
 				this.camera = new THREE.PerspectiveCamera(75, scrWidth / scrHeight, 1, 1000);
-				// this.camera.position.y = 10;
-				// this.camera.rotation.x = -55 * (Math.PI / 180);
+				this.camera.position.y = 10;
+				this.camera.rotation.x = -55 * (Math.PI / 180);
 				
-				this.camera.position.z = 10;
-	
-				controls = new THREE.OrbitControls(this.camera);
-				controls.damping = 0.2;
-		// 		break;
-		// }
+				break;
+			case "gen5":
+				break;
+		}
 		this.scene.add(this.camera);
 		
 		light = new THREE.DirectionalLight(0xffffff, 0.5);
@@ -164,14 +160,38 @@ extend(Map.prototype, {
 		this.scene.add(light);
 		
 		this.scene.add(this.mapmodel);
+		
+		this.emit("map-ready");
 	},
 	
-	cleanup : function(){
-		delete this.fileSys;
+	getAllWalkableTiles : function() {
+		
+	},
+	
+	
+	
+	
+	
+	
+	
+	
+	dispose : function(){
+		fileSys = null;
+		delete this.file;
+		delete this.xhr;
+		
+		delete this.metadata;
+		delete this.objdata;
+		delete this.mtldata;
+		
+		delete this.tiledata;
+		
+		delete this.mapmodel;
+		delete this.camera;
+		delete this.scene;
 	},
 	
 	logicLoop : function(){
-		if (controls) controls.update();
 	},
 });
 module.exports = Map;
