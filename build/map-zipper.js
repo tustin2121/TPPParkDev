@@ -65,6 +65,7 @@ function copyFile(src, dest) {
 	sync.await();
 }
 
+// If you make any changes here, make sure to mirror them in src/js/map.js!
 function convertTilePropsToShort(props) {
 	// TileData: MMMMLW00 TTTHHHHH
 	// Where:
@@ -97,7 +98,7 @@ function compressMapJson(id, file) {
 		if (json.layers[li].height != json.height) throw "Invalid map: Layer is wrong size!";
 		
 		//also convert to ndarray for easier access
-		json.layers[li].data = ndarray(json.layers[li].data, [json.width, json.height]);
+		json.layers[li].data = ndarray(json.layers[li].data, [json.width, json.height], [1, json.width]);
 	}
 	// console.log("Sanity Checks passed!"); nextTick();
 	
@@ -110,7 +111,7 @@ function compressMapJson(id, file) {
 	var cmap = {
 		width: json.width,
 		height: json.height,
-		map : ndarray(new Uint16Array(json.width * json.height), [json.width, json.height]),
+		map : ndarray(new Uint16Array(json.width * json.height), [json.width, json.height], [1, json.width]),
 		layers : [ //Layer 1 = index 0 = default layer
 			// /*1*/ { "2d": [0, 0], "3d": [1,0,0,0,  0,1,0,0,  0,0,1,0,  0,0,0,1] },
 		],

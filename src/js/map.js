@@ -2,6 +2,7 @@
 
 var inherits = require("inherits");
 var extend = require("extend");
+var ndarray = require("ndarray");
 var EventEmitter = require("events").EventEmitter;
 //var zip = zip.js
 
@@ -9,6 +10,44 @@ var ObjLoader = require("./model/obj-loader");
 
 // The currently loaded zip file system
 var fileSys = new zip.fs.FS();
+
+
+// These would be CONSTs if we weren't in the browser
+var DEF_HEIGHT_STEP = 0.5; //Default Y translation amount a height step takes. This can be defined in a map file.
+
+
+// If you make any changes here, make sure to mirror them in build/map-zipper.js!
+function convertShortToTileProps(val) {
+	// TileData: MMMMLW00 TTTHHHHH
+	// Where:
+	//    M = Movement, Bits are: (Down, Up, Left, Right)
+	//    L = Ledge bit (this tile is a ledge: you jump over it when given permission to enter it)
+	//    W = Water bit (this tile is water: most actors are denied entry onto this tile)
+	//    H = Height (vertical location of the center of this tile)
+	//    T = Transition Tile (transition to another Layer when stepping on this tile)
+	var props = {};
+	
+	var movement = ((val >> 12) & 0xF);
+	// movement is blocked if a movement flag is true:
+	props.movement = {};
+	props.movement["down"]  = !!(movement & 0x1);
+	props.movement["up"]    = !!(movement & 0x2);
+	props.movement["left"]  = !!(movement & 0x4);
+	props.movement["right"] = !!(movement & 0x8);
+	
+	props.isWalkable = !!(~movement & 0xF);
+	props.isLedge = !!(val & (0x1 << 11));
+	props.isWater = !!(val & (0x1 << 10));
+	
+	props.transition = ((val >> 5) & 0x7);
+	
+	props.height = ((val) & 0x1F);
+	
+	return props;
+}
+
+
+
 
 function Map(id, opts){
 	this.id = id;
@@ -99,6 +138,12 @@ extend(Map.prototype, {
 		//Callback chain below
 		function __jsonLoaded(data) {
 			self.metadata = JSON.parse(data);
+			
+			self.tiledata = ndarray(self.metadata.map, [self.metadata.width, self.metadata.height], [1, self.metadata.width]);
+			if (self.metadata["heightstep"] === undefined) {
+				self.metadata["heightstep"] = DEF_HEIGHT_STEP;
+			}
+			
 			self.emit("loaded-meta");
 		}
 		
@@ -147,6 +192,7 @@ extend(Map.prototype, {
 				
 				break;
 			case "gen5":
+				this.camera = new THREE.PerspectiveCamera(75, scrWidth / scrHeight, 1, 1000);
 				break;
 		}
 		this.scene.add(this.camera);
@@ -164,8 +210,47 @@ extend(Map.prototype, {
 		this.emit("map-ready");
 	},
 	
-	getAllWalkableTiles : function() {
+	getTileData : function(x, y) {
+		var tile = convertShortToTileProps(this.tiledata.get(x, y));
+		return tile;
+	},
+	
+	get3DTileLocation : function(x, y, layer, tiledata) {
+		layer = (layer || 1) - 1;
+		if (!tiledata) tiledata = this.getTileData(x, y);
 		
+		var layerdata = this.metadata.layers[layer];
+		var z = tiledata.height * this.metadata.heightstep;
+		
+		var loc = new THREE.Vector3(x, z, y);
+		loc.x -= layerdata["2d"][0];
+		loc.z -= layerdata["2d"][1];
+		
+		var mat = new THREE.Matrix4();
+		mat.set.apply(mat, layerdata["3d"]);
+		loc.applyMatrix4(mat);
+		
+		return loc;
+	},
+	
+	getAllWalkableTiles : function() {
+		var tiles = [];
+		for (var li = 1; li <= 7; li++) {
+			if (!this.metadata.layers[li-1]) continue;
+			tiles[li] = [];
+			
+			for (var y = 0; y < this.metadata.height; y++) {
+				for (var x = 0; x < this.metadata.width; x++) {
+					var tdata = this.getTileData(x, y);
+					if (!tdata.isWalkable) continue;
+					
+					tdata["3dloc"] = this.get3DTileLocation(x, y, li, tdata);
+					
+					tiles[li].push(tdata);
+				}
+			}
+		}
+		return tiles;
 	},
 	
 	
@@ -195,4 +280,5 @@ extend(Map.prototype, {
 	},
 });
 module.exports = Map;
+
 
