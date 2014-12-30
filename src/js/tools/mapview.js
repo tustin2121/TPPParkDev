@@ -50,7 +50,8 @@ function loadMap(id) {
 			//oldlogic.call(currentMap);
 		};
 		
-		showWalkableTiles();
+		// showWalkableTiles();
+		showMovementGrid();
 	});
 }
 
@@ -98,4 +99,86 @@ function showWalkableTiles() {
 		particles.sortParticles = true;
 		_infoParent.add(particles);
 	}
+}
+
+var _node_movementGrid;
+function showMovementGrid() {
+	if (!_node_movementGrid) {
+		_node_movementGrid = new THREE.Object3D();
+		
+		createInfoParent();
+		
+		//CONST
+		var markerColors = [ 0x888888, 0x008800, 0x000088, 0x880000, 0x008888, 0x880088, 0x888800 ];
+		
+		var map = currentMap;
+		var mdata = currentMap.metadata;
+		
+		for (var li = 1; li <= 7; li++) {
+			if (!mdata.layers[li-1]) continue;
+			
+			var geom = new THREE.Geometry();
+			var jumps = [];
+			
+			function __drawLine(sx, sy, dx, dy) {
+				var mv = map.canWalkBetween(sx, sy, dx, dy);
+				if (!mv) return;
+				
+				var v1 = map.get3DTileLocation(sx, sy, li);
+				var v2 = map.get3DTileLocation(dx, dy, li);
+				
+				if (mv & 0x2) {
+					jumps.push([v1, v2]); //push for a spline later
+					return;
+				}
+				
+				v2.set((v1.x+v2.x)/2, (v1.y+v2.y)/2, (v1.z+v2.z)/2);
+				
+				geom.vertices.push(v1);
+				geom.vertices.push(v2);
+			}
+			
+			for (var y = 0; y < mdata.height; y++) {
+				for (var x = 0; x < mdata.width; x++) {
+					__drawLine(x, y, x+1, y);
+					__drawLine(x, y, x-1, y);
+					__drawLine(x, y, x, y+1);
+					__drawLine(x, y, x, y-1);
+				}
+			}
+			
+			var mat = new THREE.LineBasicMaterial({
+				color: markerColors[li],
+				opacity: 0.8,
+				linewidth: 1,
+			});
+			var line = new THREE.Line(geom, mat, THREE.LinePieces);
+			_node_movementGrid.add(line);
+			
+			if (jumps.length) {
+				for (var i = 0; i < jumps.length; i++) {
+					var v1 = jumps[i][0];
+					var v3 = jumps[i][1];
+					var v2 = new THREE.Vector3((v1.x+v3.x)/2, Math.max(v1.y, v3.y)+0.4, (v1.z+v3.z)/2);
+					
+					var spline = new THREE.SplineCurve3([v1, v2, v3]);
+					var geom = new THREE.Geometry();
+					geom.vertices = spline.getPoints(7).slice(0, -1);
+					
+					var mat = new THREE.LineBasicMaterial({
+						color: markerColors[li],
+						opacity: 0.8,
+						linewidth: 1,
+					});
+					var line = new THREE.Line(geom, mat);
+					_node_movementGrid.add(line);
+				}
+			}
+		}
+		
+		_node_movementGrid.position.y = 0.1;
+		
+		_infoParent.add(_node_movementGrid);
+	}
+	_node_movementGrid.visible = true;
 }

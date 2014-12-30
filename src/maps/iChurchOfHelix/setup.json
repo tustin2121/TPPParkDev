@@ -6,6 +6,7 @@
 	"warps" : [
 		{ "loc" : [0, 0], "anim" : 0 }
 	],
+	"heightstep" : 0.25,
 	"camera" : {
 		"type" : "gen5"
 	}
