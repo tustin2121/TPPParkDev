@@ -264,7 +264,7 @@ function processMapModel(id, file) {
 		//Process the MTL file, line-by-line
 		if (!line || !line.trim()) return;
 		if (line.indexOf("#") == 0) return;
-		var comps = line.split(" ");
+		var comps = line.trim().split(" ");
 		
 		switch (comps[0]) {
 			
@@ -302,13 +302,13 @@ function processMapModel(id, file) {
 	obj_liner = new ByLineReader();
 	obj_trans = new ProcessorTransform(function(line){
 		//Process the OBJ file, line-by-line
-		var comps = line.split(" ");
+		var comps = line.trim().split(" ");
 		switch (comps[0]) {
 			case "mtllib": // Rewrite the mtllib line to point to the renamed file
 				return "mtllib map.mtl";
 			
 			case "usemtl": // Rewrite the usemtl line reference the reworked file properly
-				var oldname = comps[1];
+				var oldname = comps[1]; 
 				var mat = materials[oldname];
 				if (!mat.newname) {
 					var id = "_00"+(numMatsUsed++);
