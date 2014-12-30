@@ -30,10 +30,10 @@ function convertShortToTileProps(val) {
 	var movement = ((val >> 12) & 0xF);
 	// movement is blocked if a movement flag is true:
 	props.movement = {};
-	props.movement["down"]  = !!(movement & 0x1);
-	props.movement["up"]    = !!(movement & 0x2);
-	props.movement["left"]  = !!(movement & 0x4);
-	props.movement["right"] = !!(movement & 0x8);
+	props.movement["down"]  = !!(movement & 0x8);
+	props.movement["up"]    = !!(movement & 0x4);
+	props.movement["left"]  = !!(movement & 0x2);
+	props.movement["right"] = !!(movement & 0x1);
 	
 	props.isWalkable = !!(~movement & 0xF);
 	props.isLedge = !!(val & (0x1 << 11));
@@ -253,7 +253,52 @@ extend(Map.prototype, {
 		return tiles;
 	},
 	
-	
+	/**
+	 * canWalkBetween: If it is possible to walk from one tile to another. The two
+	 * 		tiles must be adjacent, or false is immedeately returned.
+	 * returns:
+	 * 		false = cannot, 1 = can, 2 = must jump, 4 = must swim/surf
+	 */
+	canWalkBetween : function(srcx, srcy, destx, desty){
+		if (Math.abs(srcx - destx) + Math.abs(srcy - desty) != 1) return false;
+		
+		// If we're somehow already outside the map, unconditionally allow them to walk around to get back in
+		if (srcx < 0 || srcx >= this.metadata.width) return true;
+		if (srcy < 0 || srcy >= this.metadata.height) return true;
+		
+		// Sanity check edges of the map
+		if (destx < 0 || destx >= this.metadata.width) return false;
+		if (desty < 0 || desty >= this.metadata.height) return false;
+		
+		var srctile = this.getTileData(srcx, srcy);
+		var desttile = this.getTileData(destx, desty);
+		
+		if (!desttile.isWalkable) return false;
+		
+		var canWalk = true; //Assume we can travel between until proven otherwise.
+		var mustJump, mustSwim;
+		
+		var dir = (function(){
+			switch (1) {
+				case (srcy - desty): return ["up", "down"];
+				case (desty - srcy): return ["down", "up"];
+				case (srcx - destx): return ["left", "right"];
+				case (destx - srcx): return ["right", "left"];
+			} return null;
+		})();
+		
+		if (srctile.movement[dir[0]]) { //if movement = true, means we can't walk there
+			if (srctile.isLedge) 
+				mustJump = true;
+			else canWalk = false;
+		}
+		canWalk &= !desttile.movement[dir[1]];
+		
+		mustSwim = desttile.isWater;
+		
+		if (!canWalk) return false;
+		return (canWalk?0x1:0) | (mustJump?0x2:0) | (mustSwim?0x4:0);
+	},
 	
 	
 	
