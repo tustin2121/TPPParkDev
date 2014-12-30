@@ -13,7 +13,7 @@ var extend = require("extend");
 var appCache = [
 	"./index.html", "./game.html",
 	"js/jquery-2.1.1.min.js", "js/jquery.cookie.js", "js/three.min.js",
-	"js/zip/zip.js", "js/zip/zip-fs.js", "js/zip/inflate.js", //"js/zip/deflate.js",
+	"js/zip/zip.js", "js/zip/zip-fs.js", "js/zip/z-worker.js", "js/zip/inflate.js", //"js/zip/deflate.js",
 ];
 
 //////////////// Globals ///////////////////
@@ -39,6 +39,8 @@ global.EVENT_DIRS = [
 	"src/events/s1.blazeblack2/",
 	"src/events/s1.x/",
 	"src/events/s1.omegaruby/",
+	"src/events/s1.conquest/",
+	"src/events/s1.crossgen/",
 ];
 
 global.nextTick = function() {
@@ -57,8 +59,9 @@ global.sleep = function(time) {
 }
 
 const compileMap = require("./map-zipper.js");
-const findGlobalEvents = require("./event-compiler.js");
+const findGlobalEvents = require("./event-compiler.js").findGlobalEvents;
 const checkSyntax = require("./syntax-check.js");
+const uniqueCheckGlobalEvents = require("./event-compiler.js").uniqueCheckGlobalEvents;
 
 //////////////// Main ///////////////////
 function build(){
@@ -68,6 +71,7 @@ function build(){
 	
 	//Syntax checking
 	syntaxCheckAllFiles();
+	uniqueCheckGlobalEvents();
 	
 	//Compile Less files
 	compileLess("src/less/game.less", "css/game.css");
