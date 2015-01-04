@@ -1,7 +1,7 @@
 // trigger.js
 // Defines a trigger tile(s) used throughout the park
 
-var Event = require("./event");
+var Event = require("tpp-event");
 var inherits = require("inherits");
 var extend = require("extend");
 

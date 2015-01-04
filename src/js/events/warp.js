@@ -1,7 +1,7 @@
 // warp.js
 // Defines a warp tile used throughout the park.
 
-var Event = require("./event");
+var Event = require("tpp-event");
 var inherits = require("inherits");
 var extend = require("extend");
 

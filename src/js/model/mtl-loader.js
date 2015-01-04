@@ -9,21 +9,21 @@ var extend = require("extend");
 var EventEmitter = require("events").EventEmitter;
 
 
-function MtlLoader(mtlfile, fileSys, opts) {
+function MtlLoader(mtlfile, loadTexture, opts) {
 	EventEmitter.call(this);
 	extend(this, opts);
 	
 	this.mtlfile = mtlfile;
-	this.fileSys = fileSys;
+	this.loadTexture = loadTexture;
 }
 inherits(MtlLoader, EventEmitter);
 extend(MtlLoader.prototype, {
-	fileSys : null,
+	loadTexture : null,
 	mtlfile : null,
 	
 	load: function() {
 		if (!this.mtlfile) throw new Error("No MTL file given!");
-		if (!this.fileSys) throw new Error("No FileSystem given!");
+		if (!this.loadTexture) throw new Error("No loadTexture function given!");
 		
 		var scope = this;
 		var parsed = scope.parse(this.mtlfile);
@@ -67,7 +67,7 @@ extend(MtlLoader.prototype, {
 			}
 			// Once we've parsed out all the materials, load them into a "creator"
 			
-			var matCreator = new MaterialCreator(this.fileSys);
+			var matCreator = new MaterialCreator(this.loadTexture);
 			matCreator.setMaterials(materialsInfo);
 			return matCreator;
 		} catch (e) {
@@ -107,8 +107,8 @@ function nextHighestPowerOfTwo_( x ) {
 //		normalizeRGB: false - assumed
 //		ignoreZeroRGB: false 
 //		invertTransparency: false - d = 1 is opaque
-function MaterialCreator(fileSys) {
-	this.fileSys = fileSys;
+function MaterialCreator(loadTexture) {
+	this.loadTexture = loadTexture;
 }
 MaterialCreator.prototype = {
 	setMaterials : function(matInfo) {
@@ -242,18 +242,17 @@ MaterialCreator.prototype = {
 			// Using ".dds" format?
 			
 			var image = new Image();
+			image.src = DEF_TEXTURE;
 			var texture = new THREE.Texture(image);
 			
-			var file = scope.fileSys.root.getChildByName(args.src);
-			if (!file) throw new Error("Texture "+args.src+" not found in map file!");
-			file.getBlob("image/png", function(data) {
+			scope.loadTexture(args.src, function(url){
 				// Even though the images are in memory, apparently they still aren't "loaded"
 				// at the point when they are assigned to the src attribute.
 				image.on("load", function(){
 					console.log("Image loaded!");
 					texture.needsUpdate = true;
 				});
-				image.src = URL.createObjectURL(data);
+				image.src = url;
 				// image = ensurePowerOfTwo_( image );
 				
 				texture.image = image;
@@ -270,7 +269,7 @@ MaterialCreator.prototype = {
 				texture.offset = new Vector2(args['o_u'] || 0, args['o_v'] || 0);
 			}
 			
-			texture.anisotropy = 8;
+			texture.anisotropy = 16;
 			
 			return texture;
 		}

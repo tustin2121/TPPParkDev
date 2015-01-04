@@ -3,13 +3,14 @@
 var inherits = require("inherits");
 var extend = require("extend");
 var ndarray = require("ndarray");
+var Event = require("./events/event.js");
 var EventEmitter = require("events").EventEmitter;
 //var zip = zip.js
 
 var ObjLoader = require("./model/obj-loader");
 
 // The currently loaded zip file system
-var fileSys = new zip.fs.FS();
+//var fileSys = new zip.fs.FS();
 
 
 // These would be CONSTs if we weren't in the browser
@@ -48,28 +49,62 @@ function convertShortToTileProps(val) {
 
 
 
-
+/**
+ *
+ *
+ *
+ *
+ */
 function Map(id, opts){
 	this.id = id;
 	extend(this, opts);
+	
+	this.fileSys = new zip.fs.FS();
 }
 inherits(Map, EventEmitter);
 extend(Map.prototype, {
 	id : null, //map's internal id
 	
-	//Zip file holding all data
-	file: null,
+	file: null, //Zip file holding all data
+	fileSys: null, //Current zip file system for this map
 	xhr: null, //active xhr request
 	
 	metadata : null,
 	objdata : null,
 	mtldata : null,
 	
-	tiledata : null,
+	lScriptTag : null,
+	gScriptTag : null,
 	
 	mapmodel: null,
 	camera : null,
 	scene : null,
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	// Load Management 
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	dispose : function(){
+		$(this.lScriptTag).remove();
+		$(this.gScriptTag).remove();
+		
+		delete this.file;
+		delete this.fileSys;
+		delete this.xhr;
+		
+		delete this.metadata;
+		delete this.objdata;
+		delete this.mtldata;
+		
+		delete this.lScriptTag;
+		delete this.gScriptTag;
+		
+		delete this.tiledata;
+		
+		delete this.mapmodel;
+		delete this.camera;
+		delete this.scene;
+	},
 	
 	/** Begin download of this map's zip file, preloading the data. */
 	download : function(){
@@ -119,11 +154,11 @@ extend(Map.prototype, {
 			return;
 		}
 		
-		fileSys.importBlob(this.file, function success(){
+		this.fileSys.importBlob(this.file, function success(){
 			//TODO load up the map!
-			fileSys.root.getChildByName("map.json").getText(__jsonLoaded, __logProgress);
-			fileSys.root.getChildByName("map.obj").getText(__objLoaded, __logProgress);
-			fileSys.root.getChildByName("map.mtl").getText(__mtlLoaded, __logProgress);
+			self.fileSys.root.getChildByName("map.json").getText(__jsonLoaded, __logProgress);
+			self.fileSys.root.getChildByName("map.obj").getText(__objLoaded, __logProgress);
+			self.fileSys.root.getChildByName("map.mtl").getText(__mtlLoaded, __logProgress);
 			//TODO load event bundles
 			
 		}, function error(e){
@@ -157,7 +192,22 @@ extend(Map.prototype, {
 		}
 		function __modelLoaded() {
 			if (!self.objdata || !self.mtldata) return; //don't begin parsing until they're both loaded
-			var objldr = new ObjLoader(self.objdata, self.mtldata, fileSys);
+			
+			function loadTexture(filename, callback) {
+				console.log("LOAD TEX:", filename);
+				var file = self.fileSys.root.getChildByName(filename);
+				if (!file) {
+					console.error("ERROR LOADING TEXTURE: No such file in map bundle! "+filename);
+					callback(DEF_TEXTURE);
+					return;
+				}
+				file.getBlob("image/png", function(data) {
+					console.log("TEX LOADED:", filename, data);
+					callback(URL.createObjectURL(data));
+				});
+			}
+			
+			var objldr = new ObjLoader(self.objdata, self.mtldata, loadTexture);
 			objldr.on("load", __modelReady);
 			objldr.load();
 		}
@@ -166,14 +216,14 @@ extend(Map.prototype, {
 			console.log("__modelReady");
 			self.mapmodel = obj;
 			self.emit("loaded-model");
-			self.init();
+			self._init();
 		}
 	},
 	
 	/**
 	 * Creates the map for display from the stored data.
 	 */
-	init : function(){
+	_init : function(){
 		this.scene = new THREE.Scene();
 		
 		var scrWidth = $("#gamescreen").width();
@@ -206,9 +256,20 @@ extend(Map.prototype, {
 		this.scene.add(light);
 		
 		this.scene.add(this.mapmodel);
+		// Map Model is now ready
+		
+		this._initEventMap();
+		
 		
 		this.emit("map-ready");
 	},
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	// Tile Information 
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	tiledata : null,
 	
 	getTileData : function(x, y) {
 		var tile = convertShortToTileProps(this.tiledata.get(x, y));
@@ -259,7 +320,7 @@ extend(Map.prototype, {
 	 * returns:
 	 * 		false = cannot, 1 = can, 2 = must jump, 4 = must swim/surf
 	 */
-	canWalkBetween : function(srcx, srcy, destx, desty){
+	canWalkBetween : function(srcx, srcy, destx, desty, ignoreEvents){
 		if (Math.abs(srcx - destx) + Math.abs(srcy - desty) != 1) return false;
 		
 		// If we're somehow already outside the map, unconditionally allow them to walk around to get back in
@@ -274,6 +335,15 @@ extend(Map.prototype, {
 		var desttile = this.getTileData(destx, desty);
 		
 		if (!desttile.isWalkable) return false;
+		
+		if (!ignoreEvents) { //check for the presense of events
+			var evts = this.eventMap.get(destx, desty);
+			if (evts) {
+				for (var i = 0; i < evts.length; i++) {
+					if (!evts[i].canWalkOn()) return false;
+				}
+			}
+		}
 		
 		var canWalk = true; //Assume we can travel between until proven otherwise.
 		var mustJump, mustSwim;
@@ -301,27 +371,132 @@ extend(Map.prototype, {
 	},
 	
 	
+	///////////////////////////////////////////////////////////////////////////////////////
+	// Event Handling 
+	///////////////////////////////////////////////////////////////////////////////////////
 	
+	_localId : 0,
+	eventList : null,
+	eventMap : null,
 	
-	
-	
-	dispose : function(){
-		fileSys = null;
-		delete this.file;
-		delete this.xhr;
+	_initEventMap : function() {
+		var self = this;
 		
-		delete this.metadata;
-		delete this.objdata;
-		delete this.mtldata;
+		this.eventList = {};
+		var w = this.metadata.width, h = this.metadata.height;
+		this.eventMap = ndarray(new Array(w*h), [w, h], [1, w]);
+		this.eventMap.put = function(x, y, val) {
+			if (!this.get(x, y)) {
+				this.set(x, y, []);
+			}
+			if (this.get(x, y).indexOf(val) >= 0) return; //don't double add
+			this.get(x, y).push(val);
+		};
+		this.eventMap.remove = function(x, y, val) {
+			if (!this.get(x, y)) return null;
+			var i = this.get(x, y).indexOf(val);
+			if (i == -1) return null;
+			return this.get(x, y).splice(i, 1);
+		};
 		
-		delete this.tiledata;
+		// Load event js files now:
+		loadScript("l"); // Load locally defined events
+		loadScript("g"); // Load globally defined events
 		
-		delete this.mapmodel;
-		delete this.camera;
-		delete this.scene;
+		return;
+		
+		function loadScript(t) {
+			var file = self.fileSys.root.getChildByName(t+"_evt.js");
+			if (!file) {
+				console.error("ERROR LOADING EVENTS: No "+t+"_evt.js file is present in the map bundle.");
+				return;
+			}
+			file.getBlob("text/javascript", function(data){
+				// NOTE: We cannot use JQuery().append(), as it delibrately cleans the script tags
+				//   out of the dom element we're appending, literally defeating the purpose.
+				// NOTE2: We append to the DOM instead of using eval() or new Function() because
+				//   when appended like so, the in-browserdebugger should be able to find it and
+				//   breakpoint in it.
+				var script = document.createElement("script");
+				script.type = "text/javascript";
+				script.src = URL.createObjectURL(data);
+				document.body.appendChild(script);
+				self[t+"ScriptTag"] = script;
+				// Upon being added to the body, it is evaluated
+			});
+		}
+		
 	},
 	
-	logicLoop : function(){
+	addEvent : function(evt) {
+		if (!evt) return;
+		if (!(evt instanceof Event)) 
+			throw new Error("Attempted to add an object that wasn't an Event! " + evt);
+		
+		if (!evt.shouldAppear()) return;
+		if (!evt.id)
+			evt.id = "LocalEvent_" + (++this._localId);
+		
+		//now adding event to map
+		this.eventList[evt.id] = evt;
+		if (evt.location) {
+			this.eventMap.put(evt.location.x, evt.location.y, evt);
+		} else if (evt.locations) {
+			for (var i = 0; i < evt.locations.length; i++) {
+				var loc = evt.locations[i];
+				this.eventMap.put(loc.x, loc.y, evt);
+			}
+		}
+		
+		//registering listeners on the event
+		evt.on("moving", function(srcX, srcY, destX, destY){
+			//Started moving to a new tile
+			this.eventMap.put(destX, destY, this);
+		});
+		evt.on("moved", function(srcX, srcY, destX, destY){
+			//Finished moving from the old tile
+			this.eventMap.remove(scrX, scrY, this);
+		});
+		
+		var avatar = evt.getAvatar(this);
+		if (avatar) {
+			this.scene.add(avatar);
+		}
+		
+		evt.emit("created");
+	},
+	
+	loadSprite : function(evtid, filename, callback) {
+		try {
+			var dir = this.fileSys.root.getChildByName(evtid);
+			if (!dir) callback(new Error("No subfolder for event id '"+evtid+"'!"));
+			
+			dir.getChildByName(filename).getBlob("image/png", function(data){
+				callback(null, URL.createObjectURL(data));
+			});
+		} catch (e) {
+			callback(e);
+		}
+	},
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	logicLoop : function(delta){
+		if (this.eventList) {
+			for (var i = 0; i < this.eventList.list; i++) {
+				var evt = this.eventList[i];
+				if (!evt) continue;
+				
+				evt.emit("tick", delta);
+			}
+		}
 	},
 });
 module.exports = Map;
