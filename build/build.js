@@ -62,6 +62,7 @@ const compileMap = require("./map-zipper.js");
 const findGlobalEvents = require("./event-compiler.js").findGlobalEvents;
 const checkSyntax = require("./syntax-check.js");
 const uniqueCheckGlobalEvents = require("./event-compiler.js").uniqueCheckGlobalEvents;
+const createEventLibraryBundle = require("./event-compiler.js").createEventLibraryBundle;
 
 //////////////// Main ///////////////////
 function build(){
@@ -75,6 +76,9 @@ function build(){
 	
 	//Compile Less files
 	compileLess("src/less/game.less", "css/game.css");
+	
+	//Bundler the event library
+	createEventLibraryBundle();
 	
 	//Compile every map in the source directory
 	findMaps();
@@ -183,11 +187,13 @@ function findMaps() {
 			try {
 				compileMap(file, MAP_DIRS[pi]+file);
 			} catch (e) {
-				console.error("[cMaps] ERROR compiling map: "+file);
-				if (typeof e == "string")
-					throw new Error(e);
-				else
-					throw e;
+				console.log("[cMaps] ERROR compiling map: "+file);
+				console.log("[cMaps] ERROR is: ", e, "\n"+e.stack); 
+				nextTick();
+				// if (typeof e == "string")
+				// 	throw new Error(e);
+				// else
+				// 	throw e;
 			}
 		}
 	}

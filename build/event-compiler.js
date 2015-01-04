@@ -11,12 +11,7 @@ var stream = require("stream");
 var ByLineReader = require("./transform-streams").ByLineReader;
 var ProcessorTransform = require("./transform-streams").ProcessorTransform;
 
-const EXTERNAL_EVENT_LIBS = [
-	"/src/js/events/event",
-	"/src/js/events/trigger",
-	"/src/js/events/warp",
-	"/src/js/events/actor",
-];
+const EXTERNAL_EVENT_LIBS = [];
 
 // Reason behind making global event names unique: they're all going to get folders in the
 // packed map zip files, and they'll need to be unique there. Unless we put some much more
@@ -43,6 +38,43 @@ function uniqueCheckGlobalEvents() {
 }
 module.exports.uniqueCheckGlobalEvents = uniqueCheckGlobalEvents;
 
+
+function createEventLibraryBundle(outfile) {
+	// Browserify the Event Library classes together
+	var bundler = new Browserify({
+		noParse : ["three", "jquery"],
+		debug : true,
+	});
+	
+	bundler.exclude("three");
+	bundler.exclude("jquery");
+	
+	bundler.require("./src/js/events/event",		{ expose: "tpp-event" });
+	bundler.require("./src/js/events/trigger",		{ expose: "tpp-trigger" });
+	bundler.require("./src/js/events/warp",			{ expose: "tpp-warp" });
+	bundler.require("./src/js/events/actor",		{ expose: "tpp-actor" });
+	
+	// This function will collect all the exposed labels, in a process similar to passing
+	// this not-yet-bundled bundler to another bundler through external().
+	bundler.on("label", function(prev, id){
+		if (typeof id == "string")
+			EXTERNAL_EVENT_LIBS.push(id);
+	});
+	
+	bundler.plugin("minifyify", {
+		map: "_srcmaps/maps/events.map.json",
+		output: "_srcmaps/maps/events.map.json",
+		minify: MINIFY,
+	});
+	
+	var data = sync.await(bundler.bundle(sync.defer()));
+	fs.writeFileSync("js/eventlib.js", data);
+	console.log("[EvLib] Bundled event library."); 
+	//return data;
+}
+module.exports.createEventLibraryBundle = createEventLibraryBundle;
+
+
 function findGlobalEvents(mapid) {
 	var eventPaths = [];
 	var eventConfigs = {};
@@ -60,40 +92,14 @@ function findGlobalEvents(mapid) {
 			console.log("[Event] Found event for map:", file, ">", EVENT_DIRS[pi]+file+"/"+mapid+".js");
 			
 			eventConfigs[file] = loadSpriteConfig(EVENT_DIRS[pi] + file, mapid);
-			console.log("Event Config for", file, "::", eventConfigs[file]);
+			// console.log("Event Config for", file, "::", eventConfigs[file]);
 			
 			eventPaths.push("./"+EVENT_DIRS[pi] + file + "/"+mapid+".js");
 		}
 	}
 	
-	//TODO browserify the events together
-	var bundler = new Browserify({
-		noParse : ["three", "jquery"],
-		debug : true,
-		insertGlobalVars : {
-			add : function() {
-				return "currentMap.addEvent";
-			}
-		},
-	});
-	bundler.add(eventPaths);
-	
-	bundler.transform(getPackConfigRemoverTransform);
-	
-	bundler.exclude("three");
-	bundler.exclude("jquery");
-	
-	//exclude Actor and the other events
-	bundler.external(EXTERNAL_EVENT_LIBS);
-	bundler.plugin("minifyify", {
-		map: "_srcmaps/maps/"+mapid+"/global.map.json",
-		output: "_srcmaps/maps/"+mapid+"/global.map.json",
-		minify: MINIFY,
-	});
-	
-	var data = sync.await(bundler.bundle(sync.defer()));
-	console.log("[Event] Bundled", eventPaths.length, "global events."); 
-	return data;
+	return bundle(eventPaths, mapid, "global");//,
+	//};
 }
 module.exports.findGlobalEvents = findGlobalEvents;
 
@@ -101,27 +107,41 @@ module.exports.findGlobalEvents = findGlobalEvents;
 function findLocalEvents(mapid, path) {
 	if (!fs.existsSync(path+"/events.js")) return null;
 	
-	//TODO browserify the events together
+	return bundle(path+"/events.js", mapid, "local");
+}
+module.exports.findLocalEvents = findLocalEvents;
+
+
+
+
+function bundle(srcs, mapid, type) {
+	// Browserify the events together
 	var bundler = new Browserify({
 		noParse : ["three", "jquery"],
 		debug : true,
+		insertGlobalVars : {
+			add : function() { return "currentMap.addEvent"; },
+		},
 	});
-	bundler.add(path+"/events.js");
+	bundler.add(srcs);
 	
 	bundler.transform(getPackConfigRemoverTransform);
 	
-	//TODO exclude Actor and the other events
+	bundler.exclude("three");
+	bundler.exclude("jquery");
+	
+	// Externalize the Event Library
 	bundler.external(EXTERNAL_EVENT_LIBS);
 	bundler.plugin("minifyify", {
-		map: "_srcmaps/maps/"+mapid+"/local.map.json",
-		output: "_srcmaps/maps/"+mapid+"/local.map.json",
+		map: "_srcmaps/maps/"+mapid+"/"+type+".map.json",
+		output: "_srcmaps/maps/"+mapid+"/"+type+".map.json",
 		minify: MINIFY,
 	});
 	
 	var data = sync.await(bundler.bundle(sync.defer()));
+	console.log("[Event] Bundled", (typeof srcs == "string")?1:srcs.length, type, "events."); 
 	return data;
 }
-module.exports.findLocalEvents = findLocalEvents;
 
 
 function loadSpriteConfig(file, mapid) {

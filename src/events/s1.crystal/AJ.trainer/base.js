@@ -4,8 +4,9 @@
 //$ PackConfig
 { "sprites" : [ "base.png" ] }
 //$!
-
+console.warn("HELLO FROM AJ'S BASE!!");
 module.exports = {
+	id: "AJ.trainer",
 	name: "AJ Downs",
 	infodex: "game.crystal.trainer.ajdowns",
 };
