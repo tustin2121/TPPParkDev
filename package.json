@@ -16,7 +16,7 @@
     "esprima": "^1.2.2",
     "exorcist": "^0.1.6",
     "extend": "2.0.0",
-    "inherits": "1.0.0",
+    "inherits": "2.0.1",
     "jsonlint": "^1.6.2",
     "less": "^2.1.1",
     "local-web-server": "^0.5.15",

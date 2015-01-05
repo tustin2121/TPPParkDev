@@ -8,15 +8,11 @@ require("./polyfill.js");
 var Map = require("./map");
 var renderLoop = require("./model/renderloop");
 
-window.currentMap = null;
+require("./globals");
 
-window.DEF_TEXTURE = "/img/missing_tex.png";
-window.DEF_SPRITE = "/img/missing_sprite.png";
 
 //On Ready
 $(function(){
-	$("<img>").attr("str", DEF_TEXTURE).css({display:none}).appendTo("body");
-	$("<img>").attr("str", DEF_SPRITE).css({display:none}).appendTo("body");
 	
 	currentMap = new Map("iChurchOfHelix");
 	currentMap.load();

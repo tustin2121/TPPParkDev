@@ -72,7 +72,9 @@ function checkPackConfig(content) {
 	}
 	if (inConfig) throw new Error("PackConfig does not close properly!");
 	
-	jsonlint.parse(config.join("\n"));
+	if (config.length) { //the PackConfig may have been commented out
+		jsonlint.parse(config.join("\n"));
+	}
 	
 	return out.join("\n");
 }

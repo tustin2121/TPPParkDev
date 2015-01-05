@@ -11,7 +11,7 @@ var stream = require("stream");
 var ByLineReader = require("./transform-streams").ByLineReader;
 var ProcessorTransform = require("./transform-streams").ProcessorTransform;
 
-const EXTERNAL_EVENT_LIBS = [];
+global.EXTERNAL_EVENT_LIBS = [];
 
 // Reason behind making global event names unique: they're all going to get folders in the
 // packed map zip files, and they'll need to be unique there. Unless we put some much more
@@ -98,7 +98,7 @@ function findGlobalEvents(mapid) {
 		}
 	}
 	
-	return bundle(eventPaths, mapid, "global");//,
+	return tryWrapCatch(bundle(eventPaths, mapid, "global"), "Global event loading exploded.");//,
 	//};
 }
 module.exports.findGlobalEvents = findGlobalEvents;
@@ -107,7 +107,7 @@ module.exports.findGlobalEvents = findGlobalEvents;
 function findLocalEvents(mapid, path) {
 	if (!fs.existsSync(path+"/events.js")) return null;
 	
-	return bundle(path+"/events.js", mapid, "local");
+	return tryWrapCatch(bundle(path+"/events.js", mapid, "local"), "Local event loading exploded.");
 }
 module.exports.findLocalEvents = findLocalEvents;
 
@@ -120,7 +120,8 @@ function bundle(srcs, mapid, type) {
 		noParse : ["three", "jquery"],
 		debug : true,
 		insertGlobalVars : {
-			add : function() { return "currentMap.addEvent"; },
+			add : function() { return "function(a){ currentMap.addEvent(a); }"; },
+			map : function() { return "currentMap"; },
 		},
 	});
 	bundler.add(srcs);
@@ -175,6 +176,14 @@ function loadSpriteConfig(file, mapid) {
 }
 
 
+
+function tryWrapCatch(src, msg) {
+	return "try {\n"+
+		src +
+	"\n} catch (e) {\n" +
+	'\tconsole.error("'+msg+'", e);' +
+	"}";
+}
 
 
 

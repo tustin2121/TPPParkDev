@@ -3,7 +3,7 @@
 var inherits = require("inherits");
 var extend = require("extend");
 var ndarray = require("ndarray");
-var Event = require("./events/event.js");
+var Event = require("tpp-event");
 var EventEmitter = require("events").EventEmitter;
 //var zip = zip.js
 
@@ -383,6 +383,7 @@ extend(Map.prototype, {
 		var self = this;
 		
 		this.eventList = {};
+		console.log("EVENTLIST INIT: ", this);
 		var w = this.metadata.width, h = this.metadata.height;
 		this.eventMap = ndarray(new Array(w*h), [w, h], [1, w]);
 		this.eventMap.put = function(x, y, val) {
@@ -429,6 +430,11 @@ extend(Map.prototype, {
 	},
 	
 	addEvent : function(evt) {
+		console.warn("ADDEVT", evt);
+		console.warn("ADDEVT2", (evt instanceof Event));
+		console.warn("ADDEVT2", (evt instanceof require("tpp-actor")));
+		console.warn("ADDEVT2", (require("tpp-actor") instanceof Event));
+		console.warn("ADDEVT2", (evt.constructor));
 		if (!evt) return;
 		if (!(evt instanceof Event)) 
 			throw new Error("Attempted to add an object that wasn't an Event! " + evt);
@@ -438,6 +444,7 @@ extend(Map.prototype, {
 			evt.id = "LocalEvent_" + (++this._localId);
 		
 		//now adding event to map
+		console.log("EVENTLIST ACCESS: ", this);
 		this.eventList[evt.id] = evt;
 		if (evt.location) {
 			this.eventMap.put(evt.location.x, evt.location.y, evt);
@@ -460,6 +467,10 @@ extend(Map.prototype, {
 		
 		var avatar = evt.getAvatar(this);
 		if (avatar) {
+			var loc = evt.location;
+			loc = this.get3DTileLocation(loc.x, loc.y, loc.z);
+			avatar.position = loc;
+			
 			this.scene.add(avatar);
 		}
 		

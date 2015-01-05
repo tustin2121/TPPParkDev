@@ -130,6 +130,8 @@ function bundle(file, opts) {
 	bundler.exclude("three");
 	bundler.exclude("jquery");
 	
+	// Externalize the Event Library
+	bundler.external(EXTERNAL_EVENT_LIBS);
 	bundler.plugin("minifyify", {
 		map: "/_srcmaps/"+opts.map,
 		output: "/_srcmaps/"+opts.map,
@@ -175,20 +177,22 @@ function writeCache() {
 ////////////////////////////////////////////////////////////
 
 function findMaps() {
-	console.log("[cMaps] Finding maps: ");
+	console.log("[cMaps] Begining Map Compilation");
+	var total = 0, success = 0;
 	for (var pi = 0; pi < MAP_DIRS.length; pi++) {
 		if (!fs.existsSync(MAP_DIRS[pi])) continue;
 		
 		var dirListing = fs.readdirSync(MAP_DIRS[pi]);
 		for (var di = 0; di < dirListing.length; di++) {
 			var file = dirListing[di];
-			console.log("[cMaps] Found map:", file, ">", MAP_DIRS[pi]+file);
+			console.log("\n[cMaps] Compiling Map", '"'+file+'"', "from file", MAP_DIRS[pi]+file);
+			total++;
 			
 			try {
 				compileMap(file, MAP_DIRS[pi]+file);
+				success++;
 			} catch (e) {
-				console.log("[cMaps] ERROR compiling map: "+file);
-				console.log("[cMaps] ERROR is: ", e, "\n"+e.stack); 
+				console.log("[cMaps] ERROR while compiling", '"'+file+'"', "\n"+e+"\n"+e.stack);
 				nextTick();
 				// if (typeof e == "string")
 				// 	throw new Error(e);
@@ -197,6 +201,7 @@ function findMaps() {
 			}
 		}
 	}
+	console.log("\n[cMaps] Compiled", success, "out of", total, "maps successfully.");
 }
 
 function syntaxCheckAllFiles() {
