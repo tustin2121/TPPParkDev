@@ -480,7 +480,10 @@ extend(Map.prototype, {
 	loadSprite : function(evtid, filename, callback) {
 		try {
 			var dir = this.fileSys.root.getChildByName(evtid);
-			if (!dir) callback(new Error("No subfolder for event id '"+evtid+"'!"));
+			if (!dir) {
+				callback(new Error("No subfolder for event id '"+evtid+"'!"));
+				return;
+			}
 			
 			dir.getChildByName(filename).getBlob("image/png", function(data){
 				callback(null, URL.createObjectURL(data));
