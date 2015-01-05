@@ -71,9 +71,17 @@ extend(Event.prototype, {
 				throw new Error("Event was initialized with both location and locations! They cannot be both defined!");
 			
 			var loc = this.location;
-			if ($.isArray(loc) && loc.length == 2 && typeof loc == "number" && typeof loc == "number") {
+			if ($.isArray(loc) && loc.length == 2 && typeof loc[0] == "number" && typeof loc[1] == "number") 
+			{
 				loc = new THREE.Vector2(loc[0], loc[1]);
-			} else if (!(loc instanceof THREE.Vector2)) {
+			} 
+			else if ($.isArray(loc) && loc.length == 3 
+				&& typeof loc[0] == "number" && typeof loc[1] == "number" && typeof loc[2] == "number") 
+			{
+				loc = new THREE.Vector3(loc[0], loc[1], loc[2]);
+			} 
+			else if (!(loc instanceof THREE.Vector2 || loc instanceof THREE.Vector3)) 
+			{
 				throw new Error("Could not normalize location of "+this.id+"!");
 			}
 			this.location = loc;
@@ -88,6 +96,8 @@ extend(Event.prototype, {
 				if (typeof orgloc[i] == "number")
 					newType = "number";
 				else if (orgloc[i] instanceof THREE.Vector2)
+					newType = "vector";
+				else if (orgloc[i] instanceof THREE.Vector3)
 					newType = "vector";
 				else if ($.isArray(orgloc[i]))
 					newType = "array";
@@ -116,13 +126,24 @@ extend(Event.prototype, {
 		return locs.length;
 		
 		function __parseAsNumberArray(l) {
-			if (l.length == 2) //single point
+			if (l.length == 2) //single point [x, y]
 				return [new THREE.Vector2(l[0], l[1])];
-			if (l.length == 4) { //rectangle
+			if (l.length == 3) //single point [x, y, z]
+				return [new THREE.Vector3(l[0], l[1], l[2])];
+			if (l.length == 4) { //rectangle [x, y, w, h]
 				var n = [];
 				for (var x = l[0]; x < l[0]+l[2]; x++) {
 					for (var y = l[1]; y < l[1]+l[3]; y++) {
 						n.push(new THREE.Vector2(x, y));
+					}
+				}
+				return n;
+			}
+			if (l.length == 5) { //rectangle [x, y, z, w, h]
+				var n = [];
+				for (var x = l[0]; x < l[0]+l[3]; x++) {
+					for (var y = l[1]; y < l[1]+l[4]; y++) {
+						n.push(new THREE.Vector3(x, y, l[2]));
 					}
 				}
 				return n;
@@ -147,9 +168,9 @@ module.exports = Event;
 
 Event.prototype.addListener =
 Event.prototype.on = function(type, listener) {
-	if ($.inArray(keys[i], __EVENT_TYPES__) == -1) {
+	if ($.inArray(type, __EVENT_TYPES__) == -1) {
 		console.error("Map Event", this.toString(), "registering emitted event type", 
-			keys[i], "which is not a valid emitted event type!");
+			type, "which is not a valid emitted event type!");
 	}
 	EventEmitter.prototype.on.call(this, type, listener);
 }

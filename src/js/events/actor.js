@@ -16,27 +16,47 @@ function Actor(base, opts) {
 inherits(Actor, Event);
 extend(Actor.prototype, {
 	sprite: null,
-	format: null,
+	sprite_format: null,
 	
 	avatar_mat : null,
 	avatar_sprite : null,
+	avatar_format : null,
 	
 	getAvatar : function(map){ 
 		var img = new Image();
 		img.src = DEF_SPRITE;
 		
+		var texture = new THREE.Texture(img);
+		texture.generateMipmaps = false;
+		//TODO MirroredRepeatWrapping, and just use a negative x uv value, to flip a sprite
+		
+		this.avatar_format = getSpriteFormat(DEF_SPRITE_FORMAT);
 		var mat = this.avatar_mat = new THREE.SpriteMaterial({
-			map: img,
+			map: texture,
 			color: 0xFFFFFF,
 			uvScale: new THREE.Vector2(0.25, 0.25),
 			uvOffset: new THREE.Vector2(0, 0),
 			transparent: true,
 		});
 		
-		
+		map.loadSprite(this.id, this.sprite, function(err, url){
+			if (err) {
+				console.error("ERROR LOADING SPRITE: ", err);
+				return;
+			}
+			
+			img.on("load", function(){
+				texture.image = img;
+				texture.needsUpdate = true;
+				
+				this.avatar_format = getSpriteFormat(sprite_format);
+			});
+			img.src = url;
+		});
 		
 		var sprite = this.avatar_sprite = new THREE.Sprite(mat);
 		
+		return sprite;
 	},
 	
 	
@@ -61,6 +81,26 @@ function getSpriteFormat(str) {
 	size[1] = size[1] || size[0];
 	
 	switch (name) {
+		case "pt_horzrow": 
+			return { 
+				width: size[0], height: size[1], flip: false,
+				dirs: {
+					"u0": [1, 0], "u1": [1, 1], "u2": [1, 2],
+					"d0": [0, 0], "d1": [0, 1], "d2": [0, 2],
+					"l0": [2, 0], "l1": [2, 1], "l2": [2, 2],
+					"r0": [3, 0], "r1": [3, 1], "r2": [3, 2],
+				}
+			};
+		case "pt_vertcol": 
+			return { 
+				width: size[0], height: size[1], flip: false,
+				dirs: {
+					"u0": [0, 1], "u1": [1, 1], "u2": [2, 1],
+					"d0": [0, 0], "d1": [1, 0], "d2": [2, 0],
+					"l0": [0, 2], "l1": [1, 2], "l2": [2, 2],
+					"r0": [0, 3], "r1": [1, 3], "r2": [2, 3],
+				}
+			};
 		case "hg_vertmix": 
 			return { 
 				width: size[0], height: size[1], flip: false,
