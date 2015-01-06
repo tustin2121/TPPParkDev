@@ -23,10 +23,16 @@ extend(Actor.prototype, {
 	avatar_format : null,
 	
 	getAvatar : function(map){ 
+		var self = this;
 		var img = new Image();
+		__onLoad(img, DEF_SPRITE_FORMAT);
 		img.src = DEF_SPRITE;
 		
 		var texture = new THREE.Texture(img);
+		texture.magFilter = THREE.NearestFilter;
+		texture.minFilter = THREE.NearestFilter;
+		texture.repeat = new THREE.Vector2(0.25, 0.25);
+		texture.offset = new THREE.Vector2(0, 0);
 		texture.generateMipmaps = false;
 		//TODO MirroredRepeatWrapping, and just use a negative x uv value, to flip a sprite
 		
@@ -34,8 +40,6 @@ extend(Actor.prototype, {
 		var mat = this.avatar_mat = new THREE.SpriteMaterial({
 			map: texture,
 			color: 0xFFFFFF,
-			uvScale: new THREE.Vector2(0.25, 0.25),
-			uvOffset: new THREE.Vector2(0, 0),
 			transparent: true,
 		});
 		
@@ -45,18 +49,24 @@ extend(Actor.prototype, {
 				return;
 			}
 			
-			img.on("load", function(){
-				texture.image = img;
-				texture.needsUpdate = true;
-				
-				this.avatar_format = getSpriteFormat(sprite_format);
-			});
+			__onLoad(img, this.sprite_format);
 			img.src = url;
 		});
 		
 		var sprite = this.avatar_sprite = new THREE.Sprite(mat);
 		
 		return sprite;
+		
+		function __onLoad(img, format) {
+			var f = function() {
+				texture.image = img;
+				texture.needsUpdate = true;
+				
+				self.avatar_format = getSpriteFormat(format);
+				img.removeEventListener("load", f);
+			}
+			img.on("load", f);
+		}
 	},
 	
 	

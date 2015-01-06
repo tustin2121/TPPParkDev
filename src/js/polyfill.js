@@ -22,22 +22,29 @@ if (!EventTarget.prototype.on) {
 	EventTarget.prototype.emit = EventTarget.prototype.dispatchEvent;
 }
 
-// Object.dispose()
-// Adding this allows a call to "dispose" on any object without throwing errors, though it won't do anything by default
-// if (!Object.prototype.dispose) {
-// 	Object.defineProperty(Object.prototype, "dispose", {
-// 		enumerable: false,
-// 		configurable: true,
-// 		writable: true,
-// 		value : function(){},
-// 	});
+
+// Modifications to THREE.js
+{
+	// Vector3.set(), modified to accept another Vector3
+	THREE.Vector3.prototype.set = function(x, y, z) {
+		if (x instanceof THREE.Vector3) {
+			this.x = x.x; this.y = x.y; this.z = x.z;
+			return this;
+		}
+		
+		this.x = x; this.y = y; this.z = z;
+		return this;
+	};
 	
-// 	Array.prototype.dispose = null;
+	// Also for Vector2
+	THREE.Vector2.prototype.set = function(x, y) {
+		if (x instanceof THREE.Vector2) {
+			this.x = x.x; this.y = x.y;
+			return this;
+		}
+		
+		this.x = x; this.y = y;
+		return this;
+	};
 	
-// 	// Object.defineProperty(Array.prototype, "dispose", {
-// 	// 	enumerable: true,
-// 	// 	configurable: true,
-// 	// 	writable: true,
-// 	// 	value : undefined
-// 	// });
-// }
+}
