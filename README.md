@@ -7,7 +7,7 @@ run performed thereafter until its Season 1 conclusion with Pokemon OmegaRuby.
 
 There are no plans to add anything from Season 2 to the park, simply because I was dogged 
 endlessly to add things to version 1 of the park and I don't want a repeat of that. If I 
-add anything to the park after it is declared complete, it will be on a whim.
+add anything to the park after it is declared complete, it will be on a whim or by contributor
 
 Version 2.x
 -----------
@@ -21,7 +21,7 @@ The chat, referenced as "your chat" to differentiate it from the live stream's c
 also embodying the fact that there is only one instance of this chat that only the player 
 can see, is a simulation of the chat from the stream. Its main purpose is to recreate the
 chaos of having the chat react to things on your screen with memes, copypasta, directions, 
-and all of their usual reactions. The chat is designed to look like it is watching/playing
+and all of their usual reactions. Your chat is designed to look like it is watching/playing
 YOUR experience of walking around the park, right down to the fact that when you move, your
 movements are mimiced in the chat window as "up", "down", "a", etc.
 

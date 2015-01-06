@@ -360,7 +360,7 @@ function processMapModel(id, file) {
 			
 			var read = fs.createReadStream(tex.path);
 			var write = fs.createWriteStream(BUILD_TEMP+id+"/"+tex.newname);
-			console.log("[cObjs] Writing Texture file to", BUILD_TEMP+id+"/"+tex.newname);
+			// console.log("[cObjs] Writing Texture file to", BUILD_TEMP+id+"/"+tex.newname);
 			write.on("finish", sync.defer());
 			read.pipe(write);
 		}
@@ -485,7 +485,7 @@ function processMapModel(id, file) {
 }
 
 function zipWorkingDirectory(id) {
-	var outstr = fs.createWriteStream("maps/"+id+".zip");
+	var outstr = fs.createWriteStream(BUILD_OUT+"maps/"+id+".zip");
 	var arch = archiver("zip");
 	
 	outstr.on("finish", sync.defer());

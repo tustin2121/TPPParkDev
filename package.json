@@ -21,6 +21,7 @@
     "less": "^2.1.1",
     "local-web-server": "^0.5.15",
     "minifyify": "^5.0.0",
+    "mkdirp": "^0.5.0",
     "moment": "^2.8.4",
     "ndarray": "^1.0.16",
     "raf": "^2.0.4",
@@ -29,7 +30,7 @@
     "three": "~0.69.0"
   },
   "scripts": {
-    "start": "ws",
+    "start": "ws -d _out/",
     "build": "node build/build.js"
   },
   "local-web-server": {

@@ -9,6 +9,8 @@ var Fiber = require("synchronize").Fiber;
 var rmdir = require("rimraf").sync;
 var util = require("util");
 var extend = require("extend");
+var path = require("path");
+var mkdirp = require("mkdirp").sync;
 
 var appCache = [
 	"./index.html", "./game.html",
@@ -17,7 +19,9 @@ var appCache = [
 ];
 
 //////////////// Globals ///////////////////
+global.BUILD_OUT = "_out/";
 global.BUILD_TEMP = "_outtemp/";
+global.SRC_MAPS = BUILD_OUT+"_srcmaps/";
 global.MINIFY = false; //Set to true to minifiy the source
 
 global.SRC_DIRS = [ // Directories to be syntax checked
@@ -74,8 +78,14 @@ function build(){
 	syntaxCheckAllFiles();
 	uniqueCheckGlobalEvents();
 	
+	//Copy over non-compiled files
+	copyLibraryFiles();
+	copyStaticImageFiles();
+	copyHtmlFiles();
+	copyConfigFiles();
+	
 	//Compile Less files
-	compileLess("src/less/game.less", "css/game.css");
+	compileLess("src/less/game.less", BUILD_OUT+"css/game.css");
 	
 	//Bundler the event library
 	createEventLibraryBundle();
@@ -87,7 +97,8 @@ function build(){
 	bundle("game");
 	
 	//Bundle the dev tools
-	bundle("tools/mapview", { dest:"tools/mapview.js", appcache:false });
+	copyDevTools();
+	bundle("tools/mapview", { dest:BUILD_OUT+"tools/mapview.js", appcache:false });
 	
 	//Rewrite the app cache manifest
 	writeCache();
@@ -100,6 +111,7 @@ function build(){
 function clean() {
 	console.log("[Clean] Deleting", BUILD_TEMP);
 	rmdir(BUILD_TEMP);
+	console.log("TODO Clean _out as well");
 }
 
 function compileLess(src, dest) {
@@ -115,7 +127,7 @@ function compileLess(src, dest) {
 
 function bundle(file, opts) {
 	opts = extend({
-		dest: "js/"+file+".js",
+		dest: BUILD_OUT+"js/"+file+".js",
 		src: "./src/js/"+file+".js",
 		map: file+".map.json",
 		appcache: true,
@@ -133,8 +145,8 @@ function bundle(file, opts) {
 	// Externalize the Event Library
 	bundler.external(EXTERNAL_EVENT_LIBS);
 	bundler.plugin("minifyify", {
-		map: "/_srcmaps/"+opts.map,
-		output: "/_srcmaps/"+opts.map,
+		map: SRC_MAPS+opts.map, //TODO Needs "/" in front?
+		output: SRC_MAPS+opts.map,
 		minify: MINIFY,
 	});
 	
@@ -170,9 +182,110 @@ function writeCache() {
 	txt += "# Resources that require the user to be online.\n";
 	txt += "NETWORK:\n*\n\nFALLBACK:";
 	
-	fs.writeFileSync("appcache.mf", txt);
+	fs.writeFileSync(BUILD_OUT+"appcache.mf", txt);
+}
+///////////////////////// Copying Files /////////////////////////////
+function copyLibraryFiles() {
+	//These copies can happen in parallel
+	sync.parallel(function(){
+		copyFile("lib/jquery-2.1.1.min.js", BUILD_OUT+"js/jquery-2.1.1.min.js");
+		copyFile("lib/jquery.cookie.js", BUILD_OUT+"js/jquery.cookie.js");
+		
+		copyFile("lib/three.min.js", BUILD_OUT+"js/three.min.js");
+		
+		copyDirectory("lib/zip/", BUILD_OUT+"js/zip/");
+	});
+	var l = sync.await();
+	console.log("[Copy ] Copied", l.length, "library files.");
 }
 
+function copyStaticImageFiles() {
+	//These copies can happen in parallel
+	sync.parallel(function(){
+		copyDirectory("img/", BUILD_OUT+"img/");
+		
+	});
+	var l = sync.await();
+	console.log("[Copy ] Copied", l.length, "static image files.");
+}
+
+function copyHtmlFiles() {
+	//These copies can happen in parallel
+	sync.parallel(function(){
+		copyFile("src/game.html", BUILD_OUT+"/game.html");
+		copyFile("src/index.html", BUILD_OUT+"/index.html");
+		
+	});
+	var l = sync.await();
+	console.log("[Copy ] Copied", l.length, "html files.");
+}
+
+function copyConfigFiles() {
+	//These copies can happen in parallel
+	sync.parallel(function(){
+		copyFile("src/.htaccess", BUILD_OUT+"/.htaccess");
+		copyFile("src/_config.yml", BUILD_OUT+"/_config.yml");
+		
+		copyFile("ParkReadme.md", BUILD_OUT+"/README.md");
+		
+	});
+	var l = sync.await();
+	console.log("[Copy ] Copied", l.length, "config files.");
+}
+
+function copyDevTools() {
+	//These copies can happen in parallel
+	sync.parallel(function(){
+		copyDirectory("lib/tools/", BUILD_OUT+"tools/");
+		copyFile("src/tools/mapview.html", BUILD_OUT+"tools/mapview.html");
+		
+	});
+	var l = sync.await();
+	console.log("[Copy ] Copied", l.length, "dev tools files.");
+}
+
+function copyFile(src, dest, noDefer) {
+	var dir = path.dirname(dest);
+	if (!fs.existsSync(dir)) {
+		mkdirp(dir);
+	}
+	
+	var sfile = fs.createReadStream(src);
+	var dfile = fs.createWriteStream(dest);
+	
+	if (!noDefer) dfile.on("finish", sync.defer());
+	
+	sfile.pipe(dfile);
+}
+
+function copyDirectory(src, dest, noDefer) {
+	__findFilesIn(src, dest);
+	
+	function __findFilesIn(dir, out) {
+		if (!fs.existsSync(out)) { mkdirp(out); }
+		
+		var dirListing = fs.readdirSync(dir);
+		for (var di = 0; di < dirListing.length; di++) {
+			var file = dirListing[di];
+			
+			// console.log("[ESVal] File: ", dir+file); nextTick();
+			var stat = fs.statSync(dir+file);
+			if (stat.isFile()) 
+			{
+				var sfile = fs.createReadStream(dir+file);
+				var dfile = fs.createWriteStream(out+file);
+				
+				if (!noDefer) dfile.on("finish", sync.defer());
+				
+				sfile.pipe(dfile);
+			}
+			else
+			{
+				__findFilesIn(dir+file+"/", out+file+"/");
+			}
+		}
+	}
+}
 
 ////////////////////////////////////////////////////////////
 
