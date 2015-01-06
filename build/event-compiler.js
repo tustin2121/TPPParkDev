@@ -54,6 +54,8 @@ function createEventLibraryBundle(outfile) {
 	bundler.require("./src/js/events/warp",			{ expose: "tpp-warp" });
 	bundler.require("./src/js/events/actor",		{ expose: "tpp-actor" });
 	
+	bundler.require("./src/js/events/player-character",	{ expose: "tpp-pc" });
+	
 	// This function will collect all the exposed labels, in a process similar to passing
 	// this not-yet-bundled bundler to another bundler through external().
 	bundler.on("label", function(prev, id){
@@ -98,8 +100,11 @@ function findGlobalEvents(mapid) {
 		}
 	}
 	
-	return tryWrapCatch(bundle(eventPaths, mapid, "global"), "Global event loading exploded.");//,
-	//};
+	if (!eventPaths.length) return null;
+	return {
+		configs: eventConfigs,
+		bundle: tryWrapCatch(bundle(eventPaths, mapid, "global"), "Global event loading exploded."),
+	};
 }
 module.exports.findGlobalEvents = findGlobalEvents;
 
@@ -172,6 +177,8 @@ function loadSpriteConfig(file, mapid) {
 	// console.log("Databuffer 2:", databuffer); sleep(100);
 	
 	if (databuffer.length) extend(config, JSON.parse(databuffer.join(" ")));
+	
+	config["__path"] = file;
 	return config;
 }
 

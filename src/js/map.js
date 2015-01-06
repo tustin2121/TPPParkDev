@@ -10,7 +10,7 @@ var EventEmitter = require("events").EventEmitter;
 var ObjLoader = require("./model/obj-loader");
 
 // The currently loaded zip file system
-//var fileSys = new zip.fs.FS();
+var EXT_MAPBUNDLE = ".zip";
 
 
 // These would be CONSTs if we weren't in the browser
@@ -114,7 +114,7 @@ extend(Map.prototype, {
 		
 		var self = this;
 		var xhr = this.xhr = new XMLHttpRequest();
-		xhr.open("GET", "/maps/"+this.id+".zip");
+		xhr.open("GET", "/maps/"+this.id+EXT_MAPBUNDLE);
 		console.log("XHR: ", xhr);
 		xhr.responseType = "blob";
 		xhr.on("load", function(e) {
@@ -181,6 +181,7 @@ extend(Map.prototype, {
 			}
 			
 			self.emit("loaded-meta");
+			__loadDone();
 		}
 		
 		function __objLoaded(data) {
@@ -217,6 +218,12 @@ extend(Map.prototype, {
 			console.log("__modelReady");
 			self.mapmodel = obj;
 			self.emit("loaded-model");
+			__loadDone();
+		}
+		
+		function __loadDone() {
+			if (!self.mapmodel || !self.tiledata) return; //don't call on _init before both are loaded
+			
 			self._init();
 		}
 	},
@@ -226,6 +233,8 @@ extend(Map.prototype, {
 	 */
 	_init : function(){
 		this.scene = new THREE.Scene();
+		
+		//TODO create player character
 		
 		var scrWidth = $("#gamescreen").width();
 		var scrHeight = $("#gamescreen").height();
@@ -238,7 +247,8 @@ extend(Map.prototype, {
 				break;
 			case "gen4":
 				this.camera = new THREE.PerspectiveCamera(75, scrWidth / scrHeight, 1, 1000);
-				this.camera.position.y = 10;
+				this.camera.position.y = 5;
+				this.camera.position.z = -5;
 				this.camera.rotation.x = -55 * (Math.PI / 180);
 				
 				break;
@@ -401,7 +411,7 @@ extend(Map.prototype, {
 		};
 		
 		this.spriteNode = new THREE.Object3D();
-		this.spriteNode.position.y = 0.5;
+		this.spriteNode.position.y = 0.66;
 		this.scene.add(this.spriteNode);
 		
 		// Load event js files now:
@@ -485,7 +495,13 @@ extend(Map.prototype, {
 				return;
 			}
 			
-			dir.getChildByName(filename).getBlob("image/png", function(data){
+			var file = dir.getChildByName(filename);
+			if (!file) {
+				callback(("No asset with name '"+filename+"' for event id '"+evtid+"'!"));
+				return;
+			}
+			
+			file.getBlob("image/png", function(data){
 				callback(null, URL.createObjectURL(data));
 			});
 		} catch (e) {

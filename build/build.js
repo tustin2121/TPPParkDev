@@ -16,6 +16,7 @@ var appCache = [
 	"./index.html", "./game.html",
 	"js/jquery-2.1.1.min.js", "js/jquery.cookie.js", "js/three.min.js",
 	"js/zip/zip.js", "js/zip/zip-fs.js", "js/zip/z-worker.js", "js/zip/inflate.js", //"js/zip/deflate.js",
+	"img/missing_sprite.png", "img/missing_tex.png", "img/twitch_emotes.png",
 ];
 
 //////////////// Globals ///////////////////
@@ -23,6 +24,8 @@ global.BUILD_OUT = "_out/";
 global.BUILD_TEMP = "_outtemp/";
 global.SRC_MAPS = BUILD_OUT+"_srcmaps/";
 global.MINIFY = false; //Set to true to minifiy the source
+
+global.EXT_MAPBUNDLE = ".zip"; //Remember to change in src/js/map.js
 
 global.SRC_DIRS = [ // Directories to be syntax checked
 	"src/",
