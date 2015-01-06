@@ -79,6 +79,7 @@ extend(Map.prototype, {
 	mapmodel: null,
 	camera : null,
 	scene : null,
+	spriteNode : null,
 	
 	///////////////////////////////////////////////////////////////////////////////////////
 	// Load Management 
@@ -383,7 +384,6 @@ extend(Map.prototype, {
 		var self = this;
 		
 		this.eventList = {};
-		console.log("EVENTLIST INIT: ", this);
 		var w = this.metadata.width, h = this.metadata.height;
 		this.eventMap = ndarray(new Array(w*h), [w, h], [1, w]);
 		this.eventMap.put = function(x, y, val) {
@@ -399,6 +399,10 @@ extend(Map.prototype, {
 			if (i == -1) return null;
 			return this.get(x, y).splice(i, 1);
 		};
+		
+		this.spriteNode = new THREE.Object3D();
+		this.spriteNode.position.y = 0.5;
+		this.scene.add(this.spriteNode);
 		
 		// Load event js files now:
 		loadScript("l"); // Load locally defined events
@@ -430,11 +434,6 @@ extend(Map.prototype, {
 	},
 	
 	addEvent : function(evt) {
-		console.warn("ADDEVT", evt);
-		console.warn("ADDEVT2", (evt instanceof Event));
-		console.warn("ADDEVT2", (evt instanceof require("tpp-actor")));
-		console.warn("ADDEVT2", (require("tpp-actor") instanceof Event));
-		console.warn("ADDEVT2", (evt.constructor));
 		if (!evt) return;
 		if (!(evt instanceof Event)) 
 			throw new Error("Attempted to add an object that wasn't an Event! " + evt);
@@ -444,7 +443,6 @@ extend(Map.prototype, {
 			evt.id = "LocalEvent_" + (++this._localId);
 		
 		//now adding event to map
-		console.log("EVENTLIST ACCESS: ", this);
 		this.eventList[evt.id] = evt;
 		if (evt.location) {
 			this.eventMap.put(evt.location.x, evt.location.y, evt);
@@ -468,10 +466,12 @@ extend(Map.prototype, {
 		var avatar = evt.getAvatar(this);
 		if (avatar) {
 			var loc = evt.location;
-			loc = this.get3DTileLocation(loc.x, loc.y, loc.z);
-			avatar.position = loc;
+			var loc3 = this.get3DTileLocation(loc.x, loc.y, loc.z);
+			console.log("AVATAR: ", loc, loc3);
+			avatar.position.set(loc3);
+			avatar.updateMatrix();
 			
-			this.scene.add(avatar);
+			this.spriteNode.add(avatar);
 		}
 		
 		evt.emit("created");
@@ -481,7 +481,7 @@ extend(Map.prototype, {
 		try {
 			var dir = this.fileSys.root.getChildByName(evtid);
 			if (!dir) {
-				callback(new Error("No subfolder for event id '"+evtid+"'!"));
+				callback(("No subfolder for event id '"+evtid+"'!"));
 				return;
 			}
 			
