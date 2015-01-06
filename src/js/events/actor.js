@@ -49,11 +49,12 @@ extend(Actor.prototype, {
 				return;
 			}
 			
-			__onLoad(img, this.sprite_format);
+			__onLoad(img, self.sprite_format);
 			img.src = url;
 		});
 		
 		var sprite = this.avatar_sprite = new THREE.Sprite(mat);
+		sprite.scale.set(1.5, 1.5, 1.5);
 		
 		return sprite;
 		

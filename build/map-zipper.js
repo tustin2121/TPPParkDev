@@ -42,7 +42,12 @@ function compileMap(id, file) {
 	//Collate the global events
 	evtjs = evtFinder.findGlobalEvents(id, file);
 	if (evtjs) {
-		fs.writeFileSync(BUILD_TEMP+id+"/g_evt.js", evtjs);
+		if (evtjs.bundle) {
+			fs.writeFileSync(BUILD_TEMP+id+"/g_evt.js", evtjs.bundle);
+		}
+		if (evtjs.configs) {
+			packageEventAssets(BUILD_TEMP+id, evtjs.configs);
+		}
 	}
 	nextTick();
 	
@@ -484,14 +489,32 @@ function processMapModel(id, file) {
 	}
 }
 
+function packageEventAssets(base, configs) {
+	for (var evt in configs) {
+		if (!fs.existsSync(base+"/"+evt)) fs.mkdirSync(base+"/"+evt);
+		
+		var c = configs[evt];
+		if (c.sprites) {
+			for (var i = 0; i < c.sprites.length; i++) {
+				var sprite = c.sprites[i];
+				copyFile(
+					c.__path+"/"+sprite, 
+					base+"/"+evt+"/"+sprite
+				);
+			}
+		}
+	}
+	
+}
+
 function zipWorkingDirectory(id) {
-	var outstr = fs.createWriteStream(BUILD_OUT+"maps/"+id+".zip");
+	var outstr = fs.createWriteStream(BUILD_OUT+"maps/"+id+EXT_MAPBUNDLE);
 	var arch = archiver("zip");
 	
 	outstr.on("finish", sync.defer());
 	arch.pipe(outstr);
 	arch.bulk([
-		{ expand: true, cwd: BUILD_TEMP+id, src: ["*"], flatten: true, },
+		{ expand: true, cwd: BUILD_TEMP+id, src: ["**"], flatten: false, },
 		//{ expand: true, cwd: 'source', src: ["**"], dest: 'source' },
 	]);
 	arch.finalize();
