@@ -5,6 +5,8 @@ var Event = require("tpp-event");
 var inherits = require("inherits");
 var extend = require("extend");
 
+var GLOBAL_SCALEUP = 1.5;
+
 /**
  * An actor is any event representing a person, pokemon, or other entity that
  * may move around in the world or face a direction. Actors may have different
@@ -17,10 +19,12 @@ inherits(Actor, Event);
 extend(Actor.prototype, {
 	sprite: null,
 	sprite_format: null,
+	scale: 1,
 	
-	avatar_mat : null,
+	// avatar_mat : null,
 	avatar_sprite : null,
 	avatar_format : null,
+	avatar_tex : null,
 	
 	getAvatar : function(map){ 
 		var self = this;
@@ -28,16 +32,18 @@ extend(Actor.prototype, {
 		__onLoad(img, DEF_SPRITE_FORMAT);
 		img.src = DEF_SPRITE;
 		
-		var texture = new THREE.Texture(img);
+		var texture = this.avatar_tex = new THREE.Texture(img);
 		texture.magFilter = THREE.NearestFilter;
 		texture.minFilter = THREE.NearestFilter;
 		texture.repeat = new THREE.Vector2(0.25, 0.25);
 		texture.offset = new THREE.Vector2(0, 0);
+		texture.wrapS = THREE.MirroredRepeatWrapping;
+		texture.wrapT = THREE.MirroredRepeatWrapping;
 		texture.generateMipmaps = false;
 		//TODO MirroredRepeatWrapping, and just use a negative x uv value, to flip a sprite
 		
 		this.avatar_format = getSpriteFormat(DEF_SPRITE_FORMAT);
-		var mat = this.avatar_mat = new THREE.SpriteMaterial({
+		var mat /*= this.avatar_mat*/ = new THREE.SpriteMaterial({
 			map: texture,
 			color: 0xFFFFFF,
 			transparent: true,
@@ -54,7 +60,7 @@ extend(Actor.prototype, {
 		});
 		
 		var sprite = this.avatar_sprite = new THREE.Sprite(mat);
-		sprite.scale.set(1.5, 1.5, 1.5);
+		this.setScale(this.scale);
 		
 		return sprite;
 		
@@ -64,10 +70,42 @@ extend(Actor.prototype, {
 				texture.needsUpdate = true;
 				
 				self.avatar_format = getSpriteFormat(format);
+				self.setAnimationFrame("d0");
 				img.removeEventListener("load", f);
 			}
 			img.on("load", f);
 		}
+	},
+	
+	setScale : function(scale) {
+		this.scale = scale;
+		scale *= GLOBAL_SCALEUP;
+		this.avatar_sprite.scale.set(scale, scale, scale);
+	},
+	
+	setAnimationFrame : function(frame) {
+		var def = this.avatar_format.frames[frame];
+		if (!def) {
+			console.warn("ERROR ", this.id, ": Animation frame doesn't exist:", frame);
+			return;
+		}
+		
+		var flip = false;
+		if (typeof def == "string") { //redirect
+			def = this.avatar_format.frames[def];
+			flip = true;
+		}
+		
+		var u = def[0] * this.avatar_format.repeat;
+		var v = 1 - ((def[1]+1) * this.avatar_format.repeat);
+		//For some reason, offsets are from the BOTTOM left?!
+		
+		if (flip && this.avatar_format.flip) {
+			u = 0 - (def[0]-1) * this.avatar_format.repeat; //TODO test
+		}
+		
+		this.avatar_tex.offset.set(u, v); 
+		this.avatar_tex.needsUpdate = true;
 	},
 	
 	
@@ -77,7 +115,6 @@ extend(Actor.prototype, {
 		if (num != 1 || !this.location)
 			throw new Error("Actors can only be in one place at a time! Number of locations: "+num);
 	},
-	
 	
 });
 module.exports = Actor;
@@ -94,8 +131,8 @@ function getSpriteFormat(str) {
 	switch (name) {
 		case "pt_horzrow": 
 			return { 
-				width: size[0], height: size[1], flip: false,
-				dirs: {
+				width: size[0], height: size[1], flip: false, repeat: 0.25,
+				frames: {
 					"u0": [1, 0], "u1": [1, 1], "u2": [1, 2],
 					"d0": [0, 0], "d1": [0, 1], "d2": [0, 2],
 					"l0": [2, 0], "l1": [2, 1], "l2": [2, 2],
@@ -104,8 +141,8 @@ function getSpriteFormat(str) {
 			};
 		case "pt_vertcol": 
 			return { 
-				width: size[0], height: size[1], flip: false,
-				dirs: {
+				width: size[0], height: size[1], flip: false, repeat: 0.25,
+				frames: {
 					"u0": [0, 1], "u1": [1, 1], "u2": [2, 1],
 					"d0": [0, 0], "d1": [1, 0], "d2": [2, 0],
 					"l0": [0, 2], "l1": [1, 2], "l2": [2, 2],
@@ -114,8 +151,8 @@ function getSpriteFormat(str) {
 			};
 		case "hg_vertmix": 
 			return { 
-				width: size[0], height: size[1], flip: false,
-				dirs: {
+				width: size[0], height: size[1], flip: false, repeat: 0.25,
+				frames: {
 					"u0": [0, 0], "u1": [1, 3], "u2": [2, 0],
 					"d0": [2, 1], "d1": [2, 2], "d2": [2, 3],
 					"l0": [0, 2], "l1": [0, 1], "l2": [0, 3],
@@ -124,8 +161,8 @@ function getSpriteFormat(str) {
 			};
 		case "hg_pokerow":
 			return { 
-				width: size[0], height: size[1], flip: false, 
-				dirs: { // pointers to another image indicates that image should be flipped, if flip=true
+				width: size[0], height: size[1], flip: false,  repeat: 0.25,
+				frames: { // pointers to another image indicates that image should be flipped, if flip=true
 					"u0": null, "u1": [0, 0], "u2": [1, 0],
 					"d0": null, "d1": [0, 1], "d2": [1, 1],
 					"l0": null, "l1": [0, 2], "l2": [1, 2],
@@ -134,8 +171,8 @@ function getSpriteFormat(str) {
 			};
 		case "hg_pokeflip":
 			return { 
-				width: size[0], height: size[1], flip: true,
-				dirs: { // pointers to another image indicates that image should be flipped, if flip=true
+				width: size[0], height: size[1], flip: true, repeat: 0.25,
+				frames: { // pointers to another image indicates that image should be flipped, if flip=true
 					"u0": null, "u1": [0, 0], "u2": [1, 0],
 					"d0": null, "d1": [0, 1], "d2": [1, 1],
 					"l0": null, "l1": [0, 2], "l2": [1, 2],
@@ -144,8 +181,8 @@ function getSpriteFormat(str) {
 			};
 		case "bw_vertrow":
 			return { 
-				width: size[0], height: size[1], flip: false,
-				dirs: {
+				width: size[0], height: size[1], flip: false, repeat: 0.25,
+				frames: {
 					"u0": [0, 0], "u1": [1, 0], "u2": [2, 0],
 					"d0": [0, 1], "d1": [1, 1], "d2": [2, 1],
 					"l0": [0, 2], "l1": [1, 2], "l2": [2, 2],
@@ -154,8 +191,8 @@ function getSpriteFormat(str) {
 			};
 		case "bw_horzflip":
 			return { 
-				width: size[0], height: size[1], flip: true,
-				dirs: { // pointers to another image indicates that image should be flipped, if flip=true
+				width: size[0], height: size[1], flip: true, repeat: 0.25,
+				frames: { // pointers to another image indicates that image should be flipped, if flip=true
 					"u0": [0, 0], "u1": [1, 0], "u2": "u1",
 					"d0": [2, 0], "d1": [3, 0], "d2": "d1",
 					"l0": [0, 1], "l1": [1, 1], "l2": [2, 1],
