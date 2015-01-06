@@ -5,6 +5,8 @@
 node_modules
 node-webkit
 
+# Our build folders
+_out
 _outtemp
 
 #################

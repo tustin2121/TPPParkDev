@@ -68,7 +68,7 @@ function createEventLibraryBundle(outfile) {
 	});
 	
 	var data = sync.await(bundler.bundle(sync.defer()));
-	fs.writeFileSync("js/eventlib.js", data);
+	fs.writeFileSync(BUILD_OUT+"js/eventlib.js", data);
 	console.log("[EvLib] Bundled event library."); 
 	//return data;
 }
@@ -134,8 +134,8 @@ function bundle(srcs, mapid, type) {
 	// Externalize the Event Library
 	bundler.external(EXTERNAL_EVENT_LIBS);
 	bundler.plugin("minifyify", {
-		map: "_srcmaps/maps/"+mapid+"/"+type+".map.json",
-		output: "_srcmaps/maps/"+mapid+"/"+type+".map.json",
+		map: SRC_MAPS+"/maps/"+mapid+"/"+type+".map.json",
+		output: SRC_MAPS+"/maps/"+mapid+"/"+type+".map.json",
 		minify: MINIFY,
 	});
 	
