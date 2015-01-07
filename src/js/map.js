@@ -288,6 +288,12 @@ extend(Map.prototype, {
 	},
 	
 	get3DTileLocation : function(x, y, layer, tiledata) {
+		if (x instanceof THREE.Vector2) {
+			y = x.y; x = x.x;
+		}
+		if (x instanceof THREE.Vector3) {
+			layer = x.z; y = x.y; x = x.x;
+		}
 		layer = (layer || 1) - 1;
 		if (!tiledata) tiledata = this.getTileData(x, y);
 		
@@ -411,7 +417,7 @@ extend(Map.prototype, {
 		};
 		
 		this.spriteNode = new THREE.Object3D();
-		this.spriteNode.position.y = 0.66;
+		// this.spriteNode.position.y = 0.66;
 		this.scene.add(this.spriteNode);
 		
 		// Load event js files now:
@@ -452,6 +458,7 @@ extend(Map.prototype, {
 		if (!evt.id)
 			evt.id = "LocalEvent_" + (++this._localId);
 		
+		var self = this;
 		//now adding event to map
 		this.eventList[evt.id] = evt;
 		if (evt.location) {
@@ -466,11 +473,11 @@ extend(Map.prototype, {
 		//registering listeners on the event
 		evt.on("moving", function(srcX, srcY, destX, destY){
 			//Started moving to a new tile
-			this.eventMap.put(destX, destY, this);
+			self.eventMap.put(destX, destY, this);
 		});
 		evt.on("moved", function(srcX, srcY, destX, destY){
 			//Finished moving from the old tile
-			this.eventMap.remove(scrX, scrY, this);
+			self.eventMap.remove(srcX, srcY, this);
 		});
 		
 		var avatar = evt.getAvatar(this);

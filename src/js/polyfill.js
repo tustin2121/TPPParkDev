@@ -22,6 +22,21 @@ if (!EventTarget.prototype.on) {
 	EventTarget.prototype.emit = EventTarget.prototype.dispatchEvent;
 }
 
+// Math.clamp()
+// 
+if (!Math.clamp) {
+	Object.defineProperty(Math, "clamp", {
+		enumerable: false,
+		configurable: false,
+		writable: false,
+		value: function(num, min, max) {
+			min = (min !== undefined)? min:0;
+			max = (max !== undefined)? max:1;
+			return Math.min(Math.max(num, min), max);
+		}
+	});
+}
+
 
 // Modifications to THREE.js
 {
@@ -29,6 +44,10 @@ if (!EventTarget.prototype.on) {
 	THREE.Vector3.prototype.set = function(x, y, z) {
 		if (x instanceof THREE.Vector3) {
 			this.x = x.x; this.y = x.y; this.z = x.z;
+			return this;
+		}
+		if (x instanceof THREE.Vector2) {
+			this.x = x.x; this.y = x.y; this.z = 0;
 			return this;
 		}
 		
@@ -42,9 +61,15 @@ if (!EventTarget.prototype.on) {
 			this.x = x.x; this.y = x.y;
 			return this;
 		}
+		if (x instanceof THREE.Vector3) {
+			this.x = x.x; this.y = x.y;
+			return this;
+		}
 		
 		this.x = x; this.y = y;
 		return this;
 	};
 	
 }
+
+
