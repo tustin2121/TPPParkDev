@@ -477,7 +477,6 @@ extend(Map.prototype, {
 		if (avatar) {
 			var loc = evt.location;
 			var loc3 = this.get3DTileLocation(loc.x, loc.y, loc.z);
-			console.log("AVATAR: ", loc, loc3);
 			avatar.position.set(loc3);
 			avatar.updateMatrix();
 			
@@ -520,8 +519,8 @@ extend(Map.prototype, {
 	
 	logicLoop : function(delta){
 		if (this.eventList) {
-			for (var i = 0; i < this.eventList.list; i++) {
-				var evt = this.eventList[i];
+			for (var name in this.eventList) {
+				var evt = this.eventList[name];
 				if (!evt) continue;
 				
 				evt.emit("tick", delta);

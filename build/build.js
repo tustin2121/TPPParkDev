@@ -294,6 +294,10 @@ function copyDirectory(src, dest, noDefer) {
 
 function findMaps() {
 	console.log("[cMaps] Begining Map Compilation");
+	if (!fs.existsSync(BUILD_OUT+"maps")) {
+		mkdirp(BUILD_OUT+"maps");
+	}
+	
 	var total = 0, success = 0;
 	for (var pi = 0; pi < MAP_DIRS.length; pi++) {
 		if (!fs.existsSync(MAP_DIRS[pi])) continue;
