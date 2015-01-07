@@ -44,10 +44,11 @@ function loadMap(id) {
 		var controls = new THREE.OrbitControls(currentMap.camera);
 		controls.damping = 0.2;
 		
-		var oldlogic = currentMap.logicLoop;
-		currentMap.logicLoop = function(){
+		var map = currentMap;
+		var oldlogic = map.logicLoop;
+		map.logicLoop = function(){
 			controls.update();
-			//oldlogic.call(currentMap);
+			oldlogic.call(map);
 		};
 		
 		// showWalkableTiles();
