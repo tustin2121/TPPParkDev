@@ -103,6 +103,7 @@ extend(Actor.prototype, {
 				waitTime : 0,
 				running : false,
 				queue : null,
+				animName : null,
 				
 				loop : true,
 				speed : 1,
@@ -142,6 +143,7 @@ extend(Actor.prototype, {
 		if (animName == null) {
 			state.running = false;
 			state.queue = null;
+			state.animName = null;
 			return;
 		}
 		
@@ -151,6 +153,7 @@ extend(Actor.prototype, {
 			return;
 		}
 		
+		state.animName = animName;
 		state.loop = (opts.loop === undefined)? true : opts.loop;
 		state.speed = (opts.speed === undefined)? 1 : opts.speed;
 		if (anim.length == 1) {
@@ -180,6 +183,7 @@ extend(Actor.prototype, {
 		else if (state.currFrame >= state.queue.length) {
 			state.running = false;
 			state.queue = null;
+			this.emit("anim-end", state.animName);
 			return;
 		}
 		var frame = state.queue[state.currFrame];
@@ -218,7 +222,7 @@ extend(Actor.prototype, {
 	pathTo : function(x, y) {
 		var state = this._initPathingState();
 		
-		
+		console.error(this.id, ": Pathing has not been implemented yet!");
 	},
 	
 	clearPathing : function() {
@@ -345,6 +349,9 @@ function getSpriteFormat(str) {
 			"stand_d": ["d0"],  "walk_d": ["d1", 5, "d3", 5, "d2", 5, "d3", 5 ], "bump_d": ["d1", 10, "d0"],
 			"stand_l": ["l0"],  "walk_l": ["l1", 5, "l3", 5, "l2", 5, "l3", 5 ], "bump_l": ["l1", 10, "l0"],
 			"stand_r": ["r0"],  "walk_r": ["r1", 5, "r3", 5, "r2", 5, "r3", 5 ], "bump_r": ["r1", 10, "r0"],
+			"warp_away": ["d0", 15, "l0", 14, "u0", 13, "r0", 12, "d0", 10, "l0", 8, "u0", 6, "r0", 4, "d0", 2, "l0", "u0", "r0", "d0", "l0", "u0", "r0", "d0", "l0", "u0", "r0", "d0", "l0", "u0", "r0"],
+			"warping_r": ["d0", "r0", "u0", "l0"], "warping_l": ["d0", "l0", "u0", "r0"], 
+			"warp_in": ["d0", "r0", "u0", "l0", "d0", "r0", "u0", "l0", "d0", "r0", "u0", "l0", "d0", "r0", "u0", 2, "l0", 4, "d0", 6, "r0", 8, "u0", 10, "l0", 12, "d0", 13, "r0", 14, "u0", 15, "l0", 16],
 		},
 	};
 	

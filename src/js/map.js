@@ -3,9 +3,10 @@
 var inherits = require("inherits");
 var extend = require("extend");
 var ndarray = require("ndarray");
-var Event = require("tpp-event");
 var EventEmitter = require("events").EventEmitter;
-//var zip = zip.js
+
+var Event = require("tpp-event");
+var PlayerChar = require("tpp-pc");
 
 var ObjLoader = require("./model/obj-loader");
 
@@ -417,12 +418,15 @@ extend(Map.prototype, {
 		};
 		
 		this.spriteNode = new THREE.Object3D();
-		// this.spriteNode.position.y = 0.66;
+		this.spriteNode.position.y = 0.01;
 		this.scene.add(this.spriteNode);
 		
 		// Load event js files now:
 		loadScript("l"); // Load locally defined events
 		loadScript("g"); // Load globally defined events
+		
+		// Add the player character event
+		this._initPlayerCharacter();
 		
 		return;
 		
@@ -515,7 +519,24 @@ extend(Map.prototype, {
 		}
 	},
 	
-	
+	_initPlayerCharacter : function() {
+		if (!window.player) {
+			window.player = new PlayerChar();
+		}
+		var warp = window.transition_warpto || 0;
+		warp = this.metadata.warps[warp];
+		if (!warp) {
+			console.warn("Requested warp location doesn't exist:", window.transition_warpto);
+			warp = this.metadata.warps[0];
+		}
+		if (!warp) throw new Error("This map has no warps!!");
+		
+		player.reset();
+		player.warpTo(warp.loc[0], warp.loc[1], warp.anim);
+		
+		this.addEvent(player);
+		
+	},
 	
 	
 	
