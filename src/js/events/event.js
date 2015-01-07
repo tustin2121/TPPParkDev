@@ -201,6 +201,8 @@ var __EVENT_TYPES__ = [
 		//emitted when this event begins moving to a new tile
 	"moved", //(srcX, srcY, destX, destY)
 		//emitted when this event finishes moving to a new tile
+	"anim-end", //(animationName)
+		//emitted when this event's animation ends
 	"created", 
 		//emitted when this event is added to the event map
 	"destroyed",

@@ -13,4 +13,16 @@ function PlayerChar(){
 inherits(PlayerChar, Actor);
 extend(PlayerChar.prototype, {
 	
+	reset : function() {
+		this.location.set(0, 0, 0);
+	},
+	
+	warpAway : function(animType) {
+		
+	},
+	
+	warpTo : function(x, y, animType) {
+		
+	},
+	
 });
