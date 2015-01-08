@@ -206,10 +206,10 @@ extend(Actor.prototype, {
 		}
 	},
 	
-	_tick_doAnimation: function() {
+	_tick_doAnimation: function(delta) {
 		var state = this._animationState;
 		if (state.waitTime > 0) {
-			state.waitTime -= state.speed;
+			state.waitTime -= (state.speed * delta);
 			return;
 		}
 		state.currFrame++;
@@ -303,10 +303,10 @@ extend(Actor.prototype, {
 		this.emit("moving", state.srcLocC.x, state.srcLocC.y, state.destLocC.x, state.destLocC.y);
 	},
 	
-	_tick_doMovement : function() {
+	_tick_doMovement : function(delta) {
 		var state = this._initPathingState();
 		
-		state.delta += 1/state.speed;
+		state.delta += (1/state.speed) * delta;
 		var alpha = Math.clamp(state.delta);
 		this.avatar_node.position.set( 
 			//Lerp between src and dest (built in lerp() is destructive, and seems badly done)
@@ -344,11 +344,11 @@ extend(Actor.prototype, {
 	_actorTick : function(delta) {
 		// Do animation
 		if (this._animationState && this._animationState.running) 
-			this._tick_doAnimation();
+			this._tick_doAnimation(delta);
 		
 		// Do movement
 		if (this._pathingState && this._pathingState.moving)
-			this._tick_doMovement();
+			this._tick_doMovement(delta);
 	},
 	
 });
