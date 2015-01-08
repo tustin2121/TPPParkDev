@@ -46,9 +46,9 @@ function loadMap(id) {
 		
 		var map = currentMap;
 		var oldlogic = map.logicLoop;
-		map.logicLoop = function(){
+		map.logicLoop = function(delta){
 			controls.update();
-			oldlogic.call(map);
+			oldlogic.call(map, delta);
 		};
 		
 		// showWalkableTiles();

@@ -2,6 +2,7 @@
 // Defines the concrete code for a Player Character in the world
 
 var Actor = require("tpp-actor");
+var controller = require("tpp-controller");
 var inherits = require("inherits");
 var extend = require("extend");
 
@@ -9,6 +10,8 @@ var extend = require("extend");
  */
 function PlayerChar(){
 	Actor.call(this, {}, {});
+	
+	this.on("tick", this.controlCharacter);
 }
 inherits(PlayerChar, Actor);
 extend(PlayerChar.prototype, {
@@ -22,7 +25,7 @@ extend(PlayerChar.prototype, {
 	},
 	
 	warpAway : function(animType) {
-		
+		console.warn("warpAway is not yet implemented!");
 	},
 	
 	warpTo : function(warpdef) {
@@ -62,6 +65,16 @@ extend(PlayerChar.prototype, {
 			
 			//self.avatar_node.position.set( currentMap.get3DTileLocation(self.location) );
 		});
+	},
+	
+	
+	controlCharacter : function(delta) {
+		var y = ((controller.isDown("Up"))? -1:0) + ((controller.isDown("Down"))? 1:0);
+		var x = ((controller.isDown("Left"))? -1:0) + ((controller.isDown("Right"))? 1:0);
+		
+		if (y || x) {
+			console.log("y", y, "x", x);
+		}
 	},
 	
 	
