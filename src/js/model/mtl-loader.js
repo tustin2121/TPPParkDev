@@ -245,12 +245,13 @@ MaterialCreator.prototype = {
 			image.src = DEF_TEXTURE;
 			var texture = new THREE.Texture(image);
 			
+			currentMap.markLoading();
 			scope.loadTexture(args.src, function(url){
 				// Even though the images are in memory, apparently they still aren't "loaded"
 				// at the point when they are assigned to the src attribute.
 				image.on("load", function(){
-					console.log("Image loaded!");
 					texture.needsUpdate = true;
+					currentMap.markLoadFinished();
 				});
 				image.src = url;
 				// image = ensurePowerOfTwo_( image );
