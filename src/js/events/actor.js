@@ -22,6 +22,8 @@ extend(Actor.prototype, {
 	sprite: null,
 	sprite_format: null,
 	
+	shadow : true,
+	
 	//////////////// Property Setters /////////////////
 	scale: 1,
 	
@@ -32,66 +34,89 @@ extend(Actor.prototype, {
 	},
 	
 	/////////////////////// Avatar //////////////////////
-	// avatar_mat : null,
+	avatar_node : null,
 	avatar_sprite : null,
 	avatar_format : null,
 	avatar_tex : null,
 	
 	getAvatar : function(map){ 
-		if (this.avatar_sprite) return this.avatar_sprite;
+		if (this.avatar_node) return this.avatar_node;
 		
 		var self = this;
-		var img = new Image();
-		__onLoad(img, DEF_SPRITE_FORMAT);
-		img.src = DEF_SPRITE;
+		var node = this.avatar_node = new THREE.Object3D();
 		
-		var texture = this.avatar_tex = new THREE.Texture(img);
-		texture.magFilter = THREE.NearestFilter;
-		texture.minFilter = THREE.NearestFilter;
-		texture.repeat = new THREE.Vector2(0.25, 0.25);
-		texture.offset = new THREE.Vector2(0, 0);
-		texture.wrapS = THREE.MirroredRepeatWrapping;
-		texture.wrapT = THREE.MirroredRepeatWrapping;
-		texture.generateMipmaps = false;
-		//TODO MirroredRepeatWrapping, and just use a negative x uv value, to flip a sprite
+		node.add(__createSprite());
+		node.add(__createShadowCaster());
 		
-		this.avatar_format = getSpriteFormat(DEF_SPRITE_FORMAT);
+		return node;
 		
-		var mat /*= this.avatar_mat*/ = new THREE.SpriteMaterial({
-			map: texture,
-			color: 0xFFFFFF,
-			transparent: true,
-		});
-		
-		map.loadSprite(this.id, this.sprite, function(err, url){
-			if (err) {
-				console.error("ERROR LOADING SPRITE: ", err);
-				return;
-			}
+		function __createShadowCaster() {
+			var mat = new THREE.MeshBasicMaterial();
+			mat.visible = false; //The object won't render, but the shadow still will
 			
-			__onLoad(img, self.sprite_format);
-			img.src = url;
-		});
-		
-		var sprite = this.avatar_sprite = new THREE.Sprite(mat);
-		this.setScale(this.scale);
-		
-		return sprite;
-		
-		function __onLoad(img, format) {
-			var f = function() {
-				texture.image = img;
-				
-				self.avatar_format = getSpriteFormat(format);
-				texture.repeat.set(self.avatar_format.repeat, self.avatar_format.repeat);
-
-				texture.needsUpdate = true;
-				
-				self.setAnimationFrame("d0");
-				img.removeEventListener("load", f);
-			}
-			img.on("load", f);
+			var geom = new THREE.SphereGeometry(0.3, 7, 3);
+			
+			var mesh = new THREE.Mesh(geom, mat);
+			//mesh.visible = false; //?
+			mesh.castShadow = true;
+			mesh.position.set(0, 0.5, 0);
+			return mesh;
 		}
+		
+		function __createSprite() {
+			var img = new Image();
+			__onLoad(img, DEF_SPRITE_FORMAT);
+			img.src = DEF_SPRITE;
+			
+			var texture = self.avatar_tex = new THREE.Texture(img);
+			texture.magFilter = THREE.NearestFilter;
+			texture.minFilter = THREE.NearestFilter;
+			texture.repeat = new THREE.Vector2(0.25, 0.25);
+			texture.offset = new THREE.Vector2(0, 0);
+			texture.wrapS = THREE.MirroredRepeatWrapping;
+			texture.wrapT = THREE.MirroredRepeatWrapping;
+			texture.generateMipmaps = false;
+			//TODO MirroredRepeatWrapping, and just use a negative x uv value, to flip a sprite
+			
+			self.avatar_format = getSpriteFormat(DEF_SPRITE_FORMAT);
+			
+			var mat /*= self.avatar_mat*/ = new THREE.SpriteMaterial({
+				map: texture,
+				color: 0xFFFFFF,
+				transparent: true,
+			});
+			
+			map.loadSprite(self.id, self.sprite, function(err, url){
+				if (err) {
+					console.error("ERROR LOADING SPRITE: ", err);
+					return;
+				}
+				
+				__onLoad(img, self.sprite_format);
+				img.src = url;
+			});
+			
+			var sprite = self.avatar_sprite = new THREE.Sprite(mat);
+			self.setScale(self.scale);
+			
+			return sprite;
+			
+			function __onLoad(img, format) {
+				var f = function() {
+					texture.image = img;
+					
+					self.avatar_format = getSpriteFormat(format);
+					texture.repeat.set(self.avatar_format.repeat, self.avatar_format.repeat);
+
+					texture.needsUpdate = true;
+					
+					self.setAnimationFrame("d0");
+					img.removeEventListener("load", f);
+				}
+				img.on("load", f);
+			}
+		}
+		
 	},
 	
 	/////////////////// Animation //////////////////////
@@ -273,7 +298,7 @@ extend(Actor.prototype, {
 		
 		state.delta += 1/state.speed;
 		var alpha = Math.clamp(state.delta);
-		this.avatar_sprite.position.set( 
+		this.avatar_node.position.set( 
 			//Lerp between src and dest (built in lerp() is destructive, and seems badly done)
 			state.srcLoc3.x + ((state.destLoc3.x - state.srcLoc3.x) * alpha),
 			state.srcLoc3.y + ((state.destLoc3.y - state.srcLoc3.y) * alpha),

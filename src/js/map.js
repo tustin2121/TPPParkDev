@@ -10,6 +10,8 @@ var PlayerChar = require("tpp-pc");
 
 var ObjLoader = require("./model/obj-loader");
 
+var mSetup = require("./model/map-setup");
+
 // The currently loaded zip file system
 var EXT_MAPBUNDLE = ".zip";
 
@@ -79,6 +81,7 @@ extend(Map.prototype, {
 	
 	mapmodel: null,
 	camera : null,
+	cameras : null,
 	scene : null,
 	spriteNode : null,
 	
@@ -218,6 +221,7 @@ extend(Map.prototype, {
 		function __modelReady(obj) {
 			console.log("__modelReady");
 			self.mapmodel = obj;
+			self.objdata = self.mtldata = true; //wipe the big strings from memory
 			self.emit("loaded-model");
 			__loadDone();
 		}
@@ -233,47 +237,41 @@ extend(Map.prototype, {
 	 * Creates the map for display from the stored data.
 	 */
 	_init : function(){
+		var self = this;
 		this.scene = new THREE.Scene();
 		
 		//TODO create player character
 		
-		var scrWidth = $("#gamescreen").width();
-		var scrHeight = $("#gamescreen").height();
 		// For camera types, see the Camera types wiki page
+		if (!this.metadata.camera) {
+			throw new Error("Map contains no setup for domain!");
+		}
 		switch(this.metadata.camera.type) {
 			case "ortho":
-				this.camera = new THREE.OrthographicCamera(scrWidth/-2, scrWidth/2, scrHeight/2, scrHeight/-2, 1, 1000);
-				this.camera.position.y = 100;
-				this.camera.roation.x = -Math.PI / 2;
+				mSetup.camera.ortho.call(this, this.metadata.camera);
 				break;
 			case "gen4":
-				this.camera = new THREE.PerspectiveCamera(75, scrWidth / scrHeight, 1, 1000);
-				this.camera.position.y = 5;
-				this.camera.position.z = -5;
-				this.camera.rotation.x = -55 * (Math.PI / 180);
-				
+				mSetup.camera.gen4.call(this, this.metadata.camera);
 				break;
 			case "gen5":
-				this.camera = new THREE.PerspectiveCamera(75, scrWidth / scrHeight, 1, 1000);
+				mSetup.camera.gen5.call(this, this.metadata.camera);
 				break;
+			default:
+				throw new Error("Invalid Camera Type!", this.metadata.camera.type);
 		}
-		this.scene.add(this.camera);
 		
-		light = new THREE.DirectionalLight(0xffffff, 0.5);
-		light.position.set(1, 1, 1);
-		this.scene.add(light);
-		
-		light = new THREE.DirectionalLight(0xffffff, 0.5);
-		light.position.set(-1, 1, 1);
-		this.scene.add(light);
+		var lightsetup = mSetup.lighting[this.metadata.domain];
+		if (!lightsetup)
+			throw new Error("Invalid Map Domain!", this.metadata.domain);
+		lightsetup.call(this);
 		
 		this.scene.add(this.mapmodel);
 		// Map Model is now ready
 		
 		this._initEventMap();
 		
-		
 		this.emit("map-ready");
+		
 	},
 	
 	
@@ -418,7 +416,7 @@ extend(Map.prototype, {
 		};
 		
 		this.spriteNode = new THREE.Object3D();
-		this.spriteNode.position.y = 0.01;
+		this.spriteNode.position.y = 0.21;
 		this.scene.add(this.spriteNode);
 		
 		// Load event js files now:
@@ -426,7 +424,7 @@ extend(Map.prototype, {
 		loadScript("g"); // Load globally defined events
 		
 		// Add the player character event
-		this._initPlayerCharacter();
+		// this._initPlayerCharacter();
 		
 		return;
 		
@@ -532,7 +530,7 @@ extend(Map.prototype, {
 		if (!warp) throw new Error("This map has no warps!!");
 		
 		player.reset();
-		player.warpTo(warp.loc[0], warp.loc[1], warp.anim);
+		player.warpTo(warp);
 		
 		this.addEvent(player);
 		

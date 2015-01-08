@@ -21,8 +21,9 @@ extend(PlayerChar.prototype, {
 		
 	},
 	
-	warpTo : function(x, y, animType) {
-		
+	warpTo : function(warpdef) {
+		this.location.set(warpdef.loc.x, warpdef.loc.y, warpdef.layer);
+		//TODO warpdef.anim
 	},
 	
 });
