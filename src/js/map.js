@@ -149,6 +149,7 @@ extend(Map.prototype, {
 	 *  Reads the tile data and begins loading the required resources.
 	 */
 	load : function(){
+		this.markLoading();
 		var self = this;
 		if (!this.file) { //If file isn't downloaded yet, defer loading
 			this.once("downloaded", function(){
@@ -230,6 +231,7 @@ extend(Map.prototype, {
 			if (!self.mapmodel || !self.tiledata) return; //don't call on _init before both are loaded
 			
 			self._init();
+			self.markLoadFinished();
 		}
 	},
 	
@@ -424,7 +426,7 @@ extend(Map.prototype, {
 		loadScript("g"); // Load globally defined events
 		
 		// Add the player character event
-		// this._initPlayerCharacter();
+		this._initPlayerCharacter();
 		
 		return;
 		
@@ -496,6 +498,8 @@ extend(Map.prototype, {
 	},
 	
 	loadSprite : function(evtid, filename, callback) {
+		var self = this;
+		this.markLoading();
 		try {
 			var dir = this.fileSys.root.getChildByName(evtid);
 			if (!dir) {
@@ -511,6 +515,7 @@ extend(Map.prototype, {
 			
 			file.getBlob("image/png", function(data){
 				callback(null, URL.createObjectURL(data));
+				self.markLoadFinished();
 			});
 		} catch (e) {
 			callback(e);
@@ -521,7 +526,7 @@ extend(Map.prototype, {
 		if (!window.player) {
 			window.player = new PlayerChar();
 		}
-		var warp = window.transition_warpto || 0;
+		var warp = gameState.mapTransition.warp || 0;
 		warp = this.metadata.warps[warp];
 		if (!warp) {
 			console.warn("Requested warp location doesn't exist:", window.transition_warpto);
@@ -535,6 +540,75 @@ extend(Map.prototype, {
 		this.addEvent(player);
 		
 	},
+	
+	
+	
+	
+	//////////////////////////////////////////////////////////////////////////////
+	//
+	//////////////////////////////////////////////////////////////////////////////
+	_mapRunState : null,
+	
+	_initMapRunState : function() {
+		if (!this._mapRunState) {
+			this._mapRunState = {
+				loadTotal : 0,
+				loadProgress : 0,
+				
+				isStarted : false,
+				startQueue : [],
+				
+				endQueue : [],
+			};
+		}
+		return this._mapRunState;
+	},
+	
+	markLoading : function() {
+		var state = this._initMapRunState();
+		state.loadTotal++;
+	},
+	markLoadFinished : function() {
+		var state = this._initMapRunState();
+		state.loadProgress++;
+		
+		//TODO begin map start
+		if (state.loadProgress >= state.loadTotal) {
+			console.warn("START MAP");
+			this._executeMapStartCallbacks();
+		}
+	},
+	
+	queueForMapStart : function(callback) {
+		var state = this._initMapRunState();
+		
+		if (!state.isStarted) {
+			state.startQueue.push(callback);
+		} else {
+			callback();
+		}
+	},
+	
+	_executeMapStartCallbacks : function() {
+		var state = this._initMapRunState();
+		
+		var callback;
+		while (callback = state.startQueue.shift()) {
+			callback();
+		}
+		state.isStarted = true;
+	},
+	
+	_executeMapEndCallbacks : function() {
+		var state = this._initMapRunState();
+		
+		var callback;
+		while (callback = state.endQueue.shift()) {
+			callback();
+		}
+		// state.isStarted = true;
+	},
+	
 	
 	
 	

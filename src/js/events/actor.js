@@ -42,81 +42,91 @@ extend(Actor.prototype, {
 	getAvatar : function(map){ 
 		if (this.avatar_node) return this.avatar_node;
 		
-		var self = this;
 		var node = this.avatar_node = new THREE.Object3D();
 		
-		node.add(__createSprite());
-		node.add(__createShadowCaster());
+		node.add(this._avatar_createSprite(map));
+		node.add(this._avatar_createShadowCaster());
 		
 		return node;
 		
-		function __createShadowCaster() {
-			var mat = new THREE.MeshBasicMaterial();
-			mat.visible = false; //The object won't render, but the shadow still will
-			
-			var geom = new THREE.SphereGeometry(0.3, 7, 3);
-			
-			var mesh = new THREE.Mesh(geom, mat);
-			//mesh.visible = false; //?
-			mesh.castShadow = true;
-			mesh.position.set(0, 0.5, 0);
-			return mesh;
-		}
+	},
+	
+	_avatar_createShadowCaster: function() {
+		var mat = new THREE.MeshBasicMaterial();
+		mat.visible = false; //The object won't render, but the shadow still will
 		
-		function __createSprite() {
-			var img = new Image();
-			__onLoad(img, DEF_SPRITE_FORMAT);
-			img.src = DEF_SPRITE;
-			
-			var texture = self.avatar_tex = new THREE.Texture(img);
-			texture.magFilter = THREE.NearestFilter;
-			texture.minFilter = THREE.NearestFilter;
-			texture.repeat = new THREE.Vector2(0.25, 0.25);
-			texture.offset = new THREE.Vector2(0, 0);
-			texture.wrapS = THREE.MirroredRepeatWrapping;
-			texture.wrapT = THREE.MirroredRepeatWrapping;
-			texture.generateMipmaps = false;
-			//TODO MirroredRepeatWrapping, and just use a negative x uv value, to flip a sprite
-			
-			self.avatar_format = getSpriteFormat(DEF_SPRITE_FORMAT);
-			
-			var mat /*= self.avatar_mat*/ = new THREE.SpriteMaterial({
-				map: texture,
-				color: 0xFFFFFF,
-				transparent: true,
-			});
-			
-			map.loadSprite(self.id, self.sprite, function(err, url){
-				if (err) {
-					console.error("ERROR LOADING SPRITE: ", err);
-					return;
-				}
-				
-				__onLoad(img, self.sprite_format);
-				img.src = url;
-			});
-			
-			var sprite = self.avatar_sprite = new THREE.Sprite(mat);
-			self.setScale(self.scale);
-			
-			return sprite;
-			
-			function __onLoad(img, format) {
-				var f = function() {
-					texture.image = img;
-					
-					self.avatar_format = getSpriteFormat(format);
-					texture.repeat.set(self.avatar_format.repeat, self.avatar_format.repeat);
-
-					texture.needsUpdate = true;
-					
-					self.setAnimationFrame("d0");
-					img.removeEventListener("load", f);
-				}
-				img.on("load", f);
+		var geom = new THREE.SphereGeometry(0.3, 7, 3);
+		
+		var mesh = new THREE.Mesh(geom, mat);
+		//mesh.visible = false; //?
+		mesh.castShadow = true;
+		mesh.position.set(0, 0.5, 0);
+		return mesh;
+	},
+	
+	_avatar_createSprite : function(map) {
+		var self = this;
+		var img = new Image();
+		var texture = self.avatar_tex = new THREE.Texture(img);
+		
+		this.__onLoadSprite(img, DEF_SPRITE_FORMAT, texture);
+		img.src = DEF_SPRITE;
+		
+		texture.magFilter = THREE.NearestFilter;
+		texture.minFilter = THREE.NearestFilter;
+		texture.repeat = new THREE.Vector2(0.25, 0.25);
+		texture.offset = new THREE.Vector2(0, 0);
+		texture.wrapS = THREE.MirroredRepeatWrapping;
+		texture.wrapT = THREE.MirroredRepeatWrapping;
+		texture.generateMipmaps = false;
+		//TODO MirroredRepeatWrapping, and just use a negative x uv value, to flip a sprite
+		
+		self.avatar_format = getSpriteFormat(DEF_SPRITE_FORMAT);
+		
+		var mat /*= self.avatar_mat*/ = new THREE.SpriteMaterial({
+			map: texture,
+			color: 0xFFFFFF,
+			transparent: true,
+		});
+		
+		currentMap.markLoading();
+		this._avatar_loadSprite(map, texture);
+		
+		var sprite = self.avatar_sprite = new THREE.Sprite(mat);
+		self.setScale(self.scale);
+		
+		return sprite;
+	},
+	
+	_avatar_loadSprite : function(map, texture) {
+		var self = this;
+		map.loadSprite(self.id, self.sprite, function(err, url){
+			if (err) {
+				console.error("ERROR LOADING SPRITE: ", err);
+				return;
 			}
+			
+			var img = new Image();
+			self.__onLoadSprite(img, self.sprite_format, texture);
+			img.src = url;
+		});
+	},
+	
+	__onLoadSprite : function(img, format, texture) {
+		var self = this;
+		var f = function() {
+			texture.image = img;
+			
+			self.avatar_format = getSpriteFormat(format);
+			texture.repeat.set(self.avatar_format.repeat, self.avatar_format.repeat);
+
+			texture.needsUpdate = true;
+			
+			self.setAnimationFrame("d0");
+			img.removeEventListener("load", f);
+			currentMap.markLoadFinished();
 		}
-		
+		img.on("load", f);
 	},
 	
 	/////////////////// Animation //////////////////////
@@ -322,6 +332,8 @@ extend(Actor.prototype, {
 	
 	
 	///////////////////// Private Methods //////////////////////
+	
+	canWalkOn : function(){ return false; },
 	
 	_normalizeLocation : function() {
 		var num = Event.prototype._normalizeLocation.call(this);
