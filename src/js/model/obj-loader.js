@@ -41,6 +41,7 @@ extend(ObjLoader.prototype, {
 						var mat = matLib.create(object.material.name);
 						if (mat) object.material = mat;
 					}
+					object.receiveShadow = true;
 				}
 			});
 			

@@ -17,6 +17,9 @@ module.exports = {
 		});
 		threeRenderer.setClearColorHex( opts.clearColor );
 		
+		threeRenderer.shadowMapEnabled = true;
+		threeRenderer.shadowMapType = THREE.PCFShadowMap;
+		
 		_renderHandle = raf(renderLoop);
 		initGameLoop(30);
 	},

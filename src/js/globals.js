@@ -6,6 +6,8 @@ window.DEF_TEXTURE = "/img/missing_tex.png";
 window.DEF_SPRITE = "/img/missing_sprite.png";
 window.DEF_SPRITE_FORMAT = "pt_horzrow-32";
 
+window.DEBUG = {};
+
 //On Ready
 $(function(){
 	$("<img>").attr("str", DEF_TEXTURE).css({display:"none"}).appendTo("body");
