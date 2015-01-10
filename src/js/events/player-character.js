@@ -72,8 +72,8 @@ extend(PlayerChar.prototype, {
 		var y = ((controller.isDown("Up"))? -1:0) + ((controller.isDown("Down"))? 1:0);
 		var x = ((controller.isDown("Left"))? -1:0) + ((controller.isDown("Right"))? 1:0);
 		
-		if (y || x) {
-			console.log("y", y, "x", x);
+		if ((y || x) && !this._initPathingState().moving) {
+			this.moveTo(this.location.x+x, this.location.y+y);
 		}
 	},
 	
