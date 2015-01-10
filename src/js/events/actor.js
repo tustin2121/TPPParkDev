@@ -6,7 +6,7 @@ var inherits = require("inherits");
 var extend = require("extend");
 
 var GLOBAL_SCALEUP = 1.5;
-
+var EVENT_PLANE_NORMAL = new THREE.Vector3(0, 1, 0);
 /**
  * An actor is any event representing a person, pokemon, or other entity that
  * may move around in the world or face a direction. Actors may have different
@@ -131,6 +131,7 @@ extend(Actor.prototype, {
 	
 	/////////////////// Animation //////////////////////
 	_animationState : null,
+	facing : new THREE.Vector2(0, 0, -1),
 	
 	_initAnimationState : function() {
 		if (!this._animationState)
@@ -139,6 +140,11 @@ extend(Actor.prototype, {
 				running : false,
 				queue : null,
 				animName : null,
+				currFrame : 0,
+				frameName : null,
+				
+				stopFrame : null,
+				stopNextAnim : null,
 				
 				loop : true,
 				speed : 1,
@@ -146,12 +152,31 @@ extend(Actor.prototype, {
 		return this._animationState;
 	},
 	
+	getDirectionFacing : function() {
+		var dirvector = this.facing.clone();
+		dirvector.applyMatrix4( currentMap.camera.matrixWorldInverse );
+		dirvector.projectOnPlane(EVENT_PLANE_NORMAL).normalize();
+		
+		var x = dirvector.x, y = dirvector.z;
+		if (x > y) { //Direction vector is pointing along x axis
+			if (x > 0) return "r";
+			else return "l";
+		} else { //Direction vector is pointing along y axis
+			if (y > 0) return "d";
+			else return "u";
+		}
+		return "d";
+	},
+	
 	setAnimationFrame : function(frame) {
+		var state = this._initAnimationState();
+		
 		var def = this.avatar_format.frames[frame];
 		if (!def) {
 			console.warn("ERROR ", this.id, ": Animation frame doesn't exist:", frame);
 			return;
 		}
+		state.frameName = frame;
 		
 		var flip = false;
 		if (typeof def == "string") { //redirect
@@ -176,9 +201,14 @@ extend(Actor.prototype, {
 		if (!opts) opts = {};
 		
 		if (animName == null) {
-			state.running = false;
-			state.queue = null;
-			state.animName = null;
+			this.stopAnimation();
+			return;
+		}
+		
+		if (animName == state.animName) {
+			//If we're already running this animation, continue it
+			state.stopFrame = null;
+			state.stopNextAnim = null;
 			return;
 		}
 		
@@ -191,6 +221,8 @@ extend(Actor.prototype, {
 		state.animName = animName;
 		state.loop = (opts.loop === undefined)? true : opts.loop;
 		state.speed = (opts.speed === undefined)? 1 : opts.speed;
+		state.stopFrame = null;
+		state.stopNextAnim = null;
 		if (anim.length == 1) {
 			//If there's only 1 anim
 			state.running = false;
@@ -206,19 +238,63 @@ extend(Actor.prototype, {
 		}
 	},
 	
+	stopAnimationOnFrame : function(frames, nextAnim) {
+		var state = this._initAnimationState();
+		if (!$.isArray(frames)) frames = [frames];
+		
+		if (!state.queue) {
+			console.error("ERROR ", this.id, ": No animation is running to be stopped.");
+			return;
+		}
+		OUTERLOOP:
+		for (var i = 0; i < state.queue.length; i++) {
+			for (var j = 0; j < frames.length; j++) {
+				if (state.queue[i] == frames[j]) { state.stopFrame = frames; break OUTERLOOP; }
+			}
+		}
+		if (!state.stopFrame) {
+			console.error("ERROR ", this.id, ": Given frames [", frames, "] do not exist in animation:", state.animName);
+			return;
+		}
+		state.stopNextAnim = nextAnim;
+	},
+	
+	stopAnimation : function() {
+		var state = this._initAnimationState();
+		
+		state.running = false;
+		state.queue = null;
+		state.stopFrame = null;
+		this.emit("anim-end", state.animName);
+	},
+	
 	_tick_doAnimation: function(delta) {
 		var state = this._animationState;
+		
+		if (state.stopFrame) {
+			for (var i = 0; i < state.stopFrame.length; i++){
+				if(state.frameName == state.stopFrame[i]) {
+					if (state.stopNextAnim) {
+						this.emit("anim-end", state.animName);
+						this.playAnimation(state.stopNextAnim);
+						return;
+					} else {
+						this.stopAnimation();
+						return;
+					}
+				}
+			}
+		}
+		
 		if (state.waitTime > 0) {
-			state.waitTime -= (state.speed * delta);
+			state.waitTime -= (state.speed * (delta * CONFIG.speed.animation));
 			return;
 		}
 		state.currFrame++;
 		if (state.loop)
 			state.currFrame = state.currFrame % state.queue.length;
 		else if (state.currFrame >= state.queue.length) {
-			state.running = false;
-			state.queue = null;
-			this.emit("anim-end", state.animName);
+			this.stopAnimation();
 			return;
 		}
 		var frame = state.queue[state.currFrame];
@@ -231,6 +307,9 @@ extend(Actor.prototype, {
 				state.waitTime = frame;
 				break;
 		}
+		
+		return;
+		
 	},
 	
 	/////////////////// Movement and Pathing //////////////////////
@@ -241,7 +320,7 @@ extend(Actor.prototype, {
 			this._pathingState = {
 				queue: [],
 				moving: false,
-				speed: 16,
+				speed: 1,
 				delta: 0, //the delta from src to dest
 				dir: "d",
 				
@@ -281,38 +360,54 @@ extend(Actor.prototype, {
 	moveTo : function(x, y, layer) {
 		var state = this._initPathingState();
 		var src = this.location;
+		layer = (layer == undefined)? this.location.z : layer;
 		
 		state.dir = getDirFromLoc(src.x, src.y, x, y);
 		
-		if (!currentMap.canWalkBetween(src.x, src.y, x, y)) {
+		var walkmask = currentMap.canWalkBetween(src.x, src.y, x, y);
+		if (!walkmask) {
 			console.warn(this.id, ": Cannot walk to location", "("+x+","+y+")");
 			this.emit("bumped", getDirFromLoc(x, y, src.x, src.y));
 			this.playAnimation("bump_"+state.dir, { loop: false });
 			return;
 		}
-		//TODO Transition now to another layer
+		if ((walkmask & 0x8) == 0x8) {
+			// Transition now to another layer
+			var t = currentMap.getLayerTransition(x, y, this.location.z);
+			console.log("Layer Transition: ", t);
+			x = t.x; y = t.y; layer = t.layer;
+		}
 		
+		var animopts = {};
+		state.midpointOffset.set(0, 0, 0);
 		state.srcLocC.set(src);
 		state.srcLoc3.set(currentMap.get3DTileLocation(src));
 		state.destLocC.set(x, y, layer);
 		state.destLoc3.set(currentMap.get3DTileLocation(x, y, layer));
 		state.delta = 0;
+		state.speed = 1;
 		state.moving = true;
 		
-		this.playAnimation("walk_"+state.dir);
+		if ((walkmask & 0x2) === 0x2) {
+			state.midpointOffset.setY(0.6);
+			animopts.speed = 1.5;
+		}
+		
+		this.playAnimation("walk_"+state.dir, animopts);
 		this.emit("moving", state.srcLocC.x, state.srcLocC.y, state.destLocC.x, state.destLocC.y);
 	},
 	
 	_tick_doMovement : function(delta) {
 		var state = this._initPathingState();
 		
-		state.delta += (1/state.speed) * delta;
+		state.delta += state.speed * (delta * CONFIG.speed.pathing);
 		var alpha = Math.clamp(state.delta);
+		var beta = Math.sin(alpha * Math.PI);
 		this.avatar_node.position.set( 
 			//Lerp between src and dest (built in lerp() is destructive, and seems badly done)
-			state.srcLoc3.x + ((state.destLoc3.x - state.srcLoc3.x) * alpha),
-			state.srcLoc3.y + ((state.destLoc3.y - state.srcLoc3.y) * alpha),
-			state.srcLoc3.z + ((state.destLoc3.z - state.srcLoc3.z) * alpha)
+			state.srcLoc3.x + ((state.destLoc3.x - state.srcLoc3.x) * alpha) + (state.midpointOffset.x * beta),
+			state.srcLoc3.y + ((state.destLoc3.y - state.srcLoc3.y) * alpha) + (state.midpointOffset.y * beta),
+			state.srcLoc3.z + ((state.destLoc3.z - state.srcLoc3.z) * alpha) + (state.midpointOffset.z * beta)
 		);
 		
 		if (state.delta > 1) {
@@ -323,7 +418,8 @@ extend(Actor.prototype, {
 			if (!next) {
 				state.delta = 0;
 				state.moving = false;
-				this.playAnimation("stand_"+state.dir);
+				this.stopAnimationOnFrame([state.dir+"0", state.dir+"3"], "stand_"+state.dir)
+				// this.playAnimation("stand_"+state.dir);
 			} else {
 				this.moveTo(next.x, next.y, next.z);
 			}
@@ -382,10 +478,19 @@ function getSpriteFormat(str) {
 			"u3": "u0", "d3": "d0", "l3": "l0", "r3": "r0",
 		},
 		anims: {
-			"stand_u": ["u0"],  "walk_u": ["u1", 5, "u3", 5, "u2", 5, "u3", 5 ], "bump_u": ["u1", 10, "u0"],
-			"stand_d": ["d0"],  "walk_d": ["d1", 5, "d3", 5, "d2", 5, "d3", 5 ], "bump_d": ["d1", 10, "d0"],
-			"stand_l": ["l0"],  "walk_l": ["l1", 5, "l3", 5, "l2", 5, "l3", 5 ], "bump_l": ["l1", 10, "l0"],
-			"stand_r": ["r0"],  "walk_r": ["r1", 5, "r3", 5, "r2", 5, "r3", 5 ], "bump_r": ["r1", 10, "r0"],
+			"stand" : { "u": ["u0"], "d": ["d0"], "l": ["l0"], "r": ["r0"], },
+			"walk" : {
+				"u": ["u1", 5, "u3", 5, "u2", 5, "u3", 5 ],
+				"d": ["d1", 5, "d3", 5, "d2", 5, "d3", 5 ],
+				"l": ["l1", 5, "l3", 5, "l2", 5, "l3", 5 ],
+				"r": ["r1", 5, "r3", 5, "r2", 5, "r3", 5 ],
+			},
+			"bump" : {
+				"u": ["u1", 10, "u0", 10, "u2", 10, "u0", 10 ],
+				"d": ["d1", 10, "d0", 10, "d2", 10, "d0", 10 ],
+				"l": ["l1", 10, "l0", 10, "l2", 10, "l0", 10 ],
+				"r": ["r1", 10, "r0", 10, "r2", 10, "r0", 10 ],
+			},
 			"warp_away": ["d0", 15, "l0", 14, "u0", 13, "r0", 12, "d0", 10, "l0", 8, "u0", 6, "r0", 4, "d0", 2, "l0", "u0", "r0", "d0", "l0", "u0", "r0", "d0", "l0", "u0", "r0", "d0", "l0", "u0", "r0"],
 			"warping_r": ["d0", "r0", "u0", "l0"], "warping_l": ["d0", "l0", "u0", "r0"], 
 			"warp_in": ["d0", "r0", "u0", "l0", "d0", "r0", "u0", "l0", "d0", "r0", "u0", "l0", "d0", "r0", "u0", 2, "l0", 4, "d0", 6, "r0", 8, "u0", 10, "l0", 12, "d0", 13, "r0", 14, "u0", 15, "l0", 16],

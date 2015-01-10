@@ -288,6 +288,20 @@ extend(Map.prototype, {
 		return tile;
 	},
 	
+	getLayerTransition : function(x, y, currLayer) {
+		currLayer = (currLayer!==undefined)? currLayer : 1;
+		var tile = this.getTileData(x, y);
+		var layer = tile.transition;
+		var origin1 = this.metadata.layers[currLayer-1]["2d"];
+		var origin2 = this.metadata.layers[layer-1]["2d"];
+		
+		return {
+			layer: layer,
+			x: x - origin1[0] + origin2[0],
+			y: y - origin1[1] + origin2[1],
+		};
+	},
+	
 	get3DTileLocation : function(x, y, layer, tiledata) {
 		if (x instanceof THREE.Vector2) {
 			y = x.y; x = x.x;
@@ -364,7 +378,7 @@ extend(Map.prototype, {
 		}
 		
 		var canWalk = true; //Assume we can travel between until proven otherwise.
-		var mustJump, mustSwim;
+		var mustJump, mustSwim, mustTransition;
 		
 		var dir = (function(){
 			switch (1) {
@@ -384,8 +398,10 @@ extend(Map.prototype, {
 		
 		mustSwim = desttile.isWater;
 		
+		mustTransition = !!desttile.transition;
+		
 		if (!canWalk) return false;
-		return (canWalk?0x1:0) | (mustJump?0x2:0) | (mustSwim?0x4:0);
+		return (canWalk?0x1:0) | (mustJump?0x2:0) | (mustSwim?0x4:0) | (mustTransition?0x8:0);
 	},
 	
 	
