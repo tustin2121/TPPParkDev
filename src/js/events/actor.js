@@ -5,6 +5,8 @@ var Event = require("tpp-event");
 var inherits = require("inherits");
 var extend = require("extend");
 
+var DbgDraw = require("three-debug-draw")(THREE);
+
 var GLOBAL_SCALEUP = 1.5;
 var EVENT_PLANE_NORMAL = new THREE.Vector3(0, 1, 0);
 /**
@@ -16,6 +18,7 @@ function Actor(base, opts) {
 	Event.call(this, base, opts);
 	
 	this.on("tick", this._actorTick);
+	this.facing = new THREE.Vector3(0, 0, -1);
 }
 inherits(Actor, Event);
 extend(Actor.prototype, {
@@ -122,7 +125,8 @@ extend(Actor.prototype, {
 
 			texture.needsUpdate = true;
 			
-			self.setAnimationFrame("d0");
+			self.showAnimationFrame("d0");
+			self.playAnimation("stand");
 			img.removeEventListener("load", f);
 			currentMap.markLoadFinished();
 		}
@@ -131,36 +135,32 @@ extend(Actor.prototype, {
 	
 	/////////////////// Animation //////////////////////
 	_animationState : null,
-	facing : new THREE.Vector2(0, 0, -1),
+	facing : null,
 	
 	_initAnimationState : function() {
 		if (!this._animationState)
 			this._animationState = {
-				waitTime : 0,
-				running : false,
-				queue : null,
-				animName : null,
-				currFrame : 0,
-				frameName : null,
+				// running : false,
+				// speed : 1,
 				
-				stopFrame : null,
-				stopNextAnim : null,
+				currAnim : null, // Animation object
+				currFrame : null, // Currently displayed sprite frame name
+				nextAnim : null, // Animation object in queue
 				
-				loop : true,
-				speed : 1,
 			};
 		return this._animationState;
 	},
 	
 	getDirectionFacing : function() {
 		var dirvector = this.facing.clone();
-		dirvector.applyMatrix4( currentMap.camera.matrixWorldInverse );
+		dirvector.applyQuaternion( currentMap.camera.quaternion );
 		dirvector.projectOnPlane(EVENT_PLANE_NORMAL).normalize();
 		
 		var x = dirvector.x, y = dirvector.z;
-		if (x > y) { //Direction vector is pointing along x axis
-			if (x > 0) return "r";
-			else return "l";
+		// console.log("DIRFACING:", x, y);
+		if (Math.abs(x) > Math.abs(y)) { //Direction vector is pointing along x axis
+			if (x > 0) return "l";
+			else return "r";
 		} else { //Direction vector is pointing along y axis
 			if (y > 0) return "d";
 			else return "u";
@@ -168,7 +168,7 @@ extend(Actor.prototype, {
 		return "d";
 	},
 	
-	setAnimationFrame : function(frame) {
+	showAnimationFrame : function(frame) {
 		var state = this._initAnimationState();
 		
 		var def = this.avatar_format.frames[frame];
@@ -200,115 +200,49 @@ extend(Actor.prototype, {
 		var state = this._initAnimationState();
 		if (!opts) opts = {};
 		
-		if (animName == null) {
-			this.stopAnimation();
-			return;
-		}
-		
-		if (animName == state.animName) {
-			//If we're already running this animation, continue it
-			state.stopFrame = null;
-			state.stopNextAnim = null;
-			return;
-		}
-		
 		var anim = this.avatar_format.anims[animName];
 		if (!anim) {
-			console.warn("ERROR ", this.id, ": Animation name doesn't exist:", animName);
+			console.warn("ERROR", this.id, ": Animation name doesn't exist:", animName);
 			return;
 		}
+		state.nextAnim = anim;
+		anim.speed = (opts.speed == undefined)? 1 : opts.speed;
 		
-		state.animName = animName;
-		state.loop = (opts.loop === undefined)? true : opts.loop;
-		state.speed = (opts.speed === undefined)? 1 : opts.speed;
-		state.stopFrame = null;
-		state.stopNextAnim = null;
-		if (anim.length == 1) {
-			//If there's only 1 anim
-			state.running = false;
-			state.queue = null;
-			this.setAnimationFrame(anim[0]);
-		} else {
-			state.running = true;
-			state.queue = anim;
-			state.waitTime = (typeof anim[1] == "number")? anim[1] : 0;
-			state.currFrame = (this.waitTime > 0)? 2 : 1;
-			// this._tick_doAnimation();
-			this.setAnimationFrame(anim[0]);
-		}
-	},
-	
-	stopAnimationOnFrame : function(frames, nextAnim) {
-		var state = this._initAnimationState();
-		if (!$.isArray(frames)) frames = [frames];
-		
-		if (!state.queue) {
-			console.error("ERROR ", this.id, ": No animation is running to be stopped.");
-			return;
-		}
-		OUTERLOOP:
-		for (var i = 0; i < state.queue.length; i++) {
-			for (var j = 0; j < frames.length; j++) {
-				if (state.queue[i] == frames[j]) { state.stopFrame = frames; break OUTERLOOP; }
-			}
-		}
-		if (!state.stopFrame) {
-			console.error("ERROR ", this.id, ": Given frames [", frames, "] do not exist in animation:", state.animName);
-			return;
-		}
-		state.stopNextAnim = nextAnim;
 	},
 	
 	stopAnimation : function() {
 		var state = this._initAnimationState();
 		
-		state.running = false;
-		state.queue = null;
-		state.stopFrame = null;
+		// state.running = false;
+		// state.queue = null;
+		// state.stopFrame = null;
 		this.emit("anim-end", state.animName);
 	},
 	
 	_tick_doAnimation: function(delta) {
+		DbgDraw.drawArrow(
+			this.avatar_node.position.clone(),
+        	this.avatar_node.position.clone().add(this.facing),
+        	5, "red");
+		
 		var state = this._animationState;
+		var CA = state.currAnim;
+		if (!CA) CA = state.currAnim = state.nextAnim;
+		if (!CA) return;
 		
-		if (state.stopFrame) {
-			for (var i = 0; i < state.stopFrame.length; i++){
-				if(state.frameName == state.stopFrame[i]) {
-					if (state.stopNextAnim) {
-						this.emit("anim-end", state.animName);
-						this.playAnimation(state.stopNextAnim);
-						return;
-					} else {
-						this.stopAnimation();
-						return;
-					}
-				}
-			}
+		CA.advance(delta);
+		
+		if (CA.canTransition()) {
+			//Switch animations
+			CA.reset();
+			CA = state.currAnim = state.nextAnim;
 		}
 		
-		if (state.waitTime > 0) {
-			state.waitTime -= (state.speed * (delta * CONFIG.speed.animation));
-			return;
+		var dir = this.getDirectionFacing();
+		var frame = CA.getFrameToDisplay(dir);
+		if (frame != state.currFrame) {
+			this.showAnimationFrame(frame);
 		}
-		state.currFrame++;
-		if (state.loop)
-			state.currFrame = state.currFrame % state.queue.length;
-		else if (state.currFrame >= state.queue.length) {
-			this.stopAnimation();
-			return;
-		}
-		var frame = state.queue[state.currFrame];
-		
-		switch (typeof frame) {
-			case "string":
-				this.setAnimationFrame(frame);
-				break;
-			case "number":
-				state.waitTime = frame;
-				break;
-		}
-		
-		return;
 		
 	},
 	
@@ -322,7 +256,7 @@ extend(Actor.prototype, {
 				moving: false,
 				speed: 1,
 				delta: 0, //the delta from src to dest
-				dir: "d",
+				// dir: "d",
 				
 				destLocC: new THREE.Vector3().set(this.location), //collision map location
 				destLoc3: new THREE.Vector3(), //world space location
@@ -362,13 +296,13 @@ extend(Actor.prototype, {
 		var src = this.location;
 		layer = (layer == undefined)? this.location.z : layer;
 		
-		state.dir = getDirFromLoc(src.x, src.y, x, y);
+		this.facing.set(src.x-x, 0, y-src.y);
 		
 		var walkmask = currentMap.canWalkBetween(src.x, src.y, x, y);
 		if (!walkmask) {
 			console.warn(this.id, ": Cannot walk to location", "("+x+","+y+")");
-			this.emit("bumped", getDirFromLoc(x, y, src.x, src.y));
-			this.playAnimation("bump_"+state.dir, { loop: false });
+			this.emit("bumped", this.facing); //getDirFromLoc(x, y, src.x, src.y));
+			this.playAnimation("bump");
 			return;
 		}
 		if ((walkmask & 0x8) == 0x8) {
@@ -393,7 +327,7 @@ extend(Actor.prototype, {
 			animopts.speed = 1.5;
 		}
 		
-		this.playAnimation("walk_"+state.dir, animopts);
+		this.playAnimation("walk", animopts);
 		this.emit("moving", state.srcLocC.x, state.srcLocC.y, state.destLocC.x, state.destLocC.y);
 	},
 	
@@ -418,8 +352,8 @@ extend(Actor.prototype, {
 			if (!next) {
 				state.delta = 0;
 				state.moving = false;
-				this.stopAnimationOnFrame([state.dir+"0", state.dir+"3"], "stand_"+state.dir)
-				// this.playAnimation("stand_"+state.dir);
+				// this.stopAnimation();
+				this.playAnimation("stand");
 			} else {
 				this.moveTo(next.x, next.y, next.z);
 			}
@@ -439,7 +373,7 @@ extend(Actor.prototype, {
 	
 	_actorTick : function(delta) {
 		// Do animation
-		if (this._animationState && this._animationState.running) 
+		if (this._animationState) 
 			this._tick_doAnimation(delta);
 		
 		// Do movement
@@ -453,16 +387,17 @@ module.exports = Actor;
 
 
 function getDirFromLoc(x1, y1, x2, y2) {
-	var dx = x2 - x1;
-	var dy = y2 - y1;
-	if (Math.abs(dx) > Math.abs(dy)) {
-		if (dx > 0) { return "r"; }
-		else if (dx < 0) { return "l"; }
-	} else {
-		if (dy > 0) { return "d"; }
-		else if (dy < 0) { return "u"; }
-	}
-	return "d";
+	return new THREE.Vector3(x2-x1, 0, y2-y1);
+	// var dx = x2 - x1;
+	// var dy = y2 - y1;
+	// if (Math.abs(dx) > Math.abs(dy)) {
+	// 	if (dx > 0) { return "r"; }
+	// 	else if (dx < 0) { return "l"; }
+	// } else {
+	// 	if (dy > 0) { return "d"; }
+	// 	else if (dy < 0) { return "u"; }
+	// }
+	// return "d";
 }
 
 
@@ -477,24 +412,7 @@ function getSpriteFormat(str) {
 		frames: {
 			"u3": "u0", "d3": "d0", "l3": "l0", "r3": "r0",
 		},
-		anims: {
-			"stand" : { "u": ["u0"], "d": ["d0"], "l": ["l0"], "r": ["r0"], },
-			"walk" : {
-				"u": ["u1", 5, "u3", 5, "u2", 5, "u3", 5 ],
-				"d": ["d1", 5, "d3", 5, "d2", 5, "d3", 5 ],
-				"l": ["l1", 5, "l3", 5, "l2", 5, "l3", 5 ],
-				"r": ["r1", 5, "r3", 5, "r2", 5, "r3", 5 ],
-			},
-			"bump" : {
-				"u": ["u1", 10, "u0", 10, "u2", 10, "u0", 10 ],
-				"d": ["d1", 10, "d0", 10, "d2", 10, "d0", 10 ],
-				"l": ["l1", 10, "l0", 10, "l2", 10, "l0", 10 ],
-				"r": ["r1", 10, "r0", 10, "r2", 10, "r0", 10 ],
-			},
-			"warp_away": ["d0", 15, "l0", 14, "u0", 13, "r0", 12, "d0", 10, "l0", 8, "u0", 6, "r0", 4, "d0", 2, "l0", "u0", "r0", "d0", "l0", "u0", "r0", "d0", "l0", "u0", "r0", "d0", "l0", "u0", "r0"],
-			"warping_r": ["d0", "r0", "u0", "l0"], "warping_l": ["d0", "l0", "u0", "r0"], 
-			"warp_in": ["d0", "r0", "u0", "l0", "d0", "r0", "u0", "l0", "d0", "r0", "u0", "l0", "d0", "r0", "u0", 2, "l0", 4, "d0", 6, "r0", 8, "u0", 10, "l0", 12, "d0", 13, "r0", 14, "u0", 15, "l0", 16],
-		},
+		anims : getStandardAnimations(),
 	};
 	
 	switch (name) {
@@ -506,7 +424,6 @@ function getSpriteFormat(str) {
 					"l0": [2, 0], "l1": [2, 1], "l2": [2, 2],
 					"r0": [3, 0], "r1": [3, 1], "r2": [3, 2],
 				},
-				anims: {},
 			});
 		case "pt_vertcol": 
 			return extend(true, base, { 
@@ -516,7 +433,6 @@ function getSpriteFormat(str) {
 					"l0": [0, 2], "l1": [1, 2], "l2": [2, 2],
 					"r0": [0, 3], "r1": [1, 3], "r2": [2, 3],
 				},
-				anims: {},
 			});
 		case "hg_vertmix": 
 			return extend(true, base, { 
@@ -526,7 +442,6 @@ function getSpriteFormat(str) {
 					"l0": [0, 2], "l1": [0, 1], "l2": [0, 3],
 					"r0": [1, 0], "r1": [1, 1], "r2": [1, 2],
 				},
-				anims: {},
 			});
 		case "hg_pokerow":
 			return extend(true, base, { 
@@ -536,7 +451,6 @@ function getSpriteFormat(str) {
 					"l0": null, "l1": [0, 2], "l2": [1, 2],
 					"r0": null, "r1": [0, 3], "r2": [1, 3],
 				},
-				anims: {},
 			});
 		case "hg_pokeflip":
 			return extend(true, base, { 
@@ -546,7 +460,6 @@ function getSpriteFormat(str) {
 					"l0": null, "l1": [0, 2], "l2": [1, 2],
 					"r0": null, "r1": "l1",   "r2": "l2",
 				},
-				anims: {},
 			});
 		case "bw_vertrow":
 			return extend(true, base, { 
@@ -556,7 +469,6 @@ function getSpriteFormat(str) {
 					"l0": [0, 2], "l1": [1, 2], "l2": [2, 2],
 					"r0": [0, 3], "r1": [1, 3], "r2": [2, 3],
 				},
-				anims: {},
 			});
 		case "bw_horzflip":
 			return extend(true, base, { 
@@ -566,7 +478,136 @@ function getSpriteFormat(str) {
 					"l0": [0, 1], "l1": [1, 1], "l2": [2, 1],
 					"r0": "l0",   "r1": "l1",   "r2": "l2",
 				},
-				anims: {},
 			});
 	}
 }
+
+function getStandardAnimations() {
+	var anims = {};
+	
+	anims["stand"] = new SpriteAnimation({ singleFrame: true, }, [
+		{ u: "u0", d: "d0", l: "l0", r: "r0", trans: true, pause: true, },
+	]);
+	anims["walk"] = new SpriteAnimation({ frameLength: 5, keepFrame: true, }, [
+		{ u: "u1", d: "d1", l: "l1", r: "r1", },
+		{ u: "u3", d: "d3", l: "l3", r: "r3", trans: true, },
+		{ u: "u2", d: "d2", l: "l2", r: "r2", },
+		{ u: "u3", d: "d3", l: "l3", r: "r3", trans: true, loopTo: 0, },
+	]);
+	anims["bump"] = new SpriteAnimation({ frameLength: 10, keepFrame: true, }, [
+		{ u: "u1", d: "d1", l: "l1", r: "r1", soundEffect: true, },
+		{ u: "u0", d: "d0", l: "l0", r: "r0", trans: true, },
+		{ u: "u2", d: "d2", l: "l2", r: "r2", soundEffect: true, },
+		{ u: "u0", d: "d0", l: "l0", r: "r0", trans: true, loopTo: 0, },
+	]);
+	anims["warp_away"] = new SpriteAnimation({ singleDir: "d" }, [
+		{ d: "d0", frameLength: 8, }, //0
+		{ d: "l0", frameLength: 8, },
+		{ d: "u0", frameLength: 8, },
+		{ d: "r0", frameLength: 8, },
+		{ d: "d0", frameLength: 7, }, //4
+		{ d: "l0", frameLength: 7, },
+		{ d: "u0", frameLength: 7, },
+		{ d: "r0", frameLength: 7, },
+		{ d: "d0", frameLength: 5, }, //8
+		{ d: "l0", frameLength: 5, },
+		{ d: "u0", frameLength: 5, },
+		{ d: "r0", frameLength: 5, },
+		{ d: "d0", frameLength: 3, }, //12
+		{ d: "l0", frameLength: 3, },
+		{ d: "u0", frameLength: 3, },
+		{ d: "r0", frameLength: 3, },
+		{ d: "d0", frameLength: 1, trans: true, }, //16
+		{ d: "l0", frameLength: 1, trans: true, },
+		{ d: "u0", frameLength: 1, trans: true, },
+		{ d: "r0", frameLength: 1, trans: true, loopTo: 16 },
+	]);
+	anims["warp_in"] = new SpriteAnimation({ singleDir: "d" }, [
+		{ d: "d0", frameLength: 1, }, //0
+		{ d: "r0", frameLength: 1, },
+		{ d: "u0", frameLength: 1, },
+		{ d: "l0", frameLength: 1, },
+		{ d: "d0", frameLength: 3, }, //4
+		{ d: "r0", frameLength: 3, },
+		{ d: "u0", frameLength: 3, },
+		{ d: "l0", frameLength: 3, },
+		{ d: "d0", frameLength: 5, }, //8
+		{ d: "r0", frameLength: 5, },
+		{ d: "u0", frameLength: 5, },
+		{ d: "l0", frameLength: 5, },
+		{ d: "d0", frameLength: 7, }, //12
+		{ d: "r0", frameLength: 7, },
+		{ d: "u0", frameLength: 7, },
+		{ d: "l0", frameLength: 8, },
+		{ d: "d0", frameLength: 8, }, //16
+		{ d: "r0", frameLength: 9, },
+		{ d: "u0", frameLength: 9, },
+		{ d: "l0", frameLength: 10, },
+		{ d: "d0", frameLength: 1, trans: true, },
+	]);
+	
+	return anims;
+}
+
+///////////////////////////////////////////////////////////////////////
+
+function SpriteAnimation(opts, frames) {
+	this.options = opts;
+	this.frames = frames;
+	
+	this.waitTime = this.frames[this.currFrame].frameLength || this.options.frameLength;
+}
+SpriteAnimation.prototype = {
+	options: null,
+	frames : null,
+	
+	waitTime : 0,
+	currFrame: 0,
+	speed : 1,
+	paused : false,
+	
+	/** Advanced the animation by the given amount of delta time. */
+	advance : function(deltaTime) {
+		if (this.options.singleFrame) return;
+		if (this.paused) return;
+		
+		if (this.waitTime > 0) {
+			this.waitTime -= (this.speed * (deltaTime * CONFIG.speed.animation));
+			return;
+		}
+		
+		var loop = this.frames[this.currFrame].loopTo;
+		if (loop !== undefined) this.currFrame = loop;
+		else this.currFrame++;
+		
+		//new frame
+		
+		this.waitTime = this.frames[this.currFrame].frameLength || this.options.frameLength;
+		
+		if (this.frames[this.currFrame].pause) this.paused = true;
+	},
+	
+	/** If this animation is on a pause frame */
+	resume : function() {
+		this.paused = false;
+	},
+	
+	/** Reset the animation parameters. Called when this animation is no longer used. */
+	reset : function() {
+		if (this.options.keepFrame) return;
+		this.currFrame = 0;
+		this.waitTime = this.frames[this.currFrame].frameLength || this.options.frameLength;
+		this.speed = 1;
+	},
+	
+	/** If this animation is on a frame that can transition to another animation. */
+	canTransition : function() {
+		return this.frames[this.currFrame].trans;
+	},
+	
+	/** Returns the name of the frame to display this frame. */
+	getFrameToDisplay : function(dir) {
+		if (this.options.singleDir) dir = this.options.singleDir;
+		return this.frames[this.currFrame][dir];
+	},
+};
