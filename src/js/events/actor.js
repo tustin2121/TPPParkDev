@@ -7,7 +7,7 @@ var extend = require("extend");
 
 var DbgDraw = require("three-debug-draw")(THREE);
 
-var GLOBAL_SCALEUP = 1.5;
+var GLOBAL_SCALEUP = 1.65;
 var EVENT_PLANE_NORMAL = new THREE.Vector3(0, 1, 0);
 /**
  * An actor is any event representing a person, pokemon, or other entity that
@@ -18,7 +18,7 @@ function Actor(base, opts) {
 	Event.call(this, base, opts);
 	
 	this.on("tick", this._actorTick);
-	this.facing = new THREE.Vector3(0, 0, -1);
+	this.facing = new THREE.Vector3(0, 0, 1);
 }
 inherits(Actor, Event);
 extend(Actor.prototype, {
@@ -140,13 +140,11 @@ extend(Actor.prototype, {
 	_initAnimationState : function() {
 		if (!this._animationState)
 			this._animationState = {
-				// running : false,
-				// speed : 1,
-				
 				currAnim : null, // Animation object
 				currFrame : null, // Currently displayed sprite frame name
 				nextAnim : null, // Animation object in queue
 				
+				stopNextTransition: false, //Stop at the next transition frame, to short-stop the "Bump" animation
 			};
 		return this._animationState;
 	},
@@ -207,7 +205,7 @@ extend(Actor.prototype, {
 		}
 		state.nextAnim = anim;
 		anim.speed = (opts.speed == undefined)? 1 : opts.speed;
-		
+		state.stopNextTransition = opts.stopNextTransition || false;
 	},
 	
 	stopAnimation : function() {
@@ -232,10 +230,15 @@ extend(Actor.prototype, {
 		
 		CA.advance(delta);
 		
-		if (CA.canTransition()) {
+		if (state.nextAnim && CA.canTransition()) {
 			//Switch animations
 			CA.reset();
 			CA = state.currAnim = state.nextAnim;
+			state.nextAnim = null;
+			
+			if (state.stopNextTransition) {
+				this.playAnimation("stand");
+			}
 		}
 		
 		var dir = this.getDirectionFacing();
@@ -256,6 +259,7 @@ extend(Actor.prototype, {
 				moving: false,
 				speed: 1,
 				delta: 0, //the delta from src to dest
+				jumping : false,
 				// dir: "d",
 				
 				destLocC: new THREE.Vector3().set(this.location), //collision map location
@@ -291,6 +295,10 @@ extend(Actor.prototype, {
 		this.moveTo(x, y, z);
 	},
 	
+	faceDir : function(x, y) {
+		this.facing.set(-x, 0, y);
+	},
+	
 	moveTo : function(x, y, layer) {
 		var state = this._initPathingState();
 		var src = this.location;
@@ -302,7 +310,7 @@ extend(Actor.prototype, {
 		if (!walkmask) {
 			console.warn(this.id, ": Cannot walk to location", "("+x+","+y+")");
 			this.emit("bumped", this.facing); //getDirFromLoc(x, y, src.x, src.y));
-			this.playAnimation("bump");
+			this.playAnimation("bump", { stopNextTransition: true });
 			return;
 		}
 		if ((walkmask & 0x8) == 0x8) {
@@ -324,6 +332,8 @@ extend(Actor.prototype, {
 		
 		if ((walkmask & 0x2) === 0x2) {
 			state.midpointOffset.setY(0.6);
+			state.jumping = true;
+			SoundManager.playSound("walk_jump");
 			animopts.speed = 1.5;
 		}
 		
@@ -347,6 +357,12 @@ extend(Actor.prototype, {
 		if (state.delta > 1) {
 			this.emit("moved", state.srcLocC.x, state.srcLocC.y, state.destLocC.x, state.destLocC.y);
 			this.location.set( state.destLocC );
+			
+			if (state.jumping) {
+				//TODO particle effects
+				SoundManager.playSound("walk_jump_land");
+				state.jumping = false;
+			}
 			
 			var next = state.queue.shift();
 			if (!next) {
@@ -495,9 +511,9 @@ function getStandardAnimations() {
 		{ u: "u3", d: "d3", l: "l3", r: "r3", trans: true, loopTo: 0, },
 	]);
 	anims["bump"] = new SpriteAnimation({ frameLength: 10, keepFrame: true, }, [
-		{ u: "u1", d: "d1", l: "l1", r: "r1", soundEffect: true, },
+		{ u: "u1", d: "d1", l: "l1", r: "r1", sfx: "walk_bump", },
 		{ u: "u0", d: "d0", l: "l0", r: "r0", trans: true, },
-		{ u: "u2", d: "d2", l: "l2", r: "r2", soundEffect: true, },
+		{ u: "u2", d: "d2", l: "l2", r: "r2", sfx: "walk_bump", },
 		{ u: "u0", d: "d0", l: "l0", r: "r0", trans: true, loopTo: 0, },
 	]);
 	anims["warp_away"] = new SpriteAnimation({ singleDir: "d" }, [
@@ -517,10 +533,14 @@ function getStandardAnimations() {
 		{ d: "l0", frameLength: 3, },
 		{ d: "u0", frameLength: 3, },
 		{ d: "r0", frameLength: 3, },
-		{ d: "d0", frameLength: 1, trans: true, }, //16
-		{ d: "l0", frameLength: 1, trans: true, },
-		{ d: "u0", frameLength: 1, trans: true, },
-		{ d: "r0", frameLength: 1, trans: true, loopTo: 16 },
+		{ d: "d0", frameLength: 1, }, //16
+		{ d: "l0", frameLength: 1, },
+		{ d: "u0", frameLength: 1, },
+		{ d: "r0", frameLength: 1, },
+		{ d: "d0", frameLength: 0, trans: true, }, //20
+		{ d: "l0", frameLength: 0, trans: true, },
+		{ d: "u0", frameLength: 0, trans: true, },
+		{ d: "r0", frameLength: 0, trans: true, loopTo: 20 },
 	]);
 	anims["warp_in"] = new SpriteAnimation({ singleDir: "d" }, [
 		{ d: "d0", frameLength: 1, }, //0
@@ -580,11 +600,21 @@ SpriteAnimation.prototype = {
 		if (loop !== undefined) this.currFrame = loop;
 		else this.currFrame++;
 		
+		if (this.currFrame >= this.frames.length) {
+			this.currFrame = this.frames.length-1;
+			this.paused = true;
+			console.warn("Animation has completed!");
+			return;
+		}
+		
 		//new frame
 		
 		this.waitTime = this.frames[this.currFrame].frameLength || this.options.frameLength;
 		
 		if (this.frames[this.currFrame].pause) this.paused = true;
+		
+		if (this.frames[this.currFrame].sfx) 
+			SoundManager.playSound(this.frames[this.currFrame].sfx);
 	},
 	
 	/** If this animation is on a pause frame */
@@ -594,6 +624,7 @@ SpriteAnimation.prototype = {
 	
 	/** Reset the animation parameters. Called when this animation is no longer used. */
 	reset : function() {
+		this.paused = false;
 		if (this.options.keepFrame) return;
 		this.currFrame = 0;
 		this.waitTime = this.frames[this.currFrame].frameLength || this.options.frameLength;
