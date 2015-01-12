@@ -310,15 +310,19 @@ function findMaps() {
 			total++;
 			
 			try {
-				compileMap(file, MAP_DIRS[pi]+file);
-				success++;
+				var res = compileMap(file, MAP_DIRS[pi]+file);
+				if (res) {
+					console.log("[cMaps] Skipping compilation of", '"'+file+'":', res);
+				} else {
+					success++;
+				}
 			} catch (e) {
-				console.log("[cMaps] ERROR while compiling", '"'+file+'"', "\n"+e+"\n"+e.stack);
-				nextTick();
-				// if (typeof e == "string")
-				// 	throw new Error(e);
-				// else
-				// 	throw e;
+				// console.log("[cMaps] ERROR while compiling", '"'+file+'"', "\n"+e+"\n"+e.stack);
+				// nextTick();
+				if (typeof e == "string")
+					throw new Error(e);
+				else
+					throw e;
 			}
 		}
 	}

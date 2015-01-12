@@ -16,9 +16,11 @@ var ProcessorTransform = require("./transform-streams").ProcessorTransform;
  */
 function compileMap(id, file) {
 	// Map package sanity checks
-	if (!fs.existsSync(file+"/"+id+".json")) throw "No map json file!";
-	if (!fs.existsSync(file+"/"+id+".obj")) throw "No map wavefront obj file!";
-	if (!fs.existsSync(file+"/"+id+".mtl")) throw "No map obj material file!";
+	if (fs.existsSync(file+"/SKIPME.txt")) return "Skip file found in map definition!";
+	
+	if (!fs.existsSync(file+"/"+id+".json")) return "No map json file!";
+	if (!fs.existsSync(file+"/"+id+".obj")) return "No map wavefront obj file!";
+	if (!fs.existsSync(file+"/"+id+".mtl")) return "No map obj material file!";
 	
 	if (!fs.existsSync(BUILD_TEMP)) fs.mkdirSync(BUILD_TEMP);
 	if (!fs.existsSync(BUILD_TEMP+id)) fs.mkdirSync(BUILD_TEMP+id);
@@ -57,6 +59,7 @@ function compileMap(id, file) {
 	
 	console.log("[cMaps] Compilation of map", '"'+id+'"', "completed.");
 	
+	return false; //No problems
 };
 module.exports = compileMap;
 
