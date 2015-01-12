@@ -557,6 +557,15 @@ extend(Map.prototype, {
 		
 	},
 	
+	dispatch : function(x, y) {
+		var evts = this.eventMap.get(x, y);
+		if (!evts) return;
+		
+		var args = Array.prototype.slice.call(arguments, 2);
+		for (var i = 0; i < evts.length; i++) {
+			evts[i].emit.apply(evts[i], args);
+		}
+	},
 	
 	
 	
