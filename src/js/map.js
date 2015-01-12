@@ -12,11 +12,9 @@ var ObjLoader = require("./model/obj-loader");
 
 var mSetup = require("./model/map-setup");
 
-// The currently loaded zip file system
-var EXT_MAPBUNDLE = ".zip";
-
 
 // These would be CONSTs if we weren't in the browser
+var EXT_MAPBUNDLE = ".zip"; //Extension for requesting map bundles
 var DEF_HEIGHT_STEP = 0.5; //Default Y translation amount a height step takes. This can be defined in a map file.
 
 

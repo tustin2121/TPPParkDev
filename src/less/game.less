@@ -2,8 +2,10 @@
 
 @game-width: 600px;
 @game-height: 500px;
-@chat-width: 360px;
 @status-height: 16px;
+
+@chat-width: 400px;
+@chat-width-min: 280px;
 
 html {
 	margin: 0;
@@ -43,16 +45,15 @@ body { margin: 0; }
 #right-sidebar {
 	// float: right;
 	// width: @chat-width;
-	display: block;
 	background-color: blue;
 	width: @chat-width;
-	min-width: @chat-width - 100;
+	min-width: @chat-width-min;
 }
 #left-sidebar {
 	float: left;
 	width: @chat-width;
 	max-width: @chat-width;
-	min-width: @chat-width - 100;
+	min-width: @chat-width-min;
 }
 
 #statusbar {
