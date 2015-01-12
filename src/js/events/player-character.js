@@ -75,6 +75,12 @@ extend(PlayerChar.prototype, {
 		var y = ((controller.isDown("Up"))? -1:0) + ((controller.isDown("Down"))? 1:0);
 		var x = ((controller.isDown("Left"))? -1:0) + ((controller.isDown("Right"))? 1:0);
 		
+		if (controller.isDown("Interact") && !this._initPathingState().moving) {
+			currentMap.dispatch(
+				this.location.x - this.facing.x, this.location.y + this.facing.z, 
+				"interacted", this.facing);
+		}
+		
 		if ((y || x) && !(x && y)) { //one, but not both
 			if (this.controlTimeout < 1) {
 				this.controlTimeout += CONFIG.timeout.walkControl * delta;
@@ -90,8 +96,8 @@ extend(PlayerChar.prototype, {
 		} else {
 			if (this.controlTimeout > 0)
 				this.controlTimeout -= CONFIG.timeout.walkControl * delta;
-			
 		}
+		
 	},
 	
 	

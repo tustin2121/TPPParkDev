@@ -27,8 +27,7 @@
     "raf": "^2.0.4",
     "rimraf": "^2.2.8",
     "synchronize": "^0.9.9",
-    "three": "~0.69.0",
-    "three-debug-draw": "0.0.5"
+    "three": "~0.69.0"
   },
   "scripts": {
     "start": "ws -d _out/",

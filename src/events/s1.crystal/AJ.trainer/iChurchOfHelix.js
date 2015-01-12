@@ -10,5 +10,10 @@ var Actor = require("tpp-actor");
 
 add(new Actor(base, {
 	location: [8, 7],
+	onEvents: {
+		interacted : function() {
+			console.log("INTERACTED!");
+		},
+	},
 }));
 

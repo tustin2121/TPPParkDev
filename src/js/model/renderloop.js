@@ -3,7 +3,6 @@
 
 var extend = require("extend");
 var raf = require("raf");
-var DbgDraw = require("three-debug-draw")(THREE);
 
 module.exports = {
 	start : function(opts) {
@@ -39,8 +38,6 @@ module.exports = {
 var _renderHandle; 
 function renderLoop() {
 	if (currentMap && currentMap.scene && currentMap.camera) {
-		DbgDraw.render(currentMap.scene);
-		
 		//Render with the map's active camera on its active scene
 		threeRenderer.render(currentMap.scene, currentMap.camera);
 	}

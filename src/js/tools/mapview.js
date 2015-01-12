@@ -15,6 +15,7 @@ $(function(){
 	
 	$("#loadbtn").on("click", function(){
 		loadMap($("#idin").val());
+		$("#loadbtn").blur();
 	});
 	
 	renderLoop.start({

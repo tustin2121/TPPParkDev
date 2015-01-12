@@ -5,8 +5,6 @@ var Event = require("tpp-event");
 var inherits = require("inherits");
 var extend = require("extend");
 
-var DbgDraw = require("three-debug-draw")(THREE);
-
 var GLOBAL_SCALEUP = 1.65;
 var EVENT_PLANE_NORMAL = new THREE.Vector3(0, 1, 0);
 /**
@@ -18,6 +16,7 @@ function Actor(base, opts) {
 	Event.call(this, base, opts);
 	
 	this.on("tick", this._actorTick);
+	this.on("interacted", this._actorInteractFace);
 	this.facing = new THREE.Vector3(0, 0, 1);
 }
 inherits(Actor, Event);
@@ -218,11 +217,6 @@ extend(Actor.prototype, {
 	},
 	
 	_tick_doAnimation: function(delta) {
-		DbgDraw.drawArrow(
-			this.avatar_node.position.clone(),
-        	this.avatar_node.position.clone().add(this.facing),
-        	5, "red");
-		
 		var state = this._animationState;
 		var CA = state.currAnim;
 		if (!CA) CA = state.currAnim = state.nextAnim;
@@ -299,7 +293,7 @@ extend(Actor.prototype, {
 		this.facing.set(-x, 0, y);
 	},
 	
-	moveTo : function(x, y, layer) {
+	moveTo : function(x, y, layer, bypass) { //bypass Walkmask check
 		var state = this._initPathingState();
 		var src = this.location;
 		layer = (layer == undefined)? this.location.z : layer;
@@ -307,9 +301,11 @@ extend(Actor.prototype, {
 		this.facing.set(src.x-x, 0, y-src.y);
 		
 		var walkmask = currentMap.canWalkBetween(src.x, src.y, x, y);
+		if (bypass !== undefined) walkmask = bypass;
 		if (!walkmask) {
 			console.warn(this.id, ": Cannot walk to location", "("+x+","+y+")");
-			this.emit("bumped", this.facing); //getDirFromLoc(x, y, src.x, src.y));
+			currentMap.dispatch(x, y, "bumped", this.facing);
+			// this.emit("bumped", this.facing); //getDirFromLoc(x, y, src.x, src.y));
 			this.playAnimation("bump", { stopNextTransition: true });
 			return;
 		}
@@ -395,6 +391,10 @@ extend(Actor.prototype, {
 		// Do movement
 		if (this._pathingState && this._pathingState.moving)
 			this._tick_doMovement(delta);
+	},
+	
+	_actorInteractFace : function(vector) {
+		this.facing = vector.clone().negate();
 	},
 	
 });
