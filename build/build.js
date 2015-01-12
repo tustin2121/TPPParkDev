@@ -83,7 +83,7 @@ function build(){
 	
 	//Copy over non-compiled files
 	copyLibraryFiles();
-	copyStaticImageFiles();
+	copyStaticFiles();
 	copyHtmlFiles();
 	copyConfigFiles();
 	
@@ -202,10 +202,11 @@ function copyLibraryFiles() {
 	console.log("[Copy ] Copied", l.length, "library files.");
 }
 
-function copyStaticImageFiles() {
+function copyStaticFiles() {
 	//These copies can happen in parallel
 	sync.parallel(function(){
 		copyDirectory("img/", BUILD_OUT+"img/");
+		copyDirectory("snd/", BUILD_OUT+"snd/");
 		
 	});
 	var l = sync.await();

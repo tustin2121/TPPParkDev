@@ -1,5 +1,7 @@
 // globals.js
 
+window.SoundManager = require("./soundmanager");
+
 window.currentMap = null;
 window.gameState = require("./gamestate");
 
@@ -10,8 +12,11 @@ window.DEF_SPRITE_FORMAT = "pt_horzrow-32";
 window.CONFIG = {
 	speed : {
 		pathing: 0.25,
-		animation: 2.4,
+		animation: 3,
 	},
+	timeout : {
+		walkControl : 1,
+	}
 };
 
 window.DEBUG = {};

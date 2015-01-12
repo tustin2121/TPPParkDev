@@ -39,21 +39,24 @@ extend(PlayerChar.prototype, {
 			var y = self.location.y;
 			var layer = self.location.z;
 			var z_off = 0;
-			var dir = null;
 			
 			switch(warpdef.anim) { //Warp animation
 				case 0: break; // Appear
-				case 1: y++; animName = "walk_u"; dir = "u"; break; // Walk up
-				case 2: y--; animName = "walk_d"; dir = "d"; break; // Walk down
-				case 3: x--; animName = "walk_l"; dir = "l"; break; // Walk left
-				case 4: x++; animName = "walk_r"; dir = "r"; break; // Walk down
-				case 5: z_off = 10; animName = "warp_in"; dir = "d"; break; // Warp in
+				case 1: y++; animName = "walk"; break; // Walk up
+				case 2: y--; animName = "walk"; break; // Walk down
+				case 3: x--; animName = "walk"; break; // Walk left
+				case 4: x++; animName = "walk"; break; // Walk down
+				case 5: z_off = 10; animName = "warp_in"; break; // Warp in
 			}
 			
 			var src = self.location;
 			var state = self._initPathingState();
 			
-			state.dir = dir;
+			if (src.x-x || y-src.y) 
+				self.facing.set(x-src.x, 0, src.y-y);
+			else
+				self.facing.set(0, 0, 1);
+			
 			state.srcLocC.set(x, y, layer);
 			state.srcLoc3.set(currentMap.get3DTileLocation(x, y, layer));
 			state.destLocC.set(src);
@@ -67,13 +70,27 @@ extend(PlayerChar.prototype, {
 		});
 	},
 	
-	
+	controlTimeout: 0.0,
 	controlCharacter : function(delta) {
 		var y = ((controller.isDown("Up"))? -1:0) + ((controller.isDown("Down"))? 1:0);
 		var x = ((controller.isDown("Left"))? -1:0) + ((controller.isDown("Right"))? 1:0);
 		
-		if ((y || x) && !this._initPathingState().moving) {
-			this.moveTo(this.location.x+x, this.location.y+y);
+		if ((y || x) && !(x && y)) { //one, but not both
+			if (this.controlTimeout < 1) {
+				this.controlTimeout += CONFIG.timeout.walkControl * delta;
+				
+				if (!this._initPathingState().moving) {
+					this.faceDir(x, y);
+				}
+			} else {
+				if (!this._initPathingState().moving) {
+					this.moveTo(this.location.x+x, this.location.y+y);
+				}
+			}
+		} else {
+			if (this.controlTimeout > 0)
+				this.controlTimeout -= CONFIG.timeout.walkControl * delta;
+			
 		}
 	},
 	
