@@ -100,6 +100,11 @@ function compressMapJson(id, file) {
 	if (json.orientation && json.orientation != "orthogonal") throw "Invalid map orientation: must be 'orthogonal', is "+json.orientation;
 	if (json.renderorder && json.renderorder != "right-down") throw "Invalid map render order: must be 'right-down', is "+json.renderorder;
 	for (var li = 0; li < json.layers.length; li++) {
+		if (!json.layers[li].data) {
+			//If this isn't a tile layer, dummy out getting the data from one
+			json.layers[li].data = { get: function(){return 0;} };
+			continue;
+		}
 		if (json.layers[li].x != 0) throw "Invalid map: Layer "+li+" is mis-aligned!";
 		if (json.layers[li].y != 0) throw "Invalid map: Layer "+li+" is mis-aligned!";
 		if (json.layers[li].width != json.width) throw "Invalid map: Layer is wrong size!";
@@ -133,7 +138,7 @@ function compressMapJson(id, file) {
 	// Loop through the map, and through the layers
 	for (var x = 0; x < cmap.width; x++) {
 	for (var y = 0; y < cmap.height; y++) {
-		var tiledata = 0;
+		var tileprops = {};
 		for (var li = 0; li < json.layers.length; li++) {
 			var gid = json.layers[li].data.get(x, y); //gid = global id
 			if (gid === 0) continue;
@@ -148,32 +153,37 @@ function compressMapJson(id, file) {
 			}
 			
 			if (props) {
-				tiledata |= convertTilePropsToShort(props);
-				
-				if (props.layerorigin) {
-					var lo = props.layerorigin;
-					if (lo < 1 && lo > 7) throw "Invalid layer id! "+lo;
-					cmap.layers[lo-1] = cmap.layers[lo-1] || {};
-					cmap.layers[lo-1]["2d"] = [x, y];
-				}
-				if (props.warppoint) {
-					var wp = parseInt(props.warppoint, 16);
-					if (wp < 0 && wp > 16) throw "Invalid warp id! "+wp;
-					cmap.warps[wp] = cmap.warps[wp] || {};
-					cmap.warps[wp].loc = [x, y];
-					
-					if (props.entryanim) {
-						// Entry anims: as the scene fades up, the player character walks onto the tile
-						//Entry anims: 0 = appear, 5 = beam down
-						// 1 = walk up, 2 = walk down, 3 = walk right, 4 = walk left
-						var e = parseInt(props.entryanim, 16);
-						if (e < 0 && e > 7) throw "Invalid entry anim! "+e;
-						cmap.warps[wp].anim = e;
-					}
-				}
+				extend(tileprops, props);
 			}
-			
 		}
+		
+		var tiledata = convertTilePropsToShort(tileprops);
+		
+		if (tileprops.layerorigin) {
+			var lo = tileprops.layerorigin;
+			if (lo < 1 && lo > 7) throw "Invalid layer id! "+lo;
+			cmap.layers[lo-1] = cmap.layers[lo-1] || {};
+			cmap.layers[lo-1]["2d"] = [x, y];
+		}
+		if (tileprops.warppoint) {
+			var wp = tileprops.warppoint;
+			var wb = tileprops.warpbank || 0;
+			if (wp < 0 && wp > 16) throw "Invalid warp id! "+wp;
+			if (wb < 0 && wb > 16) throw "Invalid warp bank! "+wb;
+			wp = (wp) | (wb << 4);
+			cmap.warps[wp] = cmap.warps[wp] || {};
+			cmap.warps[wp].loc = [x, y];
+			
+			if (tileprops.entryanim) {
+				// Entry anims: as the scene fades up, the player character walks onto the tile
+				//Entry anims: 0 = appear, 5 = beam down
+				// 1 = walk up, 2 = walk down, 3 = walk right, 4 = walk left
+				var e = tileprops.entryanim;
+				if (e < 0 && e > 7) throw "Invalid entry anim! "+e;
+				cmap.warps[wp].anim = e;
+			}
+		}
+		
 		cmap.map.set(x, y, tiledata);
 	}
 	}
