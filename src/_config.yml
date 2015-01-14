@@ -1,2 +1,3 @@
-exclude: ["node_modules", "src", "tools"]
+exclude: ["node_modules", "src"]
 include: []
+baseurl: /TPPParkTest

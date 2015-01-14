@@ -5,6 +5,9 @@
 			"path": "."
 		}
 	],
+	"settings" : {
+    	
+	},
 	"build_systems" : 
 	[
 		{

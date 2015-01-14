@@ -84,9 +84,6 @@ ObjLoader.prototype.parse = function(data) {
 	var group = new THREE.Object3D();
 	var object = group;
 	
-	var group = new THREE.Object3D();
-	var object = group;
-	
 	var geometry = new THREE.Geometry();
 	var material = new THREE.MeshLambertMaterial();
 	var mesh = new THREE.Mesh( geometry, material );
@@ -170,12 +167,18 @@ ObjLoader.prototype.parse = function(data) {
 		} else
 		if ( /^g /.test(line)) {
 			// group
-			meshN( line.substring( 2 ).trim(), undefined );
+			// meshN( line.substring( 2 ).trim(), undefined );
+			mesh.name = line.substring( 2 ).trim();
 			
 		} else 
 		if ( /^usemtl /.test(line)) {
 			// material
 			meshN( undefined, line.substring( 7 ).trim() );
+			
+			// material = new THREE.MeshLambertMaterial();
+			// material.name = line.substring( 7 ).trim();
+			
+			// mesh.material = material;
 
 		} else 
 		if ( /^mtllib /.test(line)) {
@@ -199,7 +202,7 @@ ObjLoader.prototype.parse = function(data) {
 
 
 	function meshN( meshName, materialName ) {
-		if ( vertices.length > 0 ) {
+		if ( vertices.length > 0 && geometry.faces.length > 0 ) {
 			geometry.vertices = vertices;
 			
 			geometry.mergeVertices();
@@ -214,7 +217,7 @@ ObjLoader.prototype.parse = function(data) {
 			verticesCount = 0;
 		}
 		
-		if ( meshName !== undefined ) mesh.name = meshName;
+		// if ( meshName !== undefined ) mesh.name = meshName;
 		
 		if ( materialName !== undefined ) {
 			material = new THREE.MeshLambertMaterial();

@@ -22,6 +22,7 @@ var appCache = [
 //////////////// Globals ///////////////////
 global.BUILD_OUT = "_out/";
 global.BUILD_TEMP = "_outtemp/";
+global.TEST_OUT = "_test/";
 global.SRC_MAPS = BUILD_OUT+"_srcmaps/";
 global.MINIFY = false; //Set to true to minifiy the source
 
@@ -70,6 +71,8 @@ const findGlobalEvents = require("./event-compiler.js").findGlobalEvents;
 const checkSyntax = require("./syntax-check.js");
 const uniqueCheckGlobalEvents = require("./event-compiler.js").uniqueCheckGlobalEvents;
 const createEventLibraryBundle = require("./event-compiler.js").createEventLibraryBundle;
+const ByLineReader = require("./transform-streams").ByLineReader;
+const ProcessorTransform = require("./transform-streams").ProcessorTransform;
 
 //////////////// Main ///////////////////
 function build(){
@@ -107,6 +110,9 @@ function build(){
 	writeCache();
 	
 	console.timeEnd("Build time");
+	
+	//Finally, "jekyllify"
+	jekyllify();
 }
 
 
@@ -379,6 +385,70 @@ function syntaxCheckAllFiles() {
 			}
 		}
 	}
+}
+
+/* 
+	Due to how github pages does subdomains, we need to replace instances of 
+	{{site.baseurl}} with an actual subdomain, and put it to YET ANOTHER folder
+	after transforming it, before we can test...
+	
+	This should be the final step of the build process, mainly because it copies files
+	in a non-sequential manner.
+*/
+function jekyllify() {
+	
+	console.log("\n[Jekyl] Jekyll-ifying output for testing.");
+	
+	__findFilesIn(BUILD_OUT, TEST_OUT, "");
+	
+	console.log("[Jekyl] Jekyll-ification completed");
+	return;
+	
+	function __findFilesIn(base, dest, dir) {
+		var dirListing = fs.readdirSync(base+dir);
+		for (var di = 0; di < dirListing.length; di++) {
+			var file = dirListing[di];
+			if (file.indexOf(".") == 0) continue;
+			//TODO insert other jekyll ignore characters here
+			
+			// console.log("[ESVal] File: ", dir+file); nextTick();
+			var stat = fs.statSync(base+dir+file);
+			if (stat.isFile()) 
+			{
+				var ext = file.substr(file.lastIndexOf(".")+1);
+				switch (ext) {
+					case "js":
+					case "css":
+					case "html":
+					case "mf":
+						__filterCopyFile(base+dir+file, dest+dir+file);
+						break;
+					default:
+						copyFile(base+dir+file, dest+dir+file, true);
+						break;
+				}
+			} else {
+				__findFilesIn(base, dest, dir+file+"/");
+			}
+		}
+	}
+	
+	function __filterCopyFile(src, dest) {
+		var dir = path.dirname(dest);
+		if (!fs.existsSync(dir)) {
+			mkdirp(dir);
+		}
+		
+		var sfile = fs.createReadStream(src);
+		var dfile = fs.createWriteStream(dest);
+		var byline = new ByLineReader();
+		var process = new ProcessorTransform(function(chunk){
+			return chunk.replace(/\{\{site\.baseurl\}\}/g, "");
+		});
+		
+		sfile.pipe(byline).pipe(process).pipe(dfile);
+	}
+	
 }
 
 

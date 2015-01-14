@@ -220,6 +220,7 @@ extend(Map.prototype, {
 		function __modelReady(obj) {
 			console.log("__modelReady");
 			self.mapmodel = obj;
+			__test__outputTree(obj);
 			self.objdata = self.mtldata = true; //wipe the big strings from memory
 			self.emit("loaded-model");
 			__loadDone();
@@ -652,5 +653,32 @@ extend(Map.prototype, {
 	},
 });
 module.exports = Map;
+
+
+function __test__outputTree(obj, indent) {
+	indent = (indent === undefined)? 0 : indent;
+	
+	var out = "["+obj.type+": ";
+	out += ((!obj.name)?"<Unnamed>":obj.name);
+	out += " ]";
+	
+	switch (obj.type) {
+		case "Mesh":
+			out += " (verts="+obj.geometry.vertices.length;
+			out += " faces="+obj.geometry.faces.length;
+			out += " mat="+obj.material.name;
+			out += ")";
+			break;
+	}
+	
+	for (var i = 0; i < indent; i++) {
+		out = "| " + out;
+	}
+	console.log(out);
+	
+	for (var i = 0; i < obj.children.length; i++) {
+		__test__outputTree(obj.children[i], indent+1);
+	}
+}
 
 

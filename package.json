@@ -30,7 +30,7 @@
     "three": "~0.69.0"
   },
   "scripts": {
-    "start": "ws -d _out/",
+    "start": "ws -d _test/",
     "build": "node build/build.js"
   },
   "local-web-server": {

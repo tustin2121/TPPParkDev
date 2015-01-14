@@ -8,6 +8,7 @@ node-webkit
 # Our build folders
 _out
 _outtemp
+_test
 
 #################
 ## Sublime Text
