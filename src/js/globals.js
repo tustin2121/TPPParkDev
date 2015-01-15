@@ -5,8 +5,8 @@ window.SoundManager = require("./soundmanager");
 window.currentMap = null;
 window.gameState = require("./gamestate");
 
-window.DEF_TEXTURE = "{{site.baseurl}}/img/missing_tex.png";
-window.DEF_SPRITE = "{{site.baseurl}}/img/missing_sprite.png";
+window.DEF_TEXTURE = BASEURL+"/img/missing_tex.png";
+window.DEF_SPRITE = BASEURL+"/img/missing_sprite.png";
 window.DEF_SPRITE_FORMAT = "pt_horzrow-32";
 
 window.CONFIG = {

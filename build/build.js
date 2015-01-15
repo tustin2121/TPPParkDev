@@ -74,6 +74,7 @@ const uniqueCheckGlobalEvents = require("./event-compiler.js").uniqueCheckGlobal
 const createEventLibraryBundle = require("./event-compiler.js").createEventLibraryBundle;
 const ByLineReader = require("./transform-streams").ByLineReader;
 const ProcessorTransform = require("./transform-streams").ProcessorTransform;
+const PrependTransform = require("./transform-streams").PrependTransform;
 
 //////////////// Main ///////////////////
 function build(){
@@ -100,7 +101,7 @@ function build(){
 	//Compile every map in the source directory
 	findMaps();
 	
-	//Browseify the source code
+	//Browserify the source code
 	bundle("game");
 	
 	//Bundle the dev tools
@@ -126,7 +127,26 @@ function build(){
 function clean() {
 	console.log("[Clean] Deleting", BUILD_TEMP);
 	rmdir(BUILD_TEMP);
-	console.log("TODO Clean _out as well");
+	
+	console.log("[Clean] Cleaning "+BUILD_OUT);
+	__rmFilesIn(BUILD_OUT);
+	
+	console.log("[Clean] Cleaning "+TEST_OUT);
+	__rmFilesIn(TEST_OUT);
+	
+	return;
+	
+	function __rmFilesIn(dir) {
+		var dirListing = fs.readdirSync(dir);
+		for (var di = 0; di < dirListing.length; di++) {
+			var file = dirListing[di];
+			
+			//skip files and folders starting with a dot, like ".git/"
+			if (file.indexOf(".") == 0) continue;
+			
+			rmdir(dir+file);
+		}
+	}
 }
 
 function compileLess(src, dest) {
@@ -232,12 +252,31 @@ function copyStaticFiles() {
 function copyHtmlFiles() {
 	//These copies can happen in parallel
 	sync.parallel(function(){
-		copyFile("src/game.html", BUILD_OUT+"/game.html");
-		copyFile("src/index.html", BUILD_OUT+"/index.html");
+		__prependCopyFile("src/game.html", BUILD_OUT+"/game.html");
+		__prependCopyFile("src/index.html", BUILD_OUT+"/index.html");
 		
 	});
 	var l = sync.await();
 	console.log("[Copy ] Copied", l.length, "html files.");
+	return;
+	
+	function __prependCopyFile(src, dest, noDefer) {
+		var dir = path.dirname(dest);
+		if (!fs.existsSync(dir)) {
+			mkdirp(dir);
+		}
+		
+		var sfile = fs.createReadStream(src);
+		var dfile = fs.createWriteStream(dest);
+		var prepend = new PrependTransform(
+			"---\n"+
+			"---\n"+
+			"{% capture baseurl %}{{ site.github.project_title | prepend:'/' }}{% endcapture %}\n");
+		
+		if (!noDefer) dfile.on("finish", sync.defer());
+		
+		sfile.pipe(prepend).pipe(dfile);
+	}
 }
 
 function copyConfigFiles() {
@@ -400,7 +439,7 @@ function syntaxCheckAllFiles() {
 
 /* 
 	Due to how github pages does subdomains, we need to replace instances of 
-	{{site.baseurl}} with an actual subdomain, and put it to YET ANOTHER folder
+	{{ site.baseurl }} with an actual subdomain, and put it to YET ANOTHER folder
 	after transforming it, before we can test...
 	
 	This should be the final step of the build process, mainly because it copies files
@@ -419,8 +458,12 @@ function jekyllify() {
 		var dirListing = fs.readdirSync(base+dir);
 		for (var di = 0; di < dirListing.length; di++) {
 			var file = dirListing[di];
-			if (file.indexOf(".") == 0) continue;
-			//TODO insert other jekyll ignore characters here
+			// Jekyll does not build the following files:
+			if (file.indexOf(".") == 0) continue; //hidden or used for backup
+			if (file.indexOf("#") == 0) continue; //start with . or #
+			if (file.indexOf("_") == 0) continue; //"contain site configuration" (start with _)
+			if (file.lastIndexOf("~") == file.length-1) continue; //end with ~
+			
 			
 			// console.log("[ESVal] File: ", dir+file); nextTick();
 			var stat = fs.statSync(base+dir+file);
@@ -454,7 +497,9 @@ function jekyllify() {
 		var dfile = fs.createWriteStream(dest);
 		var byline = new ByLineReader();
 		var process = new ProcessorTransform(function(chunk){
-			return chunk.replace(/\{\{site\.baseurl\}\}/g, "");
+			if (chunk.indexOf("---") == 0) return "";
+			if (chunk.indexOf("{% capture") == 0) return "";
+			return chunk.replace(/\{\{ baseurl \}\}/g, "");
 		});
 		
 		sfile.pipe(byline).pipe(process).pipe(dfile);

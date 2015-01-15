@@ -1,19 +1,20 @@
 <html>
 <head>
-	<link rel="stylesheet" type="text/css" href="/css/game.css">
-	<script src="/js/jquery-2.1.1.min.js"></script>
-	<script src="/js/jquery.cookie.js"></script>
+	<script>window.BASEURL = "{{ baseurl }}";</script>
+	<link rel="stylesheet" type="text/css" href="{{ baseurl }}/css/game.css">
+	<script src="{{ baseurl }}/js/jquery-2.1.1.min.js"></script>
+	<script src="{{ baseurl }}/js/jquery.cookie.js"></script>
 	<script src="three.js"></script>
 	
 	<script src="OrbitControls.js"></script>
 	
-	<script src="/js/zip/zip.js"></script>
-	<script src="/js/zip/zip-fs.js"></script>
-	<script src="/js/zip/zip-ext.js"></script>
-	<script src="/js/zip/inflate.js"></script>
-	<script>zip.workerScriptsPath = "/js/zip/";</script>
+	<script src="{{ baseurl }}/js/zip/zip.js"></script>
+	<script src="{{ baseurl }}/js/zip/zip-fs.js"></script>
+	<script src="{{ baseurl }}/js/zip/zip-ext.js"></script>
+	<script src="{{ baseurl }}/js/zip/inflate.js"></script>
+	<script>zip.workerScriptsPath = "{{ baseurl }}/js/zip/";</script>
 	
-	<script src="/js/eventlib.js"></script>
+	<script src="{{ baseurl }}/js/eventlib.js"></script>
 	<script src="mapview.js"></script>
 </head>
 <body>
@@ -22,7 +23,7 @@
 			<td>
 				<div class="canvas-wrap" style="background-color: #000000;">
 					<div style="float: right;">
-						<input id="idin" type="textbox" value="iChurchOfHelix" />
+						<input id="idin" type="text" list="compiledMaps" />
 						<button id="loadbtn">Load</button>
 					</div>
 					<canvas id="gamescreen"></canvas>

@@ -80,4 +80,37 @@ extend(ProcessorTransform.prototype, {
 });
 module.exports.ProcessorTransform = ProcessorTransform;
 
+
+/**
+ * For each chunk of data, calls a given function with the data which is expected to
+ * transform it somehow, and return the result.
+ */
+function PrependTransform(Str, opts) {
+	if (!(this instanceof PrependTransform))
+		return new PrependTransform(Str, opts);
+	
+	extend(opts, { objectMode: true });
+	stream.Transform.call(this, opts);
+	this.prependStr = Str;
+	
+	this.setEncoding("utf8");
+}
+inherits(PrependTransform, stream.Transform);
+extend(PrependTransform.prototype, {
+	prependStr : "",
+	done : false,
+	
+	_transform : function(chunk, encoding, doneFn) {
+		if (!this.done) {
+			chunk = this.prependStr + chunk.toString();
+			this.done = true;
+		}
 		
+		doneFn(null, chunk);
+	},
+	
+	// _flush : function(doneFn) {
+	// 	doneFn();
+	// },
+});
+module.exports.PrependTransform = PrependTransform;

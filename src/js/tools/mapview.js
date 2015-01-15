@@ -25,6 +25,12 @@ $(function(){
 		ticksPerSecond : 30,
 	});
 	
+	var datalist = $("<datalist id='compiledMaps'>");
+	for (var i = 0; i < COMPILED_MAPS.length; i++) {
+		datalist.append($("<option>").text(COMPILED_MAPS[i]));
+	}
+	$("#idin").after(datalist);
+	
 });
 
 function loadMap(id) {
