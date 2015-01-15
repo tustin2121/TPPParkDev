@@ -104,7 +104,7 @@ extend(PlayerChar.prototype, {
 	////////////////////////////////////////////////////////////////////////
 	
 	_avatar_loadSprite : function(map, texture) {
-		var url = gameState.playerSprite;
+		var url = "{{site.baseurl}}/img/pcs/"+ gameState.playerSprite;
 		var res = /^([^\[]+)\[([^\]]+)\].png$/.exec(url);
 		
 		var name = res[1];

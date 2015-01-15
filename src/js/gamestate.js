@@ -10,5 +10,5 @@ module.exports = {
 		animOverride: 0,
 	},
 	
-	playerSprite : "/img/pcs/youngster[hg_vertmix-32].png",
+	playerSprite : "youngster[hg_vertmix-32].png",
 };

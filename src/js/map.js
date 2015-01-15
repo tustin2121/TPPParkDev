@@ -116,7 +116,7 @@ extend(Map.prototype, {
 		
 		var self = this;
 		var xhr = this.xhr = new XMLHttpRequest();
-		xhr.open("GET", "/maps/"+this.id+EXT_MAPBUNDLE);
+		xhr.open("GET", "{{site.baseurl}}/maps/"+this.id+EXT_MAPBUNDLE);
 		console.log("XHR: ", xhr);
 		xhr.responseType = "blob";
 		xhr.on("load", function(e) {

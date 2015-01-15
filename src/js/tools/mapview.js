@@ -10,6 +10,8 @@ var renderLoop = require("../model/renderloop");
 
 require("../globals");
 
+console.log(COMPILED_MAPS);
+
 //On Ready
 $(function(){
 	

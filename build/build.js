@@ -18,6 +18,7 @@ var appCache = [
 	"js/zip/zip.js", "js/zip/zip-fs.js", "js/zip/z-worker.js", "js/zip/inflate.js", //"js/zip/deflate.js",
 	"img/missing_sprite.png", "img/missing_tex.png", "img/twitch_emotes.png",
 ];
+var compiledMaps = [];
 
 //////////////// Globals ///////////////////
 global.BUILD_OUT = "_out/";
@@ -104,7 +105,12 @@ function build(){
 	
 	//Bundle the dev tools
 	copyDevTools();
-	bundle("tools/mapview", { dest:BUILD_OUT+"tools/mapview.js", appcache:false });
+	bundle("tools/mapview", { 
+		dest:BUILD_OUT+"tools/mapview.js", appcache:false, 
+		globals: {
+			COMPILED_MAPS : function() { return "['"+compiledMaps.join("', '")+"']"; },
+		},
+	});
 	
 	//Rewrite the app cache manifest
 	writeCache();
@@ -146,6 +152,7 @@ function bundle(file, opts) {
 	var bundler = new Browserify({
 		noParse : ["three", "jquery"],
 		debug : true,
+		insertGlobalVars : opts.globals,
 	});
 	
 	bundler.exclude("three");
@@ -160,6 +167,9 @@ function bundle(file, opts) {
 	});
 	
 	bundler.add(opts.src);
+	if (opts.and) {
+		bundler.add(opts.and);
+	}
 	
 	var data = sync.await(bundler.bundle(sync.defer()));
 	fs.writeFileSync(opts.dest, data);
@@ -321,14 +331,15 @@ function findMaps() {
 					console.log("[cMaps] Skipping compilation of", '"'+file+'":', res);
 				} else {
 					success++;
+					compiledMaps.push(file);
 				}
 			} catch (e) {
-				// console.log("[cMaps] ERROR while compiling", '"'+file+'"', "\n"+e+"\n"+e.stack);
-				// nextTick();
-				if (typeof e == "string")
-					throw new Error(e);
-				else
-					throw e;
+				console.log("[cMaps] ERROR while compiling", '"'+file+'"', "\n"+e+"\n"+e.stack);
+				nextTick();
+				// if (typeof e == "string")
+				// 	throw new Error(e);
+				// else
+				// 	throw e;
 			}
 		}
 	}
