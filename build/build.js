@@ -252,31 +252,14 @@ function copyStaticFiles() {
 function copyHtmlFiles() {
 	//These copies can happen in parallel
 	sync.parallel(function(){
-		__prependCopyFile("src/game.html", BUILD_OUT+"/game.html");
-		__prependCopyFile("src/index.html", BUILD_OUT+"/index.html");
+		copyFileWithJekyllPrepend("src/game.html", BUILD_OUT+"/game.html");
+		copyFileWithJekyllPrepend("src/index.html", BUILD_OUT+"/index.html");
 		
 	});
 	var l = sync.await();
 	console.log("[Copy ] Copied", l.length, "html files.");
 	return;
 	
-	function __prependCopyFile(src, dest, noDefer) {
-		var dir = path.dirname(dest);
-		if (!fs.existsSync(dir)) {
-			mkdirp(dir);
-		}
-		
-		var sfile = fs.createReadStream(src);
-		var dfile = fs.createWriteStream(dest);
-		var prepend = new PrependTransform(
-			"---\n"+
-			"---\n"+
-			"{% capture baseurl %}{{ site.github.project_title | prepend:'/' }}{% endcapture %}\n");
-		
-		if (!noDefer) dfile.on("finish", sync.defer());
-		
-		sfile.pipe(prepend).pipe(dfile);
-	}
 }
 
 function copyConfigFiles() {
@@ -296,7 +279,7 @@ function copyDevTools() {
 	//These copies can happen in parallel
 	sync.parallel(function(){
 		copyDirectory("lib/tools/", BUILD_OUT+"tools/");
-		copyFile("src/tools/mapview.html", BUILD_OUT+"tools/mapview.html");
+		copyFileWithJekyllPrepend("src/tools/mapview.html", BUILD_OUT+"tools/mapview.html");
 		
 	});
 	var l = sync.await();
@@ -315,6 +298,24 @@ function copyFile(src, dest, noDefer) {
 	if (!noDefer) dfile.on("finish", sync.defer());
 	
 	sfile.pipe(dfile);
+}
+
+function copyFileWithJekyllPrepend(src, dest, noDefer) {
+	var dir = path.dirname(dest);
+	if (!fs.existsSync(dir)) {
+		mkdirp(dir);
+	}
+	
+	var sfile = fs.createReadStream(src);
+	var dfile = fs.createWriteStream(dest);
+	var prepend = new PrependTransform(
+		"---\n"+
+		"---\n"+
+		"{% capture baseurl %}{{ site.github.project_title | prepend:'/' }}{% endcapture %}\n");
+	
+	if (!noDefer) dfile.on("finish", sync.defer());
+	
+	sfile.pipe(prepend).pipe(dfile);
 }
 
 function copyDirectory(src, dest, noDefer) {
