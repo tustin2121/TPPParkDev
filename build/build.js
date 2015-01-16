@@ -137,6 +137,7 @@ function clean() {
 	return;
 	
 	function __rmFilesIn(dir) {
+		if (!fs.existsSync(dir)) return;
 		var dirListing = fs.readdirSync(dir);
 		for (var di = 0; di < dirListing.length; di++) {
 			var file = dirListing[di];

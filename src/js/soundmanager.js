@@ -33,7 +33,7 @@ extend(SoundManager.prototype, {
 			snd.autoplay = false;
 			snd.autobuffer = true;
 			snd.preload = "auto";
-			snd.src = "{{site.baseurl}}/snd/" + id + this.ext;
+			snd.src = BASEURL+"/snd/" + id + this.ext;
 			snd.on("ended", function(){
 				snd.currentTime = 0;
 			});

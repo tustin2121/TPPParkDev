@@ -237,8 +237,11 @@ function compressMapJson(id, file) {
 	
 	
 	function __verifyData(cmap) {
+		console.log("[cMaps] # Layers:", cmap.layers.length, "  # Warps:", cmap.warps.length);
+		
 		// Check Layer data
 		for (var i = 0; i < cmap.layers.length; i++) {
+			if (!cmap.layers[i]) continue;
 			var _2d = !!cmap.layers[i]["2d"];
 			var _3d = !!cmap.layers[i]["3d"];
 			
@@ -248,6 +251,7 @@ function compressMapJson(id, file) {
 		
 		//Check Warp data
 		for (var i = 0; i < cmap.warps.length; i++) {
+			if (!cmap.warps[i]) continue;
 			var _loc = !!cmap.warps[i]["loc"];
 			var _anim = !!cmap.warps[i]["anim"]; //TODO provide default 0 instead
 			
