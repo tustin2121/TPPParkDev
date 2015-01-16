@@ -11,5 +11,14 @@
 	"heightstep" : 0.25,
 	"camera" : {
 		"type" : "gen5"
+	},
+	"lighting" : {
+		"default": true,
+		"lights" : [],
+		"shadowmap": {
+			"width": 512, "height": 512,
+			"top": 10, "bottom": -10, "left": -10, "right": 10,
+			"near": 1, "far": 150,
+		}
 	}
 }

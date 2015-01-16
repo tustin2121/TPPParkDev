@@ -77,11 +77,14 @@ extend(Map.prototype, {
 	lScriptTag : null,
 	gScriptTag : null,
 	
+	camera: null,
+	//cameras: null,
+	scene: null,
 	mapmodel: null,
-	camera : null,
-	cameras : null,
-	scene : null,
-	spriteNode : null,
+	
+	spriteNode: null,
+	lightNode: null,
+	cameraNode: null,
 	
 	///////////////////////////////////////////////////////////////////////////////////////
 	// Load Management 
@@ -104,9 +107,14 @@ extend(Map.prototype, {
 		
 		delete this.tiledata;
 		
+		this.scene.dispose();
+		delete this.scene;
 		delete this.mapmodel;
 		delete this.camera;
-		delete this.scene;
+		
+		delete this.spriteNode;
+		delete this.lightNode;
+		delete this.cameraNode;
 	},
 	
 	/** Begin download of this map's zip file, preloading the data. */
@@ -117,15 +125,15 @@ extend(Map.prototype, {
 		var self = this;
 		var xhr = this.xhr = new XMLHttpRequest();
 		xhr.open("GET", BASEURL+"/maps/"+this.id+EXT_MAPBUNDLE);
-		console.log("XHR: ", xhr);
+		// console.log("XHR: ", xhr);
 		xhr.responseType = "blob";
 		xhr.on("load", function(e) {
-			console.log("LOAD:", e);
+			// console.log("LOAD:", e);
 			self.file = xhr.response;
 			self.emit("downloaded");
 		});
 		xhr.on("progress", function(e){
-			console.log("PROGRESS:", e);
+			// console.log("PROGRESS:", e);
 			if (e.lengthComputable) {
 				var percentDone = e.loaded / e.total;
 			} else {
@@ -133,10 +141,10 @@ extend(Map.prototype, {
 			}
 		});
 		xhr.on("error", function(e){
-			console.log("ERROR:", e);
+			console.error("ERROR:", e);
 		});
 		xhr.on("canceled", function(e){
-			console.log("CANCELED:", e);
+			console.error("CANCELED:", e);
 		});
 		//TODO on error and on canceled
 		
@@ -159,11 +167,10 @@ extend(Map.prototype, {
 		}
 		
 		this.fileSys.importBlob(this.file, function success(){
-			//TODO load up the map!
+			//load up the map!
 			self.fileSys.root.getChildByName("map.json").getText(__jsonLoaded, __logProgress);
 			self.fileSys.root.getChildByName("map.obj").getText(__objLoaded, __logProgress);
 			self.fileSys.root.getChildByName("map.mtl").getText(__mtlLoaded, __logProgress);
-			//TODO load event bundles
 			
 		}, function error(e){
 			console.log("ERROR: ", e);
@@ -243,30 +250,9 @@ extend(Map.prototype, {
 		
 		//TODO create player character
 		
-		// For camera types, see the Camera types wiki page
-		if (!this.metadata.camera) {
-			throw new Error("Map contains no setup for domain!");
-		}
-		switch(this.metadata.camera.type) {
-			case "ortho":
-				mSetup.camera.ortho.call(this, this.metadata.camera);
-				break;
-			case "gen4":
-				mSetup.camera.gen4.call(this, this.metadata.camera);
-				break;
-			case "gen5":
-				mSetup.camera.gen5.call(this, this.metadata.camera);
-				break;
-			default:
-				throw new Error("Invalid Camera Type!", this.metadata.camera.type);
-		}
-		
-		var lightsetup = mSetup.lighting[this.metadata.domain];
-		if (!lightsetup)
-			throw new Error("Invalid Map Domain!", this.metadata.domain);
-		lightsetup.call(this);
-		
 		this.scene.add(this.mapmodel);
+		
+		mSetup.setupRigging.call(this);
 		// Map Model is now ready
 		
 		this._initEventMap();

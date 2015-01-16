@@ -72,10 +72,10 @@ extend(PlayerChar.prototype, {
 	
 	controlTimeout: 0.0,
 	controlCharacter : function(delta) {
-		var y = ((controller.isDown("Up"))? -1:0) + ((controller.isDown("Down"))? 1:0);
-		var x = ((controller.isDown("Left"))? -1:0) + ((controller.isDown("Right"))? 1:0);
+		var y = ((controller.isDown("Up", "game"))? -1:0) + ((controller.isDown("Down", "game"))? 1:0);
+		var x = ((controller.isDown("Left", "game"))? -1:0) + ((controller.isDown("Right", "game"))? 1:0);
 		
-		if (controller.isDown("Interact") && !this._initPathingState().moving) {
+		if (controller.isDown("Interact", "game") && !this._initPathingState().moving) {
 			currentMap.dispatch(
 				this.location.x - this.facing.x, this.location.y + this.facing.z, 
 				"interacted", this.facing);

@@ -240,6 +240,7 @@ function compressMapJson(id, file) {
 		console.log("[cMaps] # Layers:", cmap.layers.length, "  # Warps:", cmap.warps.length);
 		
 		// Check Layer data
+		if (!cmap.layers || !cmap.layers.length) throw "No Layer definitions!";
 		for (var i = 0; i < cmap.layers.length; i++) {
 			if (!cmap.layers[i]) continue;
 			var _2d = !!cmap.layers[i]["2d"];
@@ -250,6 +251,7 @@ function compressMapJson(id, file) {
 		}
 		
 		//Check Warp data
+		if (!cmap.layers || !cmap.layers.length) throw "No Warp definitions!";
 		for (var i = 0; i < cmap.warps.length; i++) {
 			if (!cmap.warps[i]) continue;
 			var _loc = !!cmap.warps[i]["loc"];
@@ -258,6 +260,11 @@ function compressMapJson(id, file) {
 			if (!(_loc && _anim)) 
 				throw "Incomplete Layer definition: Warp "+i+", loc="+_loc+" anim="+_anim;
 		}
+		
+		//Check domain and cameras
+		if (!cmap.domain) throw "No domain set!";
+		if (!cmap.camera) throw "No camera definition!";
+		if (!cmap.camera.type) throw "No type defined for camera!";
 	}
 }
 

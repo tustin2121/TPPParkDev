@@ -35,7 +35,15 @@ extend(ControlManager.prototype, {
 		Interact: false, FocusChat: false,
 	},
 	
-	isDown : function(key) {
+	isDown : function(key, ctx) {
+		if ($.isArray(ctx)) {
+			var go = false;
+			for (var i = 0; i < ctx.length; i++) go |= ctx[i];
+			if (!go) return;
+		} else {
+			if (this.inputContext != ctx) return;
+		}
+		
 		return this.keys_down[key];
 	},
 	
