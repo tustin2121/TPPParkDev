@@ -44,6 +44,7 @@ extend(ObjLoader.prototype, {
 					object.receiveShadow = true;
 				}
 			});
+			object.name = "Loaded Mesh";
 			
 			scope.emit("load", object);
 		});

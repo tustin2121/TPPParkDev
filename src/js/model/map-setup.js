@@ -23,7 +23,7 @@ module.exports = {
 			
 			if (!camdef) { throw new Error("Map contains no setup for domain!"); }
 			
-			var camfn = mSetup.camerap[camdef.type];
+			var camfn = mSetup.camera[camdef.type];
 			if (!camfn) throw new Error("Invalid Camera Type!", camdef.type);
 			
 			camfn.call(this, camdef);

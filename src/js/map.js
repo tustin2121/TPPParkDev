@@ -419,6 +419,7 @@ extend(Map.prototype, {
 		};
 		
 		this.spriteNode = new THREE.Object3D();
+		this.spriteNode.name = "Sprite Rig";
 		this.spriteNode.position.y = 0.21;
 		this.scene.add(this.spriteNode);
 		

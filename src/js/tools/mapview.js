@@ -69,6 +69,7 @@ var _infoParent;
 function createInfoParent() {
 	if (!_infoParent) {
 		_infoParent = new THREE.Object3D();
+		_infoParent.name = "DEBUG Info Rigging";
 		currentMap.scene.add(_infoParent);
 	}
 }
@@ -115,6 +116,7 @@ var _node_movementGrid;
 function showMovementGrid() {
 	if (!_node_movementGrid) {
 		_node_movementGrid = new THREE.Object3D();
+		_node_movementGrid.name = "DEBUG Movement Grid";
 		
 		createInfoParent();
 		

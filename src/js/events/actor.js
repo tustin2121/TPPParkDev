@@ -5,6 +5,8 @@ var Event = require("tpp-event");
 var inherits = require("inherits");
 var extend = require("extend");
 
+var CharacterSprite = require("../model/spritemodel.js").CharacterSprite;
+
 var GLOBAL_SCALEUP = 1.65;
 var EVENT_PLANE_NORMAL = new THREE.Vector3(0, 1, 0);
 /**
@@ -85,16 +87,20 @@ extend(Actor.prototype, {
 		
 		self.avatar_format = getSpriteFormat(DEF_SPRITE_FORMAT);
 		
-		var mat /*= self.avatar_mat*/ = new THREE.SpriteMaterial({
-			map: texture,
-			color: 0xFFFFFF,
-			transparent: true,
-		});
+		// var mat /*= self.avatar_mat*/ = new THREE.SpriteMaterial({
+		// 	map: texture,
+		// 	color: 0xFFFFFF,
+		// 	transparent: true,
+		// });
 		
 		currentMap.markLoading();
 		this._avatar_loadSprite(map, texture);
 		
-		var sprite = self.avatar_sprite = new THREE.Sprite(mat);
+		//var sprite = self.avatar_sprite = new THREE.Sprite(mat);
+		var sprite = self.avatar_sprite = new CharacterSprite({
+			map: texture,
+			color: 0xFFFFFF,
+		});
 		self.setScale(self.scale);
 		
 		return sprite;
