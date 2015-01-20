@@ -209,6 +209,7 @@ MaterialCreator.prototype = {
 					if (value < 1) {
 						params['transparent'] = true;
 						params['opacity'] = value;
+						params['alphaTest'] = 0.05;
 					}
 					break;
 					

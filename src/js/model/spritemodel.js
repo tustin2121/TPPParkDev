@@ -14,8 +14,11 @@ function CharacterSprite(opts) {
 		alphaTest: true,
 	}, opts);
 	
+	if (!opts.offset) opts.offset = new THREE.Vector3(0, 0, 0);
+	
 	//TODO replace with geometry we can control
-	var geom = new THREE.PlaneBufferGeometry(1, 1);
+	// var geom = new THREE.PlaneBufferGeometry(1, 1);
+	var geom = new CharacterPlaneGeometry(opts.offset.x, opts.offset.y, opts.offset.z);
 	
 	var mat = new CharacterSpriteMaterial(opts);
 	
@@ -54,6 +57,8 @@ function CharacterSpriteMaterial(opts) {
 	this.type = "CharacterSpriteMaterial";
 	
 	this.transparent = (opts.transparent !== undefined)? opts.transparent : true;
+	this.alphaTest = 0.05;
+	// this.depthWrite = false;
 }
 inherits(CharacterSpriteMaterial, THREE.ShaderMaterial);
 extend(CharacterSpriteMaterial.prototype, {
@@ -81,6 +86,30 @@ extend(CharacterSpriteMaterial.prototype, {
 });
 module.exports.CharacterSpriteMaterial = CharacterSpriteMaterial;
 
+
+
+function CharacterPlaneGeometry(xoff, yoff, zoff) {
+	THREE.BufferGeometry.call(this);
+	
+	this.type = "CharacterPlaneGeometry";
+	
+	var verts = new Float32Array([
+		-0.5 + xoff, -0.5 + yoff, 0 + zoff,
+		 0.5 + xoff, -0.5 + yoff, 0 + zoff,
+		 0.5 + xoff,  0.5 + yoff, 0 + zoff,
+		-0.5 + xoff,  0.5 + yoff, 0 + zoff,
+	]);
+	var norms = new Float32Array([ 0, 1, 1,   0, 0, 1,   0, 0, 1,   0, 0, 1, ]);
+	var uvs   = new Float32Array([ 0, 0,      1, 0,      1, 1,      0, 1, ]);
+	var faces = new Uint16Array( [ 0, 1, 2,   0, 2, 3 ]);
+	
+	this.addAttribute( 'index', new THREE.BufferAttribute( faces, 1 ) );
+	this.addAttribute( 'position', new THREE.BufferAttribute( verts, 3 ) );
+	this.addAttribute( 'normal', new THREE.BufferAttribute( norms, 3 ) );
+	this.addAttribute( 'uv', new THREE.BufferAttribute( uvs, 2 ) );
+	
+}
+inherits(CharacterPlaneGeometry, THREE.BufferGeometry);
 
 
 
@@ -135,32 +164,31 @@ var FRAG_SHADER = [
 
 		'vec4 texture = texture2D( map, vUV );',
 
-		// '#ifdef ALPHATEST',
-		// 	'if ( texture.a < ALPHATEST ) discard;',
-		// '#endif',
+		'#ifdef ALPHATEST',
+			'if ( texture.a < ALPHATEST ) discard;',
+		'#endif',
 
-		// 'gl_FragColor = vec4( color * texture.xyz, texture.a * opacity );',
 		'gl_FragColor = vec4( color * texture.xyz, texture.a * opacity );',
 
-		// '#ifdef USE_FOG',
-		// 	'float depth = gl_FragCoord.z / gl_FragCoord.w;',
-		// 	'float fogFactor = 0.0;',
+		'#ifdef USE_FOG',
+			'float depth = gl_FragCoord.z / gl_FragCoord.w;',
+			'float fogFactor = 0.0;',
 			
-		// 	'#ifndef FOG_EXP2', //note: NOT defined
+			'#ifndef FOG_EXP2', //note: NOT defined
 			
-		// 		'fogFactor = smoothstep( fogNear, fogFar, depth );',
+				'fogFactor = smoothstep( fogNear, fogFar, depth );',
 				
-		// 	'#else',
+			'#else',
 			
-		// 		'const float LOG2 = 1.442695;',
-		// 		'float fogFactor = exp2( - fogDensity * fogDensity * depth * depth * LOG2 );',
-		// 		'fogFactor = 1.0 - clamp( fogFactor, 0.0, 1.0 );',
+				'const float LOG2 = 1.442695;',
+				'float fogFactor = exp2( - fogDensity * fogDensity * depth * depth * LOG2 );',
+				'fogFactor = 1.0 - clamp( fogFactor, 0.0, 1.0 );',
 
-		// 	'#endif',
+			'#endif',
 			
-		// 	'gl_FragColor = mix( gl_FragColor, vec4( fogColor, gl_FragColor.w ), fogFactor );',
+			'gl_FragColor = mix( gl_FragColor, vec4( fogColor, gl_FragColor.w ), fogFactor );',
 
-		// '#endif',
+		'#endif',
 
 	'}'
 ].join( '\n' )
