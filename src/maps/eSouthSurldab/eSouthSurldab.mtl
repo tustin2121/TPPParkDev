@@ -1,5 +1,5 @@
 # Blender MTL File: 'SurldabSouth.blend'
-# Material Count: 2
+# Material Count: 6
 
 newmtl None
 Ns 0
@@ -17,3 +17,39 @@ Kd 0.8 0.8 0.8
 Ks 0.8 0.8 0.8
 d 1
 illum 2
+
+newmtl None_concrete_bright.png
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\Surldab South\concrete_bright.png
+
+newmtl None_dirt2.png
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\Surldab South\dirt2.png
+
+newmtl None_redbrick.png
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\Surldab South\redbrick.png
+
+newmtl None_sea.png
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\Surldab South\sea.png

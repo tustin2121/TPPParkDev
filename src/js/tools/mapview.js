@@ -37,7 +37,7 @@ function loadMap(id) {
 	if (currentMap) {
 		currentMap.dispose();
 		_infoParent = null;
-		_stored_walkableTiles = null;
+		_node_movementGrid = null;
 	}
 	
 	currentMap = new Map(id);
@@ -73,7 +73,7 @@ function createInfoParent() {
 		currentMap.scene.add(_infoParent);
 	}
 }
-
+/*
 var _stored_walkableTiles;
 function showWalkableTiles() {
 	var tiles = _stored_walkableTiles;
@@ -110,7 +110,7 @@ function showWalkableTiles() {
 		particles.sortParticles = true;
 		_infoParent.add(particles);
 	}
-}
+} */
 
 var _node_movementGrid;
 function showMovementGrid() {

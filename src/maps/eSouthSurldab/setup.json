@@ -2,9 +2,9 @@
 	"areaname" : "South Surldab City",
 	"domain" : "exterior",
 	"layers" : [
-		{"layer": 1, "3d": [1, 0, 0, 0.5,   0, 1, 0, 0.0,   0, 0, 1, 0.5,   0, 0, 0, 1] }
+		{"layer": 1, "3d": [1, 0, 0, 0.5,   0, 1, 0, -2,   0, 0, 1, -0.5,   0, 0, 0, 1] }
 	],
-	"heightstep" : 0.5,
+	"heightstep" : 0.25,
 	"camera" : {
 		"type" : "gen4"
 	}

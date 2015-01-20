@@ -14,7 +14,8 @@ module.exports = {
 			var lightsetup = mSetup.lighting[this.metadata.domain];
 			if (!lightsetup) throw new Error("Invalid Map Domain!", this.metadata.domain);
 			
-			lightsetup.call(this, lightdef);
+			var l = lightsetup.call(this, lightdef);
+			this.scene.add(l);
 		}
 		
 		// Setup Camera Rigging
@@ -26,7 +27,8 @@ module.exports = {
 			var camfn = mSetup.camera[camdef.type];
 			if (!camfn) throw new Error("Invalid Camera Type!", camdef.type);
 			
-			camfn.call(this, camdef);
+			var c = camfn.call(this, camdef);
+			this.scene.add(c);
 		}
 		
 	},
@@ -123,7 +125,36 @@ module.exports = {
 		},
 		
 		exterior : function(lightdef) {
+			var node = new THREE.Object3D();
+			node.name = "Exterior Lighting Rig";
 			
+			var light;
+			
+			light = new THREE.DirectionalLight();
+			light.position.set(-10, 75, -30);
+			light.castShadow = true;
+			// light.onlyShadow = true;
+			light.shadowDarkness = 0.7;
+			light.shadowBias = 0.001;
+			
+			var shm = lightdef.shadowmap || {};
+			light.shadowCameraNear = shm.near || 1;
+			light.shadowCameraFar = shm.far || 200;
+			light.shadowCameraTop = shm.top || 30;
+			light.shadowCameraBottom = shm.bottom || -30;
+			light.shadowCameraLeft = shm.left || -30;
+			light.shadowCameraRight = shm.right || 30;
+			
+			light.shadowMapWidth = shm.width || 512;
+			light.shadowMapHeight = shm.height || 512;
+			
+			light.shadowCameraVisible = true;
+			node.add(light);
+			
+			DEBUG.showShadowCamera = function() { light.shadowCameraVisible = true; };
+			DEBUG._shadowCamera = light;
+			
+			return node;
 		},
 		
 		hell : function(lightdef) {
