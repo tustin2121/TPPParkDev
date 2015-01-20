@@ -56,12 +56,41 @@ module.exports = {
 			var node = new THREE.Object3D();
 			node.name = "Gen 4 Camera Rig";
 			
-			this.camera = new THREE.PerspectiveCamera(75, scrWidth / scrHeight, 1, 1000);
-			this.camera.position.y = 5;
-			this.camera.position.z = -5;
-			this.camera.rotation.x = -55 * (Math.PI / 180);
+			var camlist = camdef["cameras"];
+			if (!camlist) throw new Error("No cameras defined!");
+			for (var cname in camlist) {
+				var c = new THREE.PerspectiveCamera(75, scrWidth / scrHeight, 1, 1000);
+				c.name = "Camera ["+cname+"]";
+				c.my_camera = c;
+				
+				var croot;
+				if (!camlist[cname].fixedCamera) {
+					croot = new THREE.Object3D();
+					croot.add(c);
+					croot.my_camera = c;
+				}
+				
+				var cp = camlist[cname].position || [0, 4, 3.5];
+				c.position.set(cp[0], cp[1], cp[2]);
+				c.lookAt(new THREE.Vector3(0, 0.8, 0));
+				
+				var cb = camlist[cname].behavior || "followPlayer";
+				var cb = mSetup.camBehaviors[cb].call(this, camlist[cname], c, croot);
+				if (cb) {
+					this.cameraLogics.push(cb);
+				}
+				
+				node.add(croot || c);
+				this.cameras[cname] = c;
+				if (cname == 0) this.camera = c;
+			}
+			
+			// this.camera = new THREE.PerspectiveCamera(75, scrWidth / scrHeight, 1, 1000);
+			// this.camera.position.y = 5;
+			// this.camera.position.z = 5;
+			// this.camera.rotation.x = -55 * (Math.PI / 180);
 			//TODO set up a camera for each layer
-			node.add(this.camera);
+			// node.add(this.camera);
 			
 			return node;
 		},
@@ -78,6 +107,15 @@ module.exports = {
 			node.add(this.camera);
 			
 			return node;
+		},
+	},
+	
+	camBehaviors : {
+		followPlayer : function(cdef, cam, camRoot) {
+			return function(delta) {
+				camRoot.position.set(player.avatar_node.position);
+				//TODO negate moving up and down with jumping
+			}
 		},
 	},
 	

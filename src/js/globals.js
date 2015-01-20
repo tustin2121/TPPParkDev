@@ -1,6 +1,7 @@
 // globals.js
 
 window.SoundManager = require("./managers/soundmanager");
+window.GC = require("./managers/garbage-collector");
 
 window.currentMap = null;
 window.gameState = require("./gamestate");

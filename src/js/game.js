@@ -17,6 +17,21 @@ $(function(){
 	currentMap = new Map("iChurchOfHelix");
 	currentMap.load();
 	
-	renderLoop.start();
+	renderLoop.start({
+		clearColor : 0xFF0000,
+		ticksPerSecond : 30,
+	});
 	
 });
+
+function loadMap(id) {
+	if (currentMap) {
+		currentMap.dispose();
+		_infoParent = null;
+		_node_movementGrid = null;
+	}
+	
+	currentMap = new Map(id);
+	currentMap.load();
+}
+window.loadMap = loadMap;

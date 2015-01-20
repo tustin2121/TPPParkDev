@@ -60,6 +60,8 @@ function Map(id, opts){
 	this.id = id;
 	extend(this, opts);
 	
+	GC.allocateBin("map");
+	
 	this.fileSys = new zip.fs.FS();
 }
 inherits(Map, EventEmitter);
@@ -78,7 +80,7 @@ extend(Map.prototype, {
 	gScriptTag : null,
 	
 	camera: null,
-	//cameras: null,
+	cameras: null,
 	scene: null,
 	mapmodel: null,
 	
@@ -107,7 +109,6 @@ extend(Map.prototype, {
 		
 		delete this.tiledata;
 		
-		this.scene.dispose();
 		delete this.scene;
 		delete this.mapmodel;
 		delete this.camera;
@@ -115,6 +116,8 @@ extend(Map.prototype, {
 		delete this.spriteNode;
 		delete this.lightNode;
 		delete this.cameraNode;
+		
+		GC.dispose("map");
 	},
 	
 	/** Begin download of this map's zip file, preloading the data. */
@@ -247,11 +250,15 @@ extend(Map.prototype, {
 	_init : function(){
 		var self = this;
 		this.scene = new THREE.Scene();
+		this.cameras = {};
 		
-		//TODO create player character
+		if (!window.player) {
+			window.player = new PlayerChar();
+		}
 		
 		this.scene.add(this.mapmodel);
 		
+		this.cameraLogics = [];
 		mSetup.setupRigging.call(this);
 		// Map Model is now ready
 		
@@ -625,8 +632,9 @@ extend(Map.prototype, {
 	
 	
 	
-	
-	
+	////////////////////////////////////////////////////////////////////////////
+	// Logic Loop and Map Behaviors
+	cameraLogics: null,
 	
 	logicLoop : function(delta){
 		if (this.eventList) {
@@ -635,6 +643,12 @@ extend(Map.prototype, {
 				if (!evt) continue;
 				
 				evt.emit("tick", delta);
+			}
+		}
+		
+		if (this.cameraLogics) {
+			for (var i = 0; i < this.cameraLogics.length; i++) {
+				this.cameraLogics[i].call(this, delta);
 			}
 		}
 	},

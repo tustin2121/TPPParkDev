@@ -10,7 +10,10 @@
 	],
 	"heightstep" : 0.25,
 	"camera" : {
-		"type" : "gen5"
+		"type" : "gen4",
+		"cameras": {
+			"0": {}
+		}
 	},
 	"lighting" : {
 		"default": true,

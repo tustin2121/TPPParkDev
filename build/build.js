@@ -453,7 +453,6 @@ function jekyllify() {
 	
 	__findFilesIn(BUILD_OUT, TEST_OUT, "");
 	
-	console.log("[Jekyl] Jekyll-ification completed");
 	return;
 	
 	function __findFilesIn(base, dest, dir) {
