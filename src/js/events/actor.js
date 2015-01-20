@@ -49,17 +49,19 @@ extend(Actor.prototype, {
 		var node = this.avatar_node = new THREE.Object3D();
 		
 		node.add(this._avatar_createSprite(map));
-		node.add(this._avatar_createShadowCaster());
+		node.add(this._avatar_createShadowCaster(map));
 		
 		return node;
 		
 	},
 	
-	_avatar_createShadowCaster: function() {
+	_avatar_createShadowCaster: function(map) {
 		var mat = new THREE.MeshBasicMaterial();
 		mat.visible = false; //The object won't render, but the shadow still will
+		map.gc.collect(mat);
 		
 		var geom = new THREE.SphereGeometry(0.3, 7, 3);
+		map.gc.collect(geom);
 		
 		var mesh = new THREE.Mesh(geom, mat);
 		//mesh.visible = false; //?
@@ -72,6 +74,7 @@ extend(Actor.prototype, {
 		var self = this;
 		var img = new Image();
 		var texture = self.avatar_tex = new THREE.Texture(img);
+		map.gc.collect(texture);
 		
 		this.__onLoadSprite(img, DEF_SPRITE_FORMAT, texture);
 		img.src = DEF_SPRITE;
@@ -101,6 +104,7 @@ extend(Actor.prototype, {
 			map: texture,
 			color: 0xFFFFFF,
 			offset: new THREE.Vector3(0, 0.3, 0.5),
+			gc: map.gc,
 		});
 		self.setScale(self.scale);
 		
@@ -156,6 +160,8 @@ extend(Actor.prototype, {
 	},
 	
 	getDirectionFacing : function() {
+		if (!currentMap || !currentMap.camera) return "d";
+		
 		var dirvector = this.facing.clone();
 		dirvector.applyQuaternion( currentMap.camera.quaternion );
 		dirvector.projectOnPlane(EVENT_PLANE_NORMAL).normalize();

@@ -8,6 +8,7 @@ function CharacterSprite(opts) {
 	if (!(this instanceof CharacterSprite)) {
 		return new CharacterSprite(opts);
 	}
+	var gc = opts.gc || GC.getBin();
 	
 	opts = extend({
 		transparent: true,
@@ -19,8 +20,10 @@ function CharacterSprite(opts) {
 	//TODO replace with geometry we can control
 	// var geom = new THREE.PlaneBufferGeometry(1, 1);
 	var geom = new CharacterPlaneGeometry(opts.offset.x, opts.offset.y, opts.offset.z);
+	gc.collect(geom);
 	
 	var mat = new CharacterSpriteMaterial(opts);
+	gc.collect(mat);
 	
 	THREE.Mesh.call(this, geom, mat);
 	this.type = "CharacterSprite";

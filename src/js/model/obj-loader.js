@@ -17,6 +17,16 @@ function ObjLoader(objfile, mtlfile, fileSys, opts) {
 	this.objfile = objfile;
 	this.mtlfile = mtlfile;
 	this.fileSys = fileSys;
+	
+	if (opts.gc) {
+		if (typeof opts.gc == "string")
+			this.gc = GC.getBin(opts.gc);
+		else
+			this.gc = opts.gc;
+	} else {
+		this.gc = GC.getBin();
+	}
+	
 };
 inherits(ObjLoader, EventEmitter);
 extend(ObjLoader.prototype, {
@@ -29,7 +39,9 @@ extend(ObjLoader.prototype, {
 			throw new Error("No OBJ file or MTL file given!");
 		
 		var scope = this;
-		var mtlLoader = new MtlLoader(this.mtlfile, this.fileSys);
+		var mtlLoader = new MtlLoader(this.mtlfile, this.fileSys, {
+			"gc": this.gc,
+		});
 		mtlLoader.on("load", function(matLib) {
 			
 			matLib.preload();
@@ -80,6 +92,8 @@ var FACE_PATTERN4 = /f( +(\d+)\/\/(\d+))( +(\d+)\/\/(\d+))( +(\d+)\/\/(\d+))( +(
 
 
 ObjLoader.prototype.parse = function(data) {
+	var self = this;
+	
 	var face_offset = 0;
 	
 	var group = new THREE.Object3D();
@@ -212,6 +226,8 @@ ObjLoader.prototype.parse = function(data) {
 			geometry.computeBoundingSphere();
 			
 			object.add( mesh );
+			
+			self.gc.collect(geometry);
 			
 			geometry = new THREE.Geometry();
 			mesh = new THREE.Mesh( geometry, material );

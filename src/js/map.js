@@ -16,6 +16,7 @@ var mSetup = require("./model/map-setup");
 // These would be CONSTs if we weren't in the browser
 var EXT_MAPBUNDLE = ".zip"; //Extension for requesting map bundles
 var DEF_HEIGHT_STEP = 0.5; //Default Y translation amount a height step takes. This can be defined in a map file.
+var GC_BIN = "map";
 
 
 // If you make any changes here, make sure to mirror them in build/map-zipper.js!
@@ -60,7 +61,8 @@ function Map(id, opts){
 	this.id = id;
 	extend(this, opts);
 	
-	GC.allocateBin("map");
+	GC.allocateBin(GC_BIN);
+	this.gc = GC.getBin(GC_BIN);
 	
 	this.fileSys = new zip.fs.FS();
 }
@@ -117,7 +119,7 @@ extend(Map.prototype, {
 		delete this.lightNode;
 		delete this.cameraNode;
 		
-		GC.dispose("map");
+		GC.dispose(GC_BIN);
 	},
 	
 	/** Begin download of this map's zip file, preloading the data. */
@@ -218,11 +220,15 @@ extend(Map.prototype, {
 				}
 				file.getBlob("image/png", function(data) {
 					console.log("TEX LOADED:", filename, data);
-					callback(URL.createObjectURL(data));
+					var url = URL.createObjectURL(data);
+					GC.collectURL(url, GC_BIN);
+					callback(url);
 				});
 			}
 			
-			var objldr = new ObjLoader(self.objdata, self.mtldata, loadTexture);
+			var objldr = new ObjLoader(self.objdata, self.mtldata, loadTexture, {
+				gc: GC_BIN,
+			});
 			objldr.on("load", __modelReady);
 			objldr.load();
 		}
@@ -230,7 +236,7 @@ extend(Map.prototype, {
 		function __modelReady(obj) {
 			console.log("__modelReady");
 			self.mapmodel = obj;
-			__test__outputTree(obj);
+			// __test__outputTree(obj);
 			self.objdata = self.mtldata = true; //wipe the big strings from memory
 			self.emit("loaded-model");
 			__loadDone();
@@ -457,6 +463,9 @@ extend(Map.prototype, {
 				document.body.appendChild(script);
 				self[t+"ScriptTag"] = script;
 				// Upon being added to the body, it is evaluated
+				
+				GC.collect(script, GC_BIN);
+				GC.collectURL(script.src, GC_BIN);
 			});
 		}
 		
@@ -523,7 +532,9 @@ extend(Map.prototype, {
 			}
 			
 			file.getBlob("image/png", function(data){
-				callback(null, URL.createObjectURL(data));
+				var url = URL.createObjectURL(data);
+				GC.collectURL(url, GC_BIN);
+				callback(null, url);
 				self.markLoadFinished();
 			});
 		} catch (e) {

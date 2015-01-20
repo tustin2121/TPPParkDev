@@ -15,6 +15,8 @@ function MtlLoader(mtlfile, loadTexture, opts) {
 	
 	this.mtlfile = mtlfile;
 	this.loadTexture = loadTexture;
+	
+	this.gc = opts.gc;
 }
 inherits(MtlLoader, EventEmitter);
 extend(MtlLoader.prototype, {
@@ -67,7 +69,7 @@ extend(MtlLoader.prototype, {
 			}
 			// Once we've parsed out all the materials, load them into a "creator"
 			
-			var matCreator = new MaterialCreator(this.loadTexture);
+			var matCreator = new MaterialCreator(this.loadTexture, this.gc);
 			matCreator.setMaterials(materialsInfo);
 			return matCreator;
 		} catch (e) {
@@ -107,8 +109,9 @@ function nextHighestPowerOfTwo_( x ) {
 //		normalizeRGB: false - assumed
 //		ignoreZeroRGB: false 
 //		invertTransparency: false - d = 1 is opaque
-function MaterialCreator(loadTexture) {
+function MaterialCreator(loadTexture, gc) {
 	this.loadTexture = loadTexture;
+	this.gc = gc;
 }
 MaterialCreator.prototype = {
 	setMaterials : function(matInfo) {
@@ -226,6 +229,7 @@ MaterialCreator.prototype = {
 		// }
 		
 		this.materials[ matName ] = new THREE.MeshPhongMaterial( params );
+		scope.gc.collect( this.materials[matName] );
 		return this.materials[ matName ];
 		
 		
@@ -245,6 +249,7 @@ MaterialCreator.prototype = {
 			var image = new Image();
 			image.src = DEF_TEXTURE;
 			var texture = new THREE.Texture(image);
+			scope.gc.collect(texture);
 			
 			currentMap.markLoading();
 			scope.loadTexture(args.src, function(url){

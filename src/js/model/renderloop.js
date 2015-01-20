@@ -16,6 +16,7 @@ module.exports = {
 			canvas : document.getElementById("gamescreen") 
 		});
 		threeRenderer.setClearColorHex( opts.clearColor );
+		threeRenderer.autoClear = false;
 		
 		threeRenderer.shadowMapEnabled = true;
 		threeRenderer.shadowMapType = THREE.PCFShadowMap;
@@ -37,6 +38,8 @@ module.exports = {
 
 var _renderHandle; 
 function renderLoop() {
+	threeRenderer.clear();
+	
 	if (currentMap && currentMap.scene && currentMap.camera) {
 		//Render with the map's active camera on its active scene
 		threeRenderer.render(currentMap.scene, currentMap.camera);
