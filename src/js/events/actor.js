@@ -103,7 +103,7 @@ extend(Actor.prototype, {
 		var sprite = self.avatar_sprite = new CharacterSprite({
 			map: texture,
 			color: 0xFFFFFF,
-			offset: new THREE.Vector3(0, 0.3, 0.5),
+			offset: new THREE.Vector3(0, 0.3, 0.22),
 			gc: map.gc,
 		});
 		self.setScale(self.scale);

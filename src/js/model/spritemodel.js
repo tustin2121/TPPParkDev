@@ -144,8 +144,9 @@ var VERT_SHADER = [
 
 		'finalPosition = modelViewMatrix * vec4( 0.0, 0.0, 0.0, 1.0 );',
 		'finalPosition.xy += rotatedPosition;',
+		// 'finalPosition.z += position.z;',
 		'finalPosition = projectionMatrix * finalPosition;',
-
+		
 		'gl_Position = finalPosition;',
 
 	'}'

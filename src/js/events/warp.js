@@ -13,8 +13,14 @@ var extend = require("extend");
  */
 function Warp(base, opts) {
 	Event.call(this, base, opts);
+	
+	this.on("entered-tile", this._entered_tile);
 }
 inherits(Warp, Event);
 extend(Warp.prototype, {
+	sound: "exit_walk",
 	
+	_entered_tile : function(dir) {
+		SoundManager.playSound(this.sound);
+	},
 });
