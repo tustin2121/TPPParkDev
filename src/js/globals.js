@@ -2,6 +2,7 @@
 
 window.SoundManager = require("./managers/soundmanager");
 window.GC = require("./managers/garbage-collector");
+window.Chat = require("./chat/core.js");
 
 window.currentMap = null;
 window.gameState = require("./gamestate");

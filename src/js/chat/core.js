@@ -3,19 +3,22 @@
 
 // var inherits = require("inherits");
 var extend = require("extend");
+var controller = require("tpp-controller");
+var donger = require("./donger.js");
 
 function currTime() { return new Date().getTime(); }
 
 /**
- *
+ * 
  */
 function Chat() {
 	this._initUserlist();
 	this._initChatSpawnLoop();
 	
+	this._initVisitorEvents();
 }
 // inherits(Chat, );
-extend(Chat, {
+extend(Chat.prototype, {
 	
 	_u_list : [], //contains the list of all users
 	_u_hash : {}, //contains a hash of usernames to users
@@ -30,6 +33,11 @@ extend(Chat, {
 			var u = new User(ul[i]);
 			this._u_list.push(u);
 			this._u_hash[u.name] = u;
+			
+			if (!this.playerUser) {
+				//The first user is the player's user
+				this.playerUser = u; 
+			}
 		}
 	},
 	
@@ -119,6 +127,40 @@ extend(Chat, {
 		}
 	},
 	
+	///////////////////////////////////////////////////
+	playerUser: null,
+	
+	_initVisitorEvents : function() {
+		var self = this;
+		$(function(){
+			
+			$("#chatbox").on("keypress", function(e){
+				if (e.which == 13 && !e.shiftKey && !e.ctrlKey) { // Enter
+					var msg = $("#chatbox").val();
+					$("#chatbox").val("");
+					if (msg.indexOf("/") != 0) {
+						self.putMessage(self.playerUser, msg);
+					}
+					//Process chat message
+					self._processPlayerChatMessage(msg);
+					
+					e.preventDefault();
+				}
+			});
+			
+			
+		});
+	},
+	
+	_processPlayerChatMessage : function(msg) {
+		var res;
+		if (res = /^(up|down|left|right|start|select|b|a)/i.exec(msg)) {
+			controller.submitChatKeypress(res[1]);
+		}
+		
+		
+	},
+	
 	
 	///////////////////////////////////////////////////
 	
@@ -127,7 +169,7 @@ extend(Chat, {
 	 */
 	putMessage : function(user, text) {
 		if (typeof user == "string")
-			user = userlist[user];
+			user = this._u_hash[user];
 		
 		var line = $("<li>").addClass("chat-line");
 		var badges = $("<span>").addClass("badges");
@@ -142,8 +184,14 @@ extend(Chat, {
 		
 		//Process message
 		//TODO replace donger placeholders here
-		//remove HTML here
-		//replace Twitch emotes here
+		text = donger.dongerfy(text);
+		
+		// Escape HTML
+		text = msg.text(text).html();
+		
+		// Replace Twitch emotes
+		text = donger.twitchify(text);
+		
 		msg.html(text);
 		
 		if (!text.startsWith("/me ")) {
@@ -159,7 +207,7 @@ extend(Chat, {
 
 	
 });
-module.exports = Chat;
+module.exports = new Chat();
 
 
 function spawnChatMessage() {

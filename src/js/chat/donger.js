@@ -9,9 +9,48 @@ module.exports = {
 	},
 	
 	twitchify : function(str) {
-		
+		return str.replace(twitchEmotePattern, function(match){
+			return '<span class="twitchemote em-'+match+'"></span>';
+		});
 	},
 }
+
+var twitchEmotePattern = new RegExp([
+	"DansGame",
+	"PraiseIt",
+	"BibleThump",
+	"BloodTrail",
+	"PJSalt",
+	"BabyRage",
+	"HeyGuys",
+	"BionicBunion",
+	"ResidentSleeper",
+	"WinWaker",
+	"ShibeZ",
+	"BigBrother",
+	"DatSheffy",
+	"BrokeBack",
+	"EleGiggle",
+	"TriHard",
+	"OMGScoots",
+	"PogChamp",
+	"Kappa",
+	"SoonerLater",
+	"KappaHD",
+	"BrainSlug",
+	"SwiftRage",
+	"FailFish",
+	"MrDestructoid",
+	"DBStyle",
+	"OpieOP",
+	"GasJoker",
+	"4Head",
+	"KevinTurtle",
+	"Keepo",
+	"OneHand",
+	"KAPOW",
+	"Kreygasm",
+].join("|"), "g");
 
 var dongers = {
 	"riot" : "ヽ༼ຈل͜ຈ༽ﾉ",

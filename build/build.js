@@ -244,6 +244,7 @@ function copyStaticFiles() {
 	sync.parallel(function(){
 		copyDirectory("img/", BUILD_OUT+"img/");
 		copyDirectory("snd/", BUILD_OUT+"snd/");
+		copyDirectory("img/css/", BUILD_OUT+"css/");
 		
 	});
 	var l = sync.await();

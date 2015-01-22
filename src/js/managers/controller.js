@@ -9,14 +9,26 @@ var EventEmitter = require("events").EventEmitter;
 
 function ControlManager() {
 	var self = this;
-	$(document).keydown(function(e) { self.onKeyDown(e); });
-	$(document).keyup(function(e) { self.onKeyUp(e); });
-	
 	this.setKeyConfig();
+	
+	$(function(){
+		$(document).on("keydown", function(e){ self.onKeyDown(e); });
+		$(document).on("keyup", function(e){ self.onKeyUp(e); });
+		
+		$("#chatbox").on("focus", function(e){ 
+			console.log("CHAT FOCUS");
+			self.inputContext.push("chat"); 
+		});
+		$("#chatbox").on("blur", function(e){ 
+			console.log("CHAT BLUR");
+			if (self.inputContext.top == "chat")
+				self.inputContext.pop(); 
+		});
+	})
 }
 inherits(ControlManager, EventEmitter);
 extend(ControlManager.prototype, {
-	inputContext : "game",
+	inputContext : ["game"],
 	
 	keys_config : {
 		Up: [38, "Up", 87, "w"], 
@@ -41,7 +53,7 @@ extend(ControlManager.prototype, {
 			for (var i = 0; i < ctx.length; i++) go |= ctx[i];
 			if (!go) return;
 		} else {
-			if (this.inputContext != ctx) return;
+			if (this.inputContext.top != ctx) return;
 		}
 		
 		return this.keys_down[key];
@@ -74,6 +86,12 @@ extend(ControlManager.prototype, {
 		}
 	},
 	
+	submitChatKeypress : function(key) {
+		switch(key) {
+			
+		}
+	},
+	
 	emitKey : function(action, down) {
 		if (this.keys_down[action] != down) {
 			this.keys_down[action] = down;
@@ -82,4 +100,15 @@ extend(ControlManager.prototype, {
 	},
 	
 });
+
+Object.defineProperty(ControlManager.prototype.inputContext, "top", {
+	enumerable: false,
+	configurable: false,
+	// set: function(){},
+	get: function(){
+		return this[this.length-1];
+	},
+});
+
+
 module.exports = new ControlManager();
