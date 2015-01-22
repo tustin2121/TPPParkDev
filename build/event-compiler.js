@@ -113,7 +113,7 @@ module.exports.findGlobalEvents = findGlobalEvents;
 function findLocalEvents(mapid, path) {
 	if (!fs.existsSync(path+"/events.js")) return null;
 	
-	return tryWrapCatch(bundle([path+"/events.js"], mapid, "local"), "Local event loading exploded.");
+	return tryWrapCatch(bundle("./"+path+"/events.js", mapid, "local"), "Local event loading exploded.");
 }
 module.exports.findLocalEvents = findLocalEvents;
 

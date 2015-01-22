@@ -1,7 +1,7 @@
 // warp.js
 // Defines a warp tile used throughout the park.
 
-var Event = require("tpp-event");
+var Trigger = require("tpp-trigger");
 var inherits = require("inherits");
 var extend = require("extend");
 
@@ -12,15 +12,15 @@ var extend = require("extend");
  * or activate upon stepping off a certain direction.
  */
 function Warp(base, opts) {
-	Event.call(this, base, opts);
+	Trigger.call(this, base, opts);
 	
-	this.on("entered-tile", this._entered_tile);
 }
-inherits(Warp, Event);
+inherits(Warp, Trigger);
 extend(Warp.prototype, {
 	sound: "exit_walk",
 	
-	_entered_tile : function(dir) {
+	onTriggerEnter : function(dir) {
 		SoundManager.playSound(this.sound);
 	},
 });
+module.exports = Warp;

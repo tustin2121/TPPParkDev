@@ -497,19 +497,21 @@ extend(Map.prototype, {
 			//Started moving to a new tile
 			self.eventMap.put(destX, destY, this);
 			
-			var dir = new THREE.Vector3(src.x-x, 0, y-src.y);
-			var lst = self.eventMap.get(destX, destX);
+			var dir = new THREE.Vector3(srcX-destX, 0, destY-srcY);
+			var lst = self.eventMap.get(destX, destY);
 			if (lst) {
 				for (var i = 0; i < lst.length; i++) {
 					if (!lst[i] || lst[i] == this) continue;
+					// console.log("entering-tile", dir, destX, destY);
 					lst[i].emit("entering-tile", dir);
 				}
 			}
-			// dir.set(src.x-x, 0, y-src.y).negate();
+			// dir.set(srcX-destX, 0, destY-srcY).negate();
 			lst = self.eventMap.get(srcX, srcY);
 			if (lst) {
 				for (var i = 0; i < lst.length; i++) {
 					if (!lst[i] || lst[i] == this) continue;
+					// console.log("leaving-tile", dir, srcX, srcY);
 					lst[i].emit("leaving-tile", dir);
 				}
 			}
@@ -518,19 +520,21 @@ extend(Map.prototype, {
 			//Finished moving from the old tile
 			self.eventMap.remove(srcX, srcY, this);
 			
-			var dir = new THREE.Vector3(src.x-x, 0, y-src.y);
-			var lst = self.eventMap.get(destX, destX);
+			var dir = new THREE.Vector3(srcX-destX, 0, destY-srcY);
+			var lst = self.eventMap.get(destX, destY);
 			if (lst) {
 				for (var i = 0; i < lst.length; i++) {
 					if (!lst[i] || lst[i] == this) continue;
+					// console.log("entered-tile", dir, destX, destY);
 					lst[i].emit("entered-tile", dir);
 				}
 			}
-			// dir.set(src.x-x, 0, y-src.y).negate();
+			// dir.set(srcX-destX, 0, destY-srcY).negate();
 			lst = self.eventMap.get(srcX, srcY);
 			if (lst) {
 				for (var i = 0; i < lst.length; i++) {
 					if (!lst[i] || lst[i] == this) continue;
+					// console.log("left-tile", dir, srcX, srcY);
 					lst[i].emit("left-tile", dir);
 				}
 			}

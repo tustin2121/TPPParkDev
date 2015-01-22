@@ -34,19 +34,22 @@ extend(PlayerChar.prototype, {
 		//TODO warpdef.anim
 		
 		currentMap.queueForMapStart(function(){
+			console.log("WARP DEF", warpdef);
 			var animName = null;
 			var x = self.location.x;
 			var y = self.location.y;
 			var layer = self.location.z;
 			var z_off = 0;
 			
-			switch(warpdef.anim) { //Warp animation
+			switch(Number(warpdef.anim)) { //Warp animation
 				case 0: break; // Appear
 				case 1: y++; animName = "walk"; break; // Walk up
 				case 2: y--; animName = "walk"; break; // Walk down
 				case 3: x--; animName = "walk"; break; // Walk left
 				case 4: x++; animName = "walk"; break; // Walk down
 				case 5: z_off = 10; animName = "warp_in"; break; // Warp in
+				default: 
+					console.warn("ILLEGAL WARP ANIMATION:", warpdef.anim);
 			}
 			
 			var src = self.location;
@@ -65,7 +68,7 @@ extend(PlayerChar.prototype, {
 			state.moving = true;
 			
 			self.playAnimation(animName);
-			
+			console.log("WARPING MAP", animName, state);
 			//self.avatar_node.position.set( currentMap.get3DTileLocation(self.location) );
 		});
 	},

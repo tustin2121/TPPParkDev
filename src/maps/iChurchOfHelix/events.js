@@ -4,5 +4,6 @@
 var Warp = require("tpp-warp");
 
 add(new Warp({
-	location: [8, 20, 3, 1],
+	id: "EXIT_Surldab",
+	locations: [7, 19, 3, 1],
 }))

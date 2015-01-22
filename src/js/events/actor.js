@@ -480,6 +480,17 @@ function getSpriteFormat(str) {
 					"l0": null, "l1": [0, 2], "l2": [1, 2],
 					"r0": null, "r1": [0, 3], "r2": [1, 3],
 				},
+				anims: getPokemonAnimations(),
+			});
+		case "hg_pokecol":
+			return extend(true, base, { 
+				frames: { // pointers to another image indicates that image should be flipped, if flip=true
+					"u0": null, "u1": [0, 0], "u2": [0, 1],
+					"d0": null, "d1": [0, 2], "d2": [0, 3],
+					"l0": null, "l1": [1, 0], "l2": [1, 1],
+					"r0": null, "r1": [1, 3], "r2": [1, 3],
+				},
+				anims: getPokemonAnimations(),
 			});
 		case "hg_pokeflip":
 			return extend(true, base, { 
@@ -489,6 +500,7 @@ function getSpriteFormat(str) {
 					"l0": null, "l1": [0, 2], "l2": [1, 2],
 					"r0": null, "r1": "l1",   "r2": "l2",
 				},
+				anims: getPokemonAnimations(),
 			});
 		case "bw_vertrow":
 			return extend(true, base, { 
@@ -580,6 +592,18 @@ function getStandardAnimations() {
 	]);
 	
 	return anims;
+}
+
+function getPokemonAnimations() { //Overrides Standard
+	var anims = {};
+	anims["stand"] = new SpriteAnimation({ frameLength: 5, keepFrame: true, }, [
+		{ u: "u1", d: "d1", l: "l1", r: "r1", trans: true, },
+		{ u: "u2", d: "d2", l: "l2", r: "r2", loopTo: 0, },
+	]);
+	anims["walk"] = new SpriteAnimation({ frameLength: 5, keepFrame: true, }, [
+		{ u: "u1", d: "d1", l: "l1", r: "r1", trans: true, },
+		{ u: "u2", d: "d2", l: "l2", r: "r2", loopTo: 0, },
+	]);
 }
 
 ///////////////////////////////////////////////////////////////////////

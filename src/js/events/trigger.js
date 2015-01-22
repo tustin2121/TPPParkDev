@@ -14,8 +14,18 @@ var extend = require("extend");
  */
 function Trigger(base, opts) {
 	Event.call(this, base, opts);
+	
+	this.on("entered-tile", this.onTriggerEnter);
+	this.on("leaving-tile", this.onTriggerLeave);
 }
 inherits(Trigger, Event);
 extend(Trigger.prototype, {
 	
+	onTriggerEnter : function(dir) {
+		console.log("Triggered!");
+	},
+	onTriggerLeave : function(dir) {
+		
+	},
 });
+module.exports = Trigger;

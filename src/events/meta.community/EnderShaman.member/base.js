@@ -1,11 +1,11 @@
-// EnderShaman.viewer/base.js
+// EnderShaman.member/base.js
 // Defines the base event for myself in the park
 
 //$ PackConfig
 { "sprites" : [ "base.png" ] }
 //$!
 module.exports = {
-	id: "EnderShaman.viewer",
+	id: "EnderShaman.member",
 	sprite: "base.png",
 	sprite_format: "hg_vertmix-32",
 	
