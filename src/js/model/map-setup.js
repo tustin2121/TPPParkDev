@@ -133,7 +133,7 @@ module.exports = {
 			light.shadowDarkness = 0.7;
 			light.shadowBias = 0.001;
 			
-			var shm = lightdef.shadowmap;
+			var shm = lightdef.shadowmap || {};
 			light.shadowCameraNear = shm.near || 1;
 			light.shadowCameraFar = shm.far || 200;
 			light.shadowCameraTop = shm.top || 30;

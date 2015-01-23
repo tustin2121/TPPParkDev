@@ -663,15 +663,15 @@ SpriteAnimation.prototype = {
 	reset : function() {
 		this.paused = false;
 		if (this.options.keepFrame) {
-			if (self.canTransition()) {
-				var loop = this.frames[this.currFrame].loopTo;
-				if (loop !== undefined) this.currFrame = loop;
-				else this.currFrame++;
+			// if (self.canTransition()) {
+			// 	var loop = this.frames[this.currFrame].loopTo;
+			// 	if (loop !== undefined) this.currFrame = loop;
+			// 	else this.currFrame++;
 				
-				this.waitTime = this.frames[this.currFrame].frameLength || this.options.frameLength;
+			// 	this.waitTime = this.frames[this.currFrame].frameLength || this.options.frameLength;
 				
-				if (this.frames[this.currFrame].pause) this.paused = true;
-			}
+			// 	if (this.frames[this.currFrame].pause) this.paused = true;
+			// }
 			return;
 		}
 		this.currFrame = 0;
