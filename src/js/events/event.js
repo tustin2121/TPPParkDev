@@ -201,6 +201,9 @@ var __EVENT_TYPES__ = [
 		//emitted when this event begins moving to a new tile
 	"moved", //(srcX, srcY, destX, destY)
 		//emitted when this event finishes moving to a new tile
+	"cant-move", //(srcX, srcY, destX, destY, reasonEvent)
+		//emitted when this event is denied movement to the requested tile
+		// It is passed the event blocking it, or null if it is due to the collision map
 	"anim-end", //(animationName)
 		//emitted when this event's animation ends
 	"created", 

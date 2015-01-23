@@ -64,6 +64,10 @@ function compileMap(id, file) {
 module.exports = compileMap;
 
 function copyFile(src, dest) {
+	if (!fs.existsSync(src)) {
+		throw new Error("Cannot copy file; file does not exist! "+src);
+	}
+	
 	var read = fs.createReadStream(src);
 	var write = fs.createWriteStream(dest);
 	
@@ -88,6 +92,7 @@ function convertTilePropsToShort(props) {
 	if (props.water)		{ val |= 0x1 << 10; }
 	if (props.transition)	{ val |= (props.transition & 0x7) << 5; }
 	if (props.height)		{ val |= (props.height & 0x1F); }
+	//TODO add NoNPC tiles
 	return val;
 }
 
@@ -182,6 +187,9 @@ function compressMapJson(id, file) {
 				if (e < 0 && e > 7) throw "Invalid entry anim! "+e;
 				cmap.warps[wp].anim = e;
 			}
+		}
+		if (tileprops.npcRandomSpawn) {
+			cmap.npcspawns.push([x, y]);
 		}
 		
 		cmap.map.set(x, y, tiledata);

@@ -246,6 +246,11 @@
    <property name="layerorigin" value="7"/>
   </properties>
  </tile>
+ <tile id="55">
+  <properties>
+   <property name="noNPC" value="1"/>
+  </properties>
+ </tile>
  <tile id="56">
   <properties>
    <property name="transition" value="1"/>
@@ -279,6 +284,11 @@
  <tile id="62">
   <properties>
    <property name="transition" value="7"/>
+  </properties>
+ </tile>
+ <tile id="63">
+  <properties>
+   <property name="npcRandomSpawn" value="1"/>
   </properties>
  </tile>
 </tileset>

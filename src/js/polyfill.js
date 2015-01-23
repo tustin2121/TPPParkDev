@@ -37,6 +37,19 @@ if (!Math.clamp) {
 	});
 }
 
+// Array.top
+// Provides easy access to the "top" of a stack, made with push() and pop()
+if (!Array.prototype.top) {
+	Object.defineProperty(Array.prototype, "top", {
+		enumerable: false,
+		configurable: false,
+		// set: function(){},
+		get: function(){
+			return this[this.length-1];
+		},
+	});
+}
+
 
 // Modifications to THREE.js
 {

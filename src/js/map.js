@@ -323,7 +323,7 @@ extend(Map.prototype, {
 		
 		return loc;
 	},
-	
+	/*
 	getAllWalkableTiles : function() {
 		var tiles = [];
 		for (var li = 1; li <= 7; li++) {
@@ -342,6 +342,17 @@ extend(Map.prototype, {
 			}
 		}
 		return tiles;
+	}, */
+	
+	getRandomNPCSpawnPoint : function() {
+		if (!this.metadata.npcspawns) {
+			throw new Error("Event requested NPC Spawn Point on a map where none are defined!");
+		}
+		
+		var pts = this.metadata.npcspawns;
+		var index = Math.floor(Math.random() * pts.length);
+		return new THREE.Vector3(pts[index][0], pts[index][1], pts[index][2] || 1);
+		
 	},
 	
 	/**

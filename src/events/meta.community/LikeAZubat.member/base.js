@@ -6,7 +6,7 @@
 //$!
 module.exports = {
 	id: "LikeAZubat.member",
-	sprite: "base.png",
+	sprite: "zubat.png",
 	sprite_format: "hg_pokecol-32",
 	
 	name: "Like_a_Zubat",

@@ -55,6 +55,7 @@ function createEventLibraryBundle(outfile) {
 	bundler.require("./src/js/events/actor",		{ expose: "tpp-actor" });
 	
 	bundler.require("./src/js/events/player-character",	{ expose: "tpp-pc" });
+	bundler.require("./src/js/events/behavior",		{ expose: "tpp-behavior" });
 	bundler.require("./src/js/managers/controller",	{ expose: "tpp-controller" });
 	
 	// This function will collect all the exposed labels, in a process similar to passing

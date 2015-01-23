@@ -101,14 +101,5 @@ extend(ControlManager.prototype, {
 	
 });
 
-Object.defineProperty(ControlManager.prototype.inputContext, "top", {
-	enumerable: false,
-	configurable: false,
-	// set: function(){},
-	get: function(){
-		return this[this.length-1];
-	},
-});
-
 
 module.exports = new ControlManager();
