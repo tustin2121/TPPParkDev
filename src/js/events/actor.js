@@ -6,7 +6,7 @@ var inherits = require("inherits");
 var extend = require("extend");
 
 var CharacterSprite = require("../model/spritemodel.js").CharacterSprite;
-var getSpriteFormat = require("./actor_animations.js").getSpriteFormat;
+var getSpriteFormat = require("tpp-actor-animations").getSpriteFormat;
 
 var GLOBAL_SCALEUP = 1.65;
 var EVENT_PLANE_NORMAL = new THREE.Vector3(0, 1, 0);
@@ -20,6 +20,7 @@ function Actor(base, opts) {
 	
 	this.on("tick", this._actorTick);
 	this.on("interacted", this._actorInteractFace);
+	this.on("cant-move", this._actorBump);
 	this.facing = new THREE.Vector3(0, 0, 1);
 	
 	this._initBehaviorStack();
@@ -79,7 +80,11 @@ extend(Actor.prototype, {
 		var texture = self.avatar_tex = new THREE.Texture(img);
 		map.gc.collect(texture);
 		
-		this.__onLoadSprite(img, DEF_SPRITE_FORMAT, texture);
+		// Note: not useing "this.getSpriteFormat", because the defailt sprite
+		// format should not be overidden.
+		var spformat = getSpriteFormat(DEF_SPRITE_FORMAT);
+		
+		this.__onLoadSprite(img, spformat, texture);
 		img.src = DEF_SPRITE;
 		
 		texture.magFilter = THREE.NearestFilter;
@@ -91,9 +96,7 @@ extend(Actor.prototype, {
 		texture.generateMipmaps = false; //Mipmaps generate undesirable transparency artifacts
 		//TODO MirroredRepeatWrapping, and just use a negative x uv value, to flip a sprite
 		
-		// Note: not useing "this.getSpriteFormat", because the defailt sprite
-		// format should not be overidden.
-		self.avatar_format = getSpriteFormat(DEF_SPRITE_FORMAT);
+		self.avatar_format = spformat;
 		
 		// var mat /*= self.avatar_mat*/ = new THREE.SpriteMaterial({
 		// 	map: texture,
@@ -135,7 +138,7 @@ extend(Actor.prototype, {
 				format = DEF_SPRITE_FORMAT;
 			}
 			
-			self.__onLoadSprite(img, self.sprite_format, texture);
+			self.__onLoadSprite(img, self.getSpriteFormat(format), texture);
 			img.src = url;
 		});
 	},
@@ -145,14 +148,14 @@ extend(Actor.prototype, {
 		var f = function() {
 			texture.image = img;
 			
-			self.avatar_format = self.getSpriteFormat(format);
+			self.avatar_format = format;
 			texture.repeat.set(
 				self.avatar_format.width / img.naturalWidth, 
 				self.avatar_format.height / img.naturalHeight);
 
 			texture.needsUpdate = true;
 			
-			self.showAnimationFrame("d0");
+			// self.showAnimationFrame("d0");
 			self.playAnimation("stand");
 			img.removeEventListener("load", f);
 			currentMap.markLoadFinished();
@@ -238,6 +241,7 @@ extend(Actor.prototype, {
 			console.warn("ERROR", this.id, ": Animation name doesn't exist:", animName);
 			return;
 		}
+		anim.parent = this;
 		state.nextAnim = anim;
 		anim.speed = (opts.speed == undefined)? this.animationSpeed : opts.speed;
 		state.stopNextTransition = opts.stopNextTransition || false;
@@ -265,6 +269,8 @@ extend(Actor.prototype, {
 			CA.reset();
 			CA = state.currAnim = state.nextAnim;
 			state.nextAnim = null;
+			
+			// this.emit("anim-end", null); //TODO provide anim name
 			
 			if (state.stopNextTransition) {
 				this.playAnimation("stand");
@@ -339,11 +345,16 @@ extend(Actor.prototype, {
 		var walkmask = currentMap.canWalkBetween(src.x, src.y, x, y);
 		if (bypass !== undefined) walkmask = bypass;
 		if (!walkmask) {
-			console.warn(this.id, ": Cannot walk to location", "("+x+","+y+")");
+			this.emit("cant-move", src.x, src.y, x, y);
 			currentMap.dispatch(x, y, "bumped", this.facing);
-			// this.emit("bumped", this.facing); //getDirFromLoc(x, y, src.x, src.y));
-			this.playAnimation("bump", { stopNextTransition: true });
 			return;
+		}
+		if ((walkmask & 0x10) == 0x10) { // Check NoNPC tiles
+			if (this.isNPC()) {
+				this.emit("cant-move", src.x, src.y, x, y);
+				currentMap.dispatch(x, y, "bumped", this.facing);
+				return;
+			}
 		}
 		if ((walkmask & 0x8) == 0x8) {
 			// Transition now to another layer
@@ -351,6 +362,7 @@ extend(Actor.prototype, {
 			console.log("Layer Transition: ", t);
 			x = t.x; y = t.y; layer = t.layer;
 		}
+		
 		
 		var animopts = {};
 		state.midpointOffset.set(0, 0, 0);
@@ -427,6 +439,7 @@ extend(Actor.prototype, {
 	///////////////////// Private Methods //////////////////////
 	
 	canWalkOn : function(){ return false; },
+	isNPC : function(){ return true; },
 	
 	_normalizeLocation : function() {
 		if (this.location == "rand") {
@@ -456,6 +469,10 @@ extend(Actor.prototype, {
 	
 	_actorInteractFace : function(vector) {
 		this.facing = vector.clone().negate();
+	},
+	
+	_actorBump : function(srcx, srcy, x, y, reason) {
+		// console.warn(this.id, ": Cannot walk to location", "("+x+","+y+")");
 	},
 	
 });

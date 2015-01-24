@@ -2,6 +2,7 @@
 // The base actor class for our beloved Kenya the Groudon
 
 var Actor = require("tpp-actor");
+var SpriteAnimation = require("tpp-actor-animations").SpriteAnimation;
 
 //$ PackConfig
 { "sprites" : [ "base.png"] }
@@ -59,7 +60,9 @@ module.exports = {
 			};
 			
 		} else if (format == "kenya_swim") {
-			Actor.getSpriteFormat("hg_pokecol-64x32");
+			return Actor.prototype.getSpriteFormat("hg_pokecol-64x32");
+		} else {
+			throw new Error("Unhandled Custom Sprite Format! "+ format);
 		}
 	}
 };

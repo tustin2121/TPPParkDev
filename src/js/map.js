@@ -46,6 +46,8 @@ function convertShortToTileProps(val) {
 	
 	props.height = ((val) & 0x1F);
 	
+	props.noNPC = !!(val & (0x1 << 9));
+	
 	return props;
 }
 
@@ -409,8 +411,10 @@ extend(Map.prototype, {
 		
 		mustTransition = !!desttile.transition;
 		
+		mustBePlayer = !!desttile.noNPC;
+		
 		if (!canWalk) return false;
-		return (canWalk?0x1:0) | (mustJump?0x2:0) | (mustSwim?0x4:0) | (mustTransition?0x8:0);
+		return (canWalk?0x1:0) | (mustJump?0x2:0) | (mustSwim?0x4:0) | (mustTransition?0x8:0) | (mustBePlayer?0x10:0);
 	},
 	
 	
@@ -507,6 +511,7 @@ extend(Map.prototype, {
 		evt.on("moving", function(srcX, srcY, destX, destY){
 			//Started moving to a new tile
 			self.eventMap.put(destX, destY, this);
+			self.eventMap.remove(srcX, srcY, this);
 			
 			var dir = new THREE.Vector3(srcX-destX, 0, destY-srcY);
 			var lst = self.eventMap.get(destX, destY);
@@ -529,7 +534,6 @@ extend(Map.prototype, {
 		});
 		evt.on("moved", function(srcX, srcY, destX, destY){
 			//Finished moving from the old tile
-			self.eventMap.remove(srcX, srcY, this);
 			
 			var dir = new THREE.Vector3(srcX-destX, 0, destY-srcY);
 			var lst = self.eventMap.get(destX, destY);

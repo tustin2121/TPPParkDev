@@ -1,25 +1,25 @@
-// LikeAZubat.member/base.js
+// Zexinja.pokemon/base.js
 // Defines the base event for myself in the park
 
 var Actor = require("tpp-actor");
 
 //$ PackConfig
-{ "sprites" : [ "base.png", "zubat.png" ] }
+{ "sprites" : [ "base.png" ] }
 //$!
 module.exports = {
-	id: "LikeAZubat.member",
-	sprite: "zubat.png",
+	id: "Zexinja.pokemon",
+	sprite: "base.png",
 	sprite_format: "hg_pokecol-32",
 	
-	name: "Like_a_Zubat",
-	infodex: "meta.community.likeazubat",
+	name: "Zexinja",
+	infodex: "game.emerald.pokemon.zexinja",
 	
 	getSpriteFormat : function(format) {
 		var f = Actor.prototype.getSpriteFormat(format);
 		
 		if (format == "hg_pokecol-32") {
 			f.anims["stand"] = f.anims["_flap_stand"];
-			f.anims["stand"].options.frameLength = 4;
+			f.anims["stand"].options.frameLength = 7;
 		}
 		return f;
 	},

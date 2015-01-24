@@ -47,6 +47,14 @@ extend(ControlManager.prototype, {
 		Interact: false, FocusChat: false,
 	},
 	
+	pushInputContext: function(ctx) {
+		this.inputContext.push(ctx);
+	},
+	popInputContext: function(ctx) {
+		if (!ctx || this.inputContext.top == ctx)
+			this.inputContext.pop();
+	},
+	
 	isDown : function(key, ctx) {
 		if ($.isArray(ctx)) {
 			var go = false;

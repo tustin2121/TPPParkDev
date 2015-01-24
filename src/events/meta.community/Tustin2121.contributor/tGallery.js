@@ -9,7 +9,7 @@ add(new Actor(base, {
 	location: "rand",
 	onEvents: {
 		interacted : function() {
-			console.log("Interacted Tustin");
+			$("#statusbar").html("This is "+this.name+"! ("+this.id+")");
 		},
 	},
 	

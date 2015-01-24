@@ -112,6 +112,9 @@ function build(){
 			COMPILED_MAPS : function() { return "['"+compiledMaps.join("', '")+"']"; },
 		},
 	});
+	bundle("tools/gallery", { 
+		dest:BUILD_OUT+"tools/gallery.js", appcache:false, 
+	});
 	
 	//Rewrite the app cache manifest
 	writeCache();
@@ -282,6 +285,7 @@ function copyDevTools() {
 	sync.parallel(function(){
 		copyDirectory("lib/tools/", BUILD_OUT+"tools/");
 		copyFileWithJekyllPrepend("src/tools/mapview.html", BUILD_OUT+"tools/mapview.html");
+		copyFileWithJekyllPrepend("src/tools/gallery.html", BUILD_OUT+"tools/gallery.html");
 		
 	});
 	var l = sync.await();

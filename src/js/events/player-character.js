@@ -12,6 +12,7 @@ function PlayerChar(){
 	Actor.call(this, {}, {});
 	
 	this.on("tick", this.controlCharacter);
+	this.on("cant-move", this.animateBump);
 }
 inherits(PlayerChar, Actor);
 extend(PlayerChar.prototype, {
@@ -31,7 +32,18 @@ extend(PlayerChar.prototype, {
 	warpTo : function(warpdef) {
 		var self = this;
 		this.location.set(warpdef.loc[0], warpdef.loc[1], warpdef.layer);
+		controller.pushInputContext("cutscene");
 		//TODO warpdef.anim
+		
+		setTimeout(function(){
+			switch(Number(warpdef.anim)) { //Warp animation
+				case 1: self.avatar_node.position.z += 1; break; // Walk up
+				case 2: self.avatar_node.position.z -= 1; break; // Walk down
+				case 3: self.avatar_node.position.x -= 1; break; // Walk left
+				case 4: self.avatar_node.position.x += 1; break; // Walk down
+				case 5: self.avatar_node.position.y += 15; break; // Warp in
+			}
+		}, 0);
 		
 		currentMap.queueForMapStart(function(){
 			console.log("WARP DEF", warpdef);
@@ -39,16 +51,20 @@ extend(PlayerChar.prototype, {
 			var x = self.location.x;
 			var y = self.location.y;
 			var layer = self.location.z;
-			var z_off = 0;
-			var speed = 1;
+			var y_off = 0;
+			var mspd = 1, aspd = 1; //movement speed, animation speed
 			
 			switch(Number(warpdef.anim)) { //Warp animation
 				case 0: break; // Appear
-				case 1: y++; animName = "walk"; speed = 0.35; break; // Walk up
-				case 2: y--; animName = "walk"; speed = 0.35; break; // Walk down
-				case 3: x--; animName = "walk"; speed = 0.35; break; // Walk left
-				case 4: x++; animName = "walk"; speed = 0.35; break; // Walk down
-				case 5: z_off = 10; animName = "warp_in"; break; // Warp in
+				case 1: y++; animName = "walk"; mspd = 0.35; aspd = 0.35; break; // Walk up
+				case 2: y--; animName = "walk"; mspd = 0.35; aspd = 0.35; break; // Walk down
+				case 3: x--; animName = "walk"; mspd = 0.35; aspd = 0.35; break; // Walk left
+				case 4: x++; animName = "walk"; mspd = 0.35; aspd = 0.35; break; // Walk down
+				case 5: // Warp in
+					animName = "warp_in"; 
+					y_off = 15; 
+					mspd = 0.25; aspd = 1; 
+					break; 
 				default: 
 					console.warn("ILLEGAL WARP ANIMATION:", warpdef.anim);
 			}
@@ -62,15 +78,18 @@ extend(PlayerChar.prototype, {
 				self.facing.set(0, 0, 1);
 			
 			state.srcLocC.set(x, y, layer);
-			state.srcLoc3.set(currentMap.get3DTileLocation(x, y, layer));
+			state.srcLoc3.set(currentMap.get3DTileLocation(x, y, layer)).y += y_off;
 			state.destLocC.set(src);
-			state.destLoc3.set(currentMap.get3DTileLocation(src)).z += z_off;
+			state.destLoc3.set(currentMap.get3DTileLocation(src));
 			state.delta = 0;
 			state.moving = true;
-			state.speed = speed;
+			state.speed = mspd;
 			
-			self.playAnimation(animName, { speed: speed });
-			console.log("WARPING MAP", animName, state);
+			self.playAnimation(animName, { speed: aspd });
+			self.once("anim-end", function(animationName){
+				console.log("Pop!");
+				controller.popInputContext("cutscene");
+			});
 			//self.avatar_node.position.set( currentMap.get3DTileLocation(self.location) );
 		});
 	},
@@ -105,8 +124,14 @@ extend(PlayerChar.prototype, {
 		
 	},
 	
+	animateBump : function(srcx, srcy, x, y, reason) {
+		// console.warn(this.id, ": Cannot walk to location", "("+x+","+y+")");
+		this.playAnimation("bump", { stopNextTransition: true });
+	},
+	
 	
 	////////////////////////////////////////////////////////////////////////
+	isNPC : function(){ return false; },
 	
 	_avatar_loadSprite : function(map, texture) {
 		var url = BASEURL+"/img/pcs/"+ gameState.playerSprite;
@@ -116,6 +141,7 @@ extend(PlayerChar.prototype, {
 		var format = res[2];
 		
 		var img = new Image();
+		format = this.getSpriteFormat(format);
 		this.__onLoadSprite(img, format, texture);
 		img.src = url;
 	},

@@ -79,19 +79,21 @@ function copyFile(src, dest) {
 
 // If you make any changes here, make sure to mirror them in src/js/map.js!
 function convertTilePropsToShort(props) {
-	// TileData: MMMMLW00 TTTHHHHH
+	// TileData: MMMMLWN0 TTTHHHHH
 	// Where:
 	//    M = Movement, Bits are: (Down, Up, Left, Right)
 	//    L = Ledge bit (this tile is a ledge: you jump over it when given permission to enter it)
 	//    W = Water bit (this tile is water: most actors are denied entry onto this tile)
 	//    H = Height (vertical location of the center of this tile)
 	//    T = Transition Tile (transition to another Layer when stepping on this tile)
+	//	  N = NoNPC bit (NPCs are not allowed to walk onto this tile)
 	var val = 0;
 	if (props.movement)		{ val |= (props.movement & 0xF) << 12; }
 	if (props.ledge)		{ val |= 0x1 << 11; }
 	if (props.water)		{ val |= 0x1 << 10; }
 	if (props.transition)	{ val |= (props.transition & 0x7) << 5; }
 	if (props.height)		{ val |= (props.height & 0x1F); }
+	if (props.noNPC)		{ val |= 0x1 << 9; }
 	//TODO add NoNPC tiles
 	return val;
 }
@@ -189,6 +191,7 @@ function compressMapJson(id, file) {
 			}
 		}
 		if (tileprops.npcRandomSpawn) {
+			if (!cmap.npcspawns) cmap.npcspawns = [];
 			cmap.npcspawns.push([x, y]);
 		}
 		

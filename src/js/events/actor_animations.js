@@ -66,6 +66,16 @@ function getSpriteFormat(str) {
 				},
 				anims: getPokemonAnimations(),
 			});
+		case "hg_poke_horzcol":
+			return extend(true, base, { 
+				frames: { // pointers to another image indicates that image should be flipped, if flip=true
+					"u0": null, "u1": [1, 0], "u2": [1, 1],
+					"d0": null, "d1": [0, 0], "d2": [0, 1],
+					"l0": null, "l1": [2, 0], "l2": [2, 1],
+					"r0": null, "r1": [3, 0], "r2": [3, 1],
+				},
+				anims: getPokemonAnimations(),
+			});
 		case "hg_pokeflip":
 			return extend(true, base, { 
 				frames: { // pointers to another image indicates that image should be flipped, if flip=true
@@ -94,6 +104,9 @@ function getSpriteFormat(str) {
 					"r0": "l0",   "r1": "l1",   "r2": "l2",
 				},
 			});
+		default:
+			console.error("No such Sprite Format:", name);
+			return {};
 	}
 }
 module.exports.getSpriteFormat = getSpriteFormat;
@@ -159,12 +172,12 @@ function getStandardAnimations() {
 		{ d: "d0", frameLength: 7, }, //12
 		{ d: "r0", frameLength: 7, },
 		{ d: "u0", frameLength: 7, },
-		{ d: "l0", frameLength: 8, },
+		{ d: "l0", frameLength: 7, },
 		{ d: "d0", frameLength: 8, }, //16
-		{ d: "r0", frameLength: 9, },
+		{ d: "r0", frameLength: 8, },
 		{ d: "u0", frameLength: 9, },
-		{ d: "l0", frameLength: 10, },
-		{ d: "d0", frameLength: 1, trans: true, },
+		{ d: "l0", frameLength: 9, },
+		{ d: "d0", frameLength: 1, },
 	]);
 	
 	return anims;
@@ -172,7 +185,10 @@ function getStandardAnimations() {
 
 function getPokemonAnimations() { //Overrides Standard
 	var anims = {};
-	anims["stand"] = new SpriteAnimation({ frameLength: 5, keepFrame: true, }, [
+	anims["stand"] = new SpriteAnimation({ singleFrame: true, }, [
+		{ u: "u1", d: "d1", l: "l1", r: "r1", trans: true, pause: true, },
+	]);
+	anims["_flap_stand"] = new SpriteAnimation({ frameLength: 5, keepFrame: true, }, [
 		{ u: "u1", d: "d1", l: "l1", r: "r1", trans: true, },
 		{ u: "u2", d: "d2", l: "l2", r: "r2", loopTo: 0, },
 	]);
@@ -199,6 +215,9 @@ SpriteAnimation.prototype = {
 	currFrame: 0,
 	speed : 1,
 	paused : false,
+	finished: false,
+	
+	parent : null,
 	
 	/** Advanced the animation by the given amount of delta time. */
 	advance : function(deltaTime) {
@@ -217,7 +236,9 @@ SpriteAnimation.prototype = {
 		if (this.currFrame >= this.frames.length) {
 			this.currFrame = this.frames.length-1;
 			this.paused = true;
+			this.finished = true;
 			console.warn("Animation has completed!");
+			if (this.parent) this.parent.emit("anim-end", null); //TODO provide anim name
 			return;
 		}
 		
@@ -251,6 +272,7 @@ SpriteAnimation.prototype = {
 			// }
 			return;
 		}
+		this.finished = false;
 		this.currFrame = 0;
 		this.waitTime = this.frames[this.currFrame].frameLength || this.options.frameLength;
 		this.speed = 1;
@@ -258,7 +280,7 @@ SpriteAnimation.prototype = {
 	
 	/** If this animation is on a frame that can transition to another animation. */
 	canTransition : function() {
-		return this.frames[this.currFrame].trans;
+		return this.finished || this.frames[this.currFrame].trans;
 	},
 	
 	/** Returns the name of the frame to display this frame. */
@@ -267,3 +289,4 @@ SpriteAnimation.prototype = {
 		return this.frames[this.currFrame][dir];
 	},
 };
+module.exports.SpriteAnimation = SpriteAnimation;

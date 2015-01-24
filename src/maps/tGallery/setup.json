@@ -1,0 +1,13 @@
+{
+	"areaname" : "Gallery",
+	"domain" : "interior",
+	"layers" : [
+		{ "layer" : 1, "3d" : [1, 0, 0, -1.5,   0, 1, 0, 0.05,   0, 0, 1, -2.3,   0, 0, 0, 1] }
+	],
+	"camera" : {
+		"type" : "gen4",
+		"cameras": {
+			"0": {}
+		}
+	}
+}

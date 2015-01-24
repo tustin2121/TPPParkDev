@@ -1,0 +1,33 @@
+<html>
+<head>
+	<script>window.BASEURL = "{{ baseurl }}";</script>
+	<link rel="stylesheet" type="text/css" href="{{ baseurl }}/css/game.css">
+	<script src="{{ baseurl }}/js/jquery-2.1.1.min.js"></script>
+	<script src="{{ baseurl }}/js/jquery.cookie.js"></script>
+	<script src="three.js"></script>
+	
+	<script src="OrbitControls.js"></script>
+	
+	<script src="{{ baseurl }}/js/zip/zip.js"></script>
+	<script src="{{ baseurl }}/js/zip/zip-fs.js"></script>
+	<script src="{{ baseurl }}/js/zip/zip-ext.js"></script>
+	<script src="{{ baseurl }}/js/zip/inflate.js"></script>
+	<script>zip.workerScriptsPath = "{{ baseurl }}/js/zip/";</script>
+	
+	<script src="{{ baseurl }}/js/eventlib.js"></script>
+	<script src="gallery.js"></script>
+</head>
+<body>
+	<table id="overtable">
+		<tr>
+			<td>
+				<div class="canvas-wrap" style="background-color: #000000;">
+					<canvas id="gamescreen"></canvas>
+					<div id="statusbar"></div>
+				</div>
+			</td>
+		</tr>
+	</table>
+	
+</body>
+</html>

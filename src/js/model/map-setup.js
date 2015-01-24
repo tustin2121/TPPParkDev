@@ -59,7 +59,7 @@ module.exports = {
 			var camlist = camdef["cameras"];
 			if (!camlist) throw new Error("No cameras defined!");
 			for (var cname in camlist) {
-				var c = new THREE.PerspectiveCamera(75, scrWidth / scrHeight, 1, 1000);
+				var c = new THREE.PerspectiveCamera(55, scrWidth / scrHeight, 1, 1000);
 				c.name = "Camera ["+cname+"]";
 				c.my_camera = c;
 				
@@ -70,7 +70,7 @@ module.exports = {
 					croot.my_camera = c;
 				}
 				
-				var cp = camlist[cname].position || [0, 4, 3.5];
+				var cp = camlist[cname].position || [0, 5.45, 5.3];
 				c.position.set(cp[0], cp[1], cp[2]);
 				c.lookAt(new THREE.Vector3(0, 0.8, 0));
 				
@@ -144,10 +144,9 @@ module.exports = {
 			light.shadowMapWidth = shm.width || 512;
 			light.shadowMapHeight = shm.height || 512;
 			
-			light.shadowCameraVisible = true;
+			// light.shadowCameraVisible = true;
 			node.add(light);
 			
-			DEBUG.showShadowCamera = function() { light.shadowCameraVisible = true; };
 			DEBUG._shadowCamera = light;
 			
 			light = new THREE.DirectionalLight(0xffffff, 0.9);
@@ -186,10 +185,9 @@ module.exports = {
 			light.shadowMapWidth = shm.width || 512;
 			light.shadowMapHeight = shm.height || 512;
 			
-			light.shadowCameraVisible = true;
+			// light.shadowCameraVisible = true;
 			node.add(light);
 			
-			DEBUG.showShadowCamera = function() { light.shadowCameraVisible = true; };
 			DEBUG._shadowCamera = light;
 			
 			return node;
