@@ -31,7 +31,7 @@ and its probably one of the biggest maps in the park!
 16 = from Burrito's Fanfiction Emporium 
 17 = from the Kenyan Post Office (Human Entrance)
 18 = from the Kenyan Post Office (Kenya Entrance)
-19 =
+19 = from Hall of Fame
 1A =
 1B =
 1C =

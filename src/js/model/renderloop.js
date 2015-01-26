@@ -45,6 +45,11 @@ function renderLoop() {
 		threeRenderer.render(currentMap.scene, currentMap.camera);
 	}
 	
+	if (UI.scene && UI.camera) {
+		//Render the UI with the UI camera and its scene
+		threeRenderer.render(UI.scene, UI.camera);
+	}
+	
 	if (_renderHandle)
 		_renderHandle = raf(renderLoop);
 }
