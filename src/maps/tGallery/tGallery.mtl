@@ -46,7 +46,7 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 0.999000
 illum 1
-map_Kd rug_center.png
+map_Kd -clamp on rug_center.png
 
 newmtl rug_corner
 Ns 96.078431
@@ -56,7 +56,7 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 0.999000
 illum 1
-map_Kd rug_corner.png
+map_Kd -clamp on rug_corner.png
 
 newmtl rug_end
 Ns 96.078431
@@ -66,7 +66,7 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 0.999000
 illum 1
-map_Kd rug_edge.png
+map_Kd -clamp on rug_edge.png
 
 newmtl rug_innerCorner
 Ns 96.078431
@@ -76,4 +76,4 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 0.999000
 illum 1
-map_Kd rug_innercorner.png
+map_Kd -clamp on rug_innercorner.png

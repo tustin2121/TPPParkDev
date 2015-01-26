@@ -149,12 +149,16 @@ module.exports = {
 			
 			DEBUG._shadowCamera = light;
 			
+			var ORIGIN = new THREE.Vector3(0, 0, 0);
+			
 			light = new THREE.DirectionalLight(0xffffff, 0.9);
-			light.position.set(1, 1, 1);
+			light.position.set(4, 4, 4);
+			light.lookAt(ORIGIN);
 			node.add(light);
 			
 			light = new THREE.DirectionalLight(0xffffff, 0.9);
-			light.position.set(-1, 1, 1);
+			light.position.set(-4, 4, 4);
+			light.lookAt(ORIGIN);
 			node.add(light);
 			
 			return node;

@@ -32,7 +32,9 @@ extend(PlayerChar.prototype, {
 	warpTo : function(warpdef) {
 		var self = this;
 		this.location.set(warpdef.loc[0], warpdef.loc[1], warpdef.layer);
-		controller.pushInputContext("cutscene");
+		
+		if (!warpdef.anim)
+			controller.pushInputContext("cutscene");
 		//TODO warpdef.anim
 		
 		setTimeout(function(){
@@ -53,6 +55,7 @@ extend(PlayerChar.prototype, {
 			var layer = self.location.z;
 			var y_off = 0;
 			var mspd = 1, aspd = 1; //movement speed, animation speed
+			var animEndEvent = "anim-end";
 			
 			switch(Number(warpdef.anim)) { //Warp animation
 				case 0: break; // Appear
@@ -62,7 +65,7 @@ extend(PlayerChar.prototype, {
 				case 4: x++; animName = "walk"; mspd = 0.35; aspd = 0.35; break; // Walk down
 				case 5: // Warp in
 					animName = "warp_in"; 
-					y_off = 15; 
+					y_off = 15; animEndEvent = "moved";
 					mspd = 0.25; aspd = 1; 
 					break; 
 				default: 
@@ -86,7 +89,7 @@ extend(PlayerChar.prototype, {
 			state.speed = mspd;
 			
 			self.playAnimation(animName, { speed: aspd });
-			self.once("anim-end", function(animationName){
+			self.once(animEndEvent, function(animationName){
 				console.log("Pop!");
 				controller.popInputContext("cutscene");
 			});

@@ -1,0 +1,35 @@
+# Blender MTL File: 'None'
+# Material Count: 3
+
+newmtl lambert2
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.627440 0.627440 0.627440
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon White\Buildings\Gateway\lambert2.png
+map_d C:\\Users\\Tim\\Dropbox\\Apps\\Emulator\\Pokemon White\\Buildings\\Gateway\\lambert2.png
+
+newmtl lambert3
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.627440 0.627440 0.627440
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon White\Buildings\Gateway\lambert3.png
+map_d C:\\Users\\Tim\\Dropbox\\Apps\\Emulator\\Pokemon White\\Buildings\\Gateway\\lambert3.png
+
+newmtl lambert5
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.627440 0.627440 0.627440
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon White\Buildings\Gateway\lambert5.png
+map_d C:\\Users\\Tim\\Dropbox\\Apps\\Emulator\\Pokemon White\\Buildings\\Gateway\\lambert5.png

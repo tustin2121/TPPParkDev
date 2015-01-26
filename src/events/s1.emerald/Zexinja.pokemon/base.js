@@ -19,7 +19,7 @@ module.exports = {
 		
 		if (format == "hg_pokecol-32") {
 			f.anims["stand"] = f.anims["_flap_stand"];
-			f.anims["stand"].options.frameLength = 7;
+			f.anims["stand"].options.frameLength = 10;
 		}
 		return f;
 	},

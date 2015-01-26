@@ -1,5 +1,177 @@
 # Blender MTL File: 'SurldabSouth.blend'
-# Material Count: 6
+# Material Count: 35
+
+newmtl BldFace
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.501952 0.501952 0.501952
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon White\Buildings\Building01\t2_buil1_lm.png
+map_d C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon White\Buildings\Building01\t2_buil1_lm.png
+
+newmtl BldRoof
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.501952 0.501952 0.501952
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon White\Buildings\Building01\t2_buil2_lm2.png
+
+newmtl Brick
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\Surldab South\redbrick.png
+
+newmtl Building
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.501952 0.501952 0.501952
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\_Buildings\NapoleonCasino\jhCasinoBld.png
+
+newmtl Building.001
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.501952 0.501952 0.501952
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon HeartGold\Buildings\GameCorner\ko_game_a.png
+
+newmtl Cobblestone
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\Surldab South\road2.png
+
+newmtl Cobblestone_NONE
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\Surldab South\road2.png
+
+newmtl CornerLights
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.501952 0.501952 0.501952
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\_Buildings\NapoleonCasino\koCasinoLights.png
+
+newmtl DiamondLight
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.501952 0.501952 0.501952
+Ks 0.177083 0.177083 0.177083
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon HeartGold\Buildings\GameCorner\ko_game_a_.png
+
+newmtl Dirt
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\Surldab South\dirt2.png
+
+newmtl FrontLit
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.501952 0.501952 0.501952
+Ks 0.100000 0.100000 0.100000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon HeartGold\Buildings\PokeMart\fs_ax.png
+
+newmtl Glass
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.501952 0.501952 0.501952
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon White\Buildings\Building01\h_mado_lm3.png
+map_d C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon White\Buildings\Building01\h_mado_lm3.png
+
+newmtl HotelBuilding
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.501952 0.501952 0.501952
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\_Buildings\NapoleonCasino\ptCasinoBld.png
+
+newmtl HotelBuilding_lambert2.png.004
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.501952 0.501952 0.501952
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon Platinum\Buildings\Casino\lambert2.png
+
+newmtl LitSign
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.501952 0.501952 0.501952
+Ks 0.150000 0.150000 0.150000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon HeartGold\Buildings\PokeCenter\gs_pc_a_.png
+
+newmtl Metal_Outerbuilding
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.600000 0.600000 0.600000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon HeartGold\Buildings\PokeMart\fs_ax.png
+
+newmtl NapoleonNeon
+Ns 90.196078
+Ka 0.000000 0.000000 0.000000
+Kd 0.401562 0.401562 0.401562
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 0.999000
+illum 2
+map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\_Buildings\NapoleonCasino\ptCasinoSign2.png
 
 newmtl None
 Ns 0
@@ -18,38 +190,160 @@ Ks 0.8 0.8 0.8
 d 1
 illum 2
 
-newmtl None_concrete_bright.png
+newmtl None_flowers.png
 Ns 0
 Ka 0.000000 0.000000 0.000000
 Kd 0.8 0.8 0.8
 Ks 0.8 0.8 0.8
 d 1
 illum 2
+map_Kd flowers.png
+
+newmtl None_flowers2.png
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd flowers2.png
+
+newmtl None_hedge.png
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd hedge.png
+
+newmtl OuterBuilding
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.501952 0.501952 0.501952
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon HeartGold\Buildings\PokeCenter\gs_pc_a.png
+
+newmtl Outer_Building
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.501952 0.501952 0.501952
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon HeartGold\Buildings\PokeMart\fs_ax.png
+
+newmtl Pillars
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.501952 0.501952 0.501952
+Ks 0.072917 0.072917 0.072917
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\_Buildings\NapoleonCasino\jhCasinoBld.png
+
+newmtl PinkLights
+Ns 90.196078
+Ka 0.000000 0.000000 0.000000
+Kd 0.401562 0.401562 0.401562
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\_Buildings\NapoleonCasino\koCasinoLights.png
+
+newmtl SignBG
+Ns 90.196078
+Ka 0.000000 0.000000 0.000000
+Kd 0.401562 0.401562 0.401562
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\_Buildings\NapoleonCasino\koCasinoLights.png
+
+newmtl SkyLights
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.501952 0.501952 0.501952
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon HeartGold\Buildings\GameCorner2\anime.png
+map_d C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon HeartGold\Buildings\GameCorner2\anime.png
+
+newmtl Stone_Sides
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
 map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\Surldab South\concrete_bright.png
 
-newmtl None_dirt2.png
-Ns 0
+newmtl TopLight
+Ns 92.156863
 Ka 0.000000 0.000000 0.000000
-Kd 0.8 0.8 0.8
-Ks 0.8 0.8 0.8
-d 1
+Kd 0.501952 0.501952 0.501952
+Ks 0.083333 0.083333 0.083333
+Ni 1.000000
+d 1.000000
 illum 2
-map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\Surldab South\dirt2.png
+map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon HeartGold\Buildings\GameCorner2\hikaru.png
 
-newmtl None_redbrick.png
-Ns 0
+newmtl Water
+Ns 96.078431
 Ka 0.000000 0.000000 0.000000
-Kd 0.8 0.8 0.8
-Ks 0.8 0.8 0.8
-d 1
-illum 2
-map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\Surldab South\redbrick.png
-
-newmtl None_sea.png
-Ns 0
-Ka 0.000000 0.000000 0.000000
-Kd 0.8 0.8 0.8
-Ks 0.8 0.8 0.8
-d 1
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 0.600000
 illum 2
 map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\Surldab South\sea.png
+
+newmtl Window
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.501952 0.501952 0.501952
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon HeartGold\Buildings\PokeCenter\gs_pc_b.png
+
+newmtl Window.001
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.501952 0.501952 0.501952
+Ks 0.350000 0.350000 0.350000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon HeartGold\Buildings\PokeMart\fs_ax.png
+
+newmtl Windows
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.501952 0.501952 0.501952
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\_Buildings\NapoleonCasino\ptCasinoBld.png
+
+newmtl lambert4.001
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.501952 0.501952 0.501952
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\_Buildings\NapoleonCasino\koCasinoLights.png

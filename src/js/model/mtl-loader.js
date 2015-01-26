@@ -79,7 +79,7 @@ extend(MtlLoader.prototype, {
 	
 });
 
-
+/*
 function ensurePowerOfTwo_ ( image ) {
 	if ( ! THREE.Math.isPowerOfTwo( image.width ) || ! THREE.Math.isPowerOfTwo( image.height ) ) {
 		var canvas = document.createElement( "canvas" );
@@ -93,7 +93,7 @@ function ensurePowerOfTwo_ ( image ) {
 	
 	return image;
 }
-
+*/
 function nextHighestPowerOfTwo_( x ) {
 	--x;
 	for ( var i = 1; i < 32; i <<= 1 ) {
@@ -169,6 +169,10 @@ MaterialCreator.prototype = {
 				
 				case "ks": // Specular color
 					params['specular'] = new THREE.Color().fromArray(value);
+					break;
+				
+				case "ke": // Emission (non-standard)
+					params['emissive'] = new THREE.Color(value, value, value);
 					break;
 				
 				case "map_kd": // Diffuse texture map
@@ -270,6 +274,9 @@ MaterialCreator.prototype = {
 			if (!args.clamp) { //undefined or false
 				texture.wrapS = THREE.RepeatWrapping;
 				texture.wrapT = THREE.RepeatWrapping;
+			} else {
+				texture.wrapS = THREE.ClampToEdgeWrapping;
+				texture.wrapT = THREE.ClampToEdgeWrapping;
 			}
 			
 			if (args['o_u'] || args['o_v']) {

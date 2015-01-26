@@ -1,0 +1,151 @@
+# Blender MTL File: 'NapoleonCasino.blend'
+# Material Count: 15
+
+newmtl Building
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.627440 0.627440 0.627440
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd jhCasinoBld.png
+
+newmtl Building.001
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.627440 0.627440 0.627440
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon HeartGold\Buildings\GameCorner\ko_game_a.png
+
+newmtl CornerLights
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.627440 0.627440 0.627440
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd koCasinoLights.png
+
+newmtl DiamondLight
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.627440 0.627440 0.627440
+Ks 0.177083 0.177083 0.177083
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon HeartGold\Buildings\GameCorner\ko_game_a_.png
+
+newmtl HotelBuilding
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.627440 0.627440 0.627440
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd ptCasinoBld.png
+
+newmtl HotelBuilding_lambert2.png.004
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.627440 0.627440 0.627440
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon Platinum\Buildings\Casino\lambert2.png
+
+newmtl NapoleonNeon
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.501952 0.501952 0.501952
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 0.999000
+illum 1
+map_Kd ptCasinoSign2.png
+
+newmtl None
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+
+newmtl Pillars
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.627440 0.627440 0.627440
+Ks 0.072917 0.072917 0.072917
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd jhCasinoBld.png
+
+newmtl PinkLights
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.501952 0.501952 0.501952
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd koCasinoLights.png
+
+newmtl SignBG
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.501952 0.501952 0.501952
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd koCasinoLights.png
+
+newmtl SkyLights
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.627440 0.627440 0.627440
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon HeartGold\Buildings\GameCorner2\anime.png
+map_d C:\\Users\\Tim\\Dropbox\\Apps\\Emulator\\Pokemon HeartGold\\Buildings\\GameCorner2\\anime.png
+
+newmtl TopLight
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.627440 0.627440 0.627440
+Ks 0.083333 0.083333 0.083333
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon HeartGold\Buildings\GameCorner2\hikaru.png
+
+newmtl Windows
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.627440 0.627440 0.627440
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd ptCasinoBld.png
+
+newmtl lambert4.001
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.627440 0.627440 0.627440
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd koCasinoLights.png

@@ -258,6 +258,10 @@
                 {
                  "layerorigin":"7"
                 },
+             "55":
+                {
+                 "noNPC":"1"
+                },
              "56":
                 {
                  "transition":"1"
@@ -289,6 +293,10 @@
              "62":
                 {
                  "transition":"7"
+                },
+             "63":
+                {
+                 "npcRandomSpawn":"1"
                 },
              "7":
                 {

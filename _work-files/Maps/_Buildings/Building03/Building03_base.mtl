@@ -1,0 +1,79 @@
+# Blender MTL File: 'Building03.blend'
+# Material Count: 7
+
+newmtl buill01_002_1
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.627440 0.627440 0.627440
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon White\Buildings\Bulding08\buill01_002_1.png
+map_d C:\\Users\\Tim\\Dropbox\\Apps\\Emulator\\Pokemon White\\Buildings\\Bulding08\\buill01_002_1.png
+
+newmtl buill01_003_1
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.627440 0.627440 0.627440
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon White\Buildings\Bulding08\buill01_003_1.png
+map_d C:\\Users\\Tim\\Dropbox\\Apps\\Emulator\\Pokemon White\\Buildings\\Bulding08\\buill01_003_1.png
+
+newmtl buill01_003_2
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.627440 0.627440 0.627440
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon White\Buildings\Bulding08\buill01_003_2.png
+map_d C:\\Users\\Tim\\Dropbox\\Apps\\Emulator\\Pokemon White\\Buildings\\Bulding08\\buill01_003_2.png
+
+newmtl buill01_004_1
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.627440 0.627440 0.627440
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon White\Buildings\Bulding08\buill01_004_1.png
+map_d C:\\Users\\Tim\\Dropbox\\Apps\\Emulator\\Pokemon White\\Buildings\\Bulding08\\buill01_004_1.png
+
+newmtl buill01_004_2
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.627440 0.627440 0.627440
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon White\Buildings\Bulding08\buill01_004_2.png
+map_d C:\\Users\\Tim\\Dropbox\\Apps\\Emulator\\Pokemon White\\Buildings\\Bulding08\\buill01_004_2.png
+
+newmtl buill01_005_1
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.627440 0.627440 0.627440
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon White\Buildings\Bulding08\buill01_005_1.png
+map_d C:\\Users\\Tim\\Dropbox\\Apps\\Emulator\\Pokemon White\\Buildings\\Bulding08\\buill01_005_1.png
+
+newmtl h_mado_1.003
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.627440 0.627440 0.627440
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon White\Buildings\Bulding08\h_mado_1.png
+map_d C:\\Users\\Tim\\Dropbox\\Apps\\Emulator\\Pokemon White\\Buildings\\Bulding08\\h_mado_1.png

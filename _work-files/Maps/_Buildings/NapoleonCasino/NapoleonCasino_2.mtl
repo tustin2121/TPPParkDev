@@ -1,0 +1,84 @@
+# Blender MTL File: 'tGallery.blend'
+# Material Count: 8
+
+newmtl Material.001
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 0.999000
+illum 1
+Ke 0.000000
+map_Kd C:\Users\Tim\github-projects\TPPParkDev\src\maps\tGallery\instructions.png
+
+newmtl None
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd C:\Users\Tim\github-projects\TPPParkDev\src\maps\tGallery\wall.png
+
+newmtl None_floor2.png
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd C:\Users\Tim\github-projects\TPPParkDev\src\maps\tGallery\floor2.png
+
+newmtl None_wall2.png
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd C:\Users\Tim\github-projects\TPPParkDev\src\maps\tGallery\wall2.png
+
+newmtl rug_center
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 0.999000
+illum 1
+Ke 0.000000
+map_Kd C:\Users\Tim\github-projects\TPPParkDev\src\maps\tGallery\rug_center.png
+
+newmtl rug_corner
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 0.999000
+illum 1
+Ke 0.000000
+map_Kd C:\Users\Tim\github-projects\TPPParkDev\src\maps\tGallery\rug_corner.png
+
+newmtl rug_end
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 0.999000
+illum 1
+Ke 0.000000
+map_Kd C:\Users\Tim\github-projects\TPPParkDev\src\maps\tGallery\rug_edge.png
+
+newmtl rug_innerCorner
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 0.999000
+illum 1
+Ke 0.000000
+map_Kd C:\Users\Tim\github-projects\TPPParkDev\src\maps\tGallery\rug_innercorner.png

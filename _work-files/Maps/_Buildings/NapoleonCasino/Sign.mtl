@@ -1,0 +1,35 @@
+# Blender MTL File: 'None'
+# Material Count: 3
+
+newmtl lambert2
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.627440 0.627440 0.627440
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon Platinum\Buildings\Casino\lambert2.png
+map_d C:\\Users\\Tim\\Dropbox\\Apps\\Emulator\\Pokemon Platinum\\Buildings\\Casino\\lambert2.png
+
+newmtl lambert7
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.627440 0.627440 0.627440
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon Platinum\Buildings\Casino\lambert7.png
+map_d C:\\Users\\Tim\\Dropbox\\Apps\\Emulator\\Pokemon Platinum\\Buildings\\Casino\\lambert7.png
+
+newmtl lambert8
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.627440 0.627440 0.627440
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon Platinum\Buildings\Casino\lambert8.png
+map_d C:\\Users\\Tim\\Dropbox\\Apps\\Emulator\\Pokemon Platinum\\Buildings\\Casino\\lambert8.png

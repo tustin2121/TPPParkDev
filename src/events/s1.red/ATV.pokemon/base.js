@@ -24,8 +24,8 @@ module.exports = {
 		});
 		
 		f.anims["stand"] = new SpriteAnimation({ }, [
-			{ u: "u2", d: "d2", l: "l2", r: "r2", frameLength: 15, trans: true, },
-			{ u: "u3", d: "d3", l: "l3", r: "r3", frameLength:  7, trans: true, loopTo: 0, },
+			{ u: "u2", d: "d2", l: "l2", r: "r2", frameLength: 35, trans: true, },
+			{ u: "u3", d: "d3", l: "l3", r: "r3", frameLength: 14, trans: true, loopTo: 0, },
 		]);
 		
 		return f;

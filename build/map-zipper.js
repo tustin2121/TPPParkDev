@@ -357,6 +357,13 @@ function processMapModel(id, file) {
 				}
 				return "usemtl "+mat.newname;
 			
+			case "o": //Rewrite the object name line to removed uneeded appended crap by blender
+				var name = comps[1];
+				var idx = name.indexOf("_");
+				if (idx < 0) idx = name.indexOf(".");
+				if (idx < 0) return line;
+				return "o "+name.substr(0, idx);
+			
 			default:
 				return line;
 				
