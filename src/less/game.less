@@ -28,8 +28,8 @@ body { margin: 0; }
 }
 
 #canvas-ui { 
-	position: absolute;
-	top: 0; left: 0;
+	position: relative;
+	float: left;
 	width: @game-width;
 	height: @game-height;
 	
@@ -55,9 +55,12 @@ body { margin: 0; }
 }
 
 #gamescreen {
-	float: left;
+	position: absolute;
+	top: 0; left: 0;
+	
 	width: @game-width;
 	height: @game-height;
+	z-index: -10;
 }
 
 #right-sidebar {
@@ -84,6 +87,17 @@ body { margin: 0; }
 	background-color: #eeeeee;
 	color: #000000;
 }
+
+.dialogbox, .textbox {
+	position: absolute;
+	display: inline-block;
+	max-width: 400px;
+	padding: 2px 6px;
+	// line-height: 16px;
+}
+
+.textbox { margin: 6px 20px 8px 9px; }
+.dialogbox { margin: 6px 6px 9px 6px; }
 
 @import "twitch-emotes";
 

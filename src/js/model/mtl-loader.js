@@ -283,7 +283,7 @@ MaterialCreator.prototype = {
 				texture.offset = new Vector2(args['o_u'] || 0, args['o_v'] || 0);
 			}
 			
-			texture.anisotropy = 16;
+			// texture.anisotropy = 16;
 			
 			return texture;
 		}
