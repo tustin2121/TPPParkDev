@@ -6,6 +6,12 @@ var raf = require("raf");
 
 module.exports = {
 	start : function(opts) {
+		// Set the canvas's attributes, because those 
+		// ACTUALLY determine how big the rendering area is.
+		var canvas = $("#gamescreen");
+		canvas.attr("width", parseInt(canvas.css("width")));
+		canvas.attr("height", parseInt(canvas.css("height")));
+		
 		opts = extend({
 			clearColor : 0x000000,
 			ticksPerSecond : 30,
@@ -23,6 +29,7 @@ module.exports = {
 		
 		_renderHandle = raf(renderLoop);
 		initGameLoop(30);
+		
 	},
 	
 	pause : function() {
@@ -84,6 +91,9 @@ function initGameLoop(ticksPerSec) {
 		
 		if (currentMap && currentMap.logicLoop)
 			currentMap.logicLoop(wholeTick * 0.01);
+		if (UI && UI.logicLoop)
+			UI.logicLoop(wholeTick * 0.01);
+		
 		accum -= wholeTick;
 	}
 }

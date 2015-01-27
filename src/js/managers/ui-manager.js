@@ -123,14 +123,21 @@ extend(UIManager.prototype, {
 		var sw = $("#gamescreen").width();
 		var sh = $("#gamescreen").height();
 		
-		var camera = this.camera = new THREE.OrthographicCamera(0, sw, 0, -sh, 0, 10);
-		camera.position.set(sw/2, -sh/2, -5);
+		var camera = this.camera = new THREE.OrthographicCamera(0, sw, sh, 0, 1, 101);
+		camera.position.set(0, 0, 51);
 		this.scene.add(camera);
 		
 		this.textbox = createDialogModel("textbox_gold");
 		// adjust width : this.textbox.morphTargetInfluences[0] = 1;
 		// adjust height: this.textbox.morphTargetInfluences[1] = 1;
 		this.scene.add(this.textbox);
+		
+		// createDEBUGSetup.call(this);
+	},
+	
+	//////////////////////////////////////////////////////////////////
+	
+	logicLoop : function(delta) {
 		
 	},
 	
@@ -146,13 +153,13 @@ module.exports = new UIManager();
 function createDialogModel(type) {
 	var ins; //insets
 	switch (type) {
-		case "textbox_gold":
+		case "dialog_bubble":
 			ins = { 
 				t: 6, b: 10, h: 16, //top, bottom, height
 				l: 6, r: 10, w: 16, //left, right, width
 			};
 			break;
-		case "dialog_bubble":
+		case "textbox_gold":
 			ins = { 
 				t: 6, b:  9, h: 16,
 				l: 9, r: 12, w: 32,
@@ -198,6 +205,7 @@ function createDialogModel(type) {
 		var tex = new THREE.Texture();
 		tex.magFilter = THREE.NearestFilter;
 		tex.minFilter = THREE.NearestFilter;
+		tex.anisotropy = 1;
 		tex.generateMipmaps = false;
 		
 		var img = new Image();
@@ -212,6 +220,8 @@ function createDialogModel(type) {
 		
 		mat.map = tex;
 		mat.morphTargets = true;
+		mat.transparent = true;
+		mat.alphaTest = 0.05;
 	}
 	
 	var model = new THREE.Mesh(geom, mat);
@@ -226,11 +236,31 @@ function createDialogModel(type) {
 	
 	function f4(g, a, b, c, d) {
 		g.faces.push(new THREE.Face3(a, b, d));
-		g.faces.push(new THREE.Face3(b, c, d));
+		g.faces.push(new THREE.Face3(a, d, c));
 		
 		g.faceVertexUvs[0].push([ uv(g.vertices[a]), uv(g.vertices[b]), uv(g.vertices[d]) ]);
-		g.faceVertexUvs[0].push([ uv(g.vertices[b]), uv(g.vertices[c]), uv(g.vertices[d]) ]);
+		g.faceVertexUvs[0].push([ uv(g.vertices[a]), uv(g.vertices[d]), uv(g.vertices[c]) ]);
 	}
 }
 
-
+function createDEBUGSetup() {
+	this._mainCamera = this.camera;
+	this._debugCamera = this.camera = new THREE.PerspectiveCamera(75, 
+		$("#gamescreen").width()/ $("#gamescreen").height(),
+		0.1, 10000);
+	this._debugCamera.position.z = 10;
+	this.scene.add(this._debugCamera);
+	
+	
+	this.scene.add(new THREE.CameraHelper(this._mainCamera));
+	this.scene.add(new THREE.AxisHelper(5));
+	
+	var controls = new THREE.OrbitControls(this._debugCamera);
+	controls.damping = 0.2;
+	
+	var oldlogic = this.logicLoop;
+	this.logicLoop = function(delta){
+		controls.update();
+		oldlogic.call(this, delta);
+	};
+}
