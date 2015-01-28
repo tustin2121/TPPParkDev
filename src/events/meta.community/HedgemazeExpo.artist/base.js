@@ -7,7 +7,7 @@
 module.exports = {
 	id: "HedgemazeExpo.artist",
 	sprite: "base.png",
-	sprite_format: "hg_pokecol-32",
+	sprite_format: "hg_pokerow_reverse-32",
 	
 	name: "HedgemazeExpo",
 	infodex: "meta.community.hedgemazeexpo",

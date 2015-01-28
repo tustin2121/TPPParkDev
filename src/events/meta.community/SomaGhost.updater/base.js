@@ -2,12 +2,12 @@
 // Defines the base event for myself in the park
 
 //$ PackConfig
-{ "sprites" : [ "base.png" ] }
+{ "sprites" : [ "ghost.png" ] }
 //$!
 module.exports = {
 	id: "SomaGhost.updater",
-	sprite: "base.png",
-	sprite_format: "hg_pokecol-32",
+	sprite: "ghost.png",
+	sprite_format: "hg_pokerow_reverse-32",
 	
 	name: "SomaGhost",
 	infodex: "meta.community.somaghost",

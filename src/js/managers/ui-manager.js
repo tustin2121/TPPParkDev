@@ -14,27 +14,14 @@ function UIManager() {
 		"dialog" : new DialogBox("dialog_bubble"),
 	};
 	
-	this.tb = {
-		model : null,
-		element : null,
-		html : "",
-		advance : null,
-	};
-	this.db = {
-		model : null,
-		element : null,
-		owner : null,
-		html : "",
-		advance : null,
-	}
-	
 	var self = this;
 	$(function(){
 		self._initUIScene();
 		
 		self.skrim = $("#canvas-ui .skrim");
-		self.tb.element = $("#canvas-ui .textbox");
-		self.db.element = $("#canvas-ui .dialogbox");
+		
+		self.dialogs["text"].element = $("#canvas-ui .textbox");
+		self.dialogs["dialog"].element = $("#canvas-ui .dialogbox");
 	});
 }
 inherits(UIManager, EventEmitter);
@@ -61,22 +48,6 @@ extend(UIManager.prototype, {
 		if (!d) throw new Error("Invalid dialog type: "+type);
 		
 		d.hide();
-		
-	},
-	
-	/** Show a speech bubble on screen. Owner points to the event the tail should point at. */
-	showDialogBox : function(owner, html) {
-		this.db.html = html;
-		this._displayBox(this.db);
-	},
-	
-	/** Immedeately hides the dialog box and clear any text that was in it. */
-	closeDialogBox : function() {
-		this.db.model.visible = false;
-		this.db.element.hide().css({ width:"", height:"", bottom:"", left:"", top:"", right:"" });
-		this.db.owner = null;
-		this.db.html = "";
-		this.db.printindex = 0;
 	},
 	
 	/** Shows a selectable menu in the top-right corner of the screen. */
@@ -164,8 +135,9 @@ extend(UIManager.prototype, {
 		camera.position.set(0, 0, 51);
 		this.scene.add(camera);
 		
-		for (var dlog : this.dialogs) {
-			var model = dlog.createDialogModel();
+		for (var dlog in this.dialogs) {
+			console.log("createDialogModel: ", dlog, this.dialogs[dlog]); 
+			var model = this.dialogs[dlog].createDialogModel();
 			this.scene.add(model);
 		}
 		
@@ -187,11 +159,10 @@ extend(UIManager.prototype, {
 	//////////////////////////////////////////////////////////////////
 	
 	logicLoop : function(delta) {
-		if (this.tb.advance)
-			this.tb.advance(delta);
-		
-		if (this.db.advance)
-			this.db.advance(delta);
+		for (var dlog in this.dialogs) {
+			if (this.dialogs[dlog].advance)
+				this.dialogs[dlog].advance();
+		}
 	},
 	
 });
@@ -273,6 +244,7 @@ extend(DialogBox.prototype, {
 	
 	
 	createDialogModel: function() {
+		var self = this;
 		var ins; //insets
 		switch (this.type) {
 			case "dialog_bubble":
@@ -374,7 +346,7 @@ extend(DialogBox.prototype, {
 				}
 				img.on("load", f);
 				
-				img.src = BASEURL+"/img/ui/"+this.type+".png";
+				img.src = BASEURL+"/img/ui/"+self.type+".png";
 				
 				mat.map = tex;
 				mat.morphTargets = true;
@@ -392,9 +364,9 @@ extend(DialogBox.prototype, {
 			})(),
 		]);
 		
-		var model = new THREE.Mesh(geom, mat);
-		model.visible = false;
-		return model;
+		this.model = new THREE.Mesh(geom, mat);
+		this.model.visible = false;
+		return this.model;
 		
 		//--------------------------------------------------------------------//
 		function v2(x, y) { return new THREE.Vector2(x, y); }

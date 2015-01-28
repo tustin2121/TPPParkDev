@@ -56,6 +56,16 @@ function getSpriteFormat(str) {
 				},
 				anims: getPokemonAnimations(),
 			});
+		case "hg_pokerow_reverse":
+			return extend(true, base, { 
+				frames: { // pointers to another image indicates that image should be flipped, if flip=true
+					"u0": null, "u1": [0, 1], "u2": [1, 1],
+					"d0": null, "d1": [0, 0], "d2": [1, 0],
+					"l0": null, "l1": [0, 3], "l2": [1, 3],
+					"r0": null, "r1": [0, 2], "r2": [1, 2],
+				},
+				anims: getPokemonAnimations(),
+			});
 		case "hg_pokecol":
 			return extend(true, base, { 
 				frames: { // pointers to another image indicates that image should be flipped, if flip=true
