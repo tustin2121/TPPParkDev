@@ -88,16 +88,21 @@ body { margin: 0; }
 	color: #000000;
 }
 
-.dialogbox, .textbox {
+.dialogbox {
 	position: absolute;
 	display: inline-block;
 	max-width: 400px;
 	padding: 2px 6px;
 	// line-height: 16px;
+	
+	&.text { margin: 6px 20px 8px 9px; }
+	&.dialog { margin: 6px 6px 9px 6px; }
 }
 
-.textbox { margin: 6px 20px 8px 9px; }
-.dialogbox { margin: 6px 6px 9px 6px; }
+
+hlt { 
+	color: #FF0000;
+}
 
 @import "twitch-emotes";
 

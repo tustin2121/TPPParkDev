@@ -3,6 +3,7 @@
 
 var extend = require("extend");
 var raf = require("raf");
+var controller = require("tpp-controller");
 
 module.exports = {
 	start : function(opts) {
@@ -93,6 +94,9 @@ function initGameLoop(ticksPerSec) {
 			currentMap.logicLoop(wholeTick * 0.01);
 		if (UI && UI.logicLoop)
 			UI.logicLoop(wholeTick * 0.01);
+		
+		if (controller && controller._tick)
+			controller._tick();
 		
 		accum -= wholeTick;
 	}

@@ -4,6 +4,9 @@
 var inherits = require("inherits");
 var extend = require("extend");
 var EventEmitter = require("events").EventEmitter;
+var controller = require("tpp-controller");
+
+var M_WIDTH = 0, M_HEIGHT = 1, M_HIDE = 2, M_TRIANGLE = 3;
 
 /**
  *
@@ -18,10 +21,13 @@ function UIManager() {
 	$(function(){
 		self._initUIScene();
 		
-		self.skrim = $("#canvas-ui .skrim");
+		self.skrim = $("<div>").addClass("skrim").appendTo("#canvas-ui");
 		
-		self.dialogs["text"].element = $("#canvas-ui .textbox");
-		self.dialogs["dialog"].element = $("#canvas-ui .dialogbox");
+		for (var type in self.dialogs) {
+			self.dialogs[type].element = $("<div>")
+				.addClass("dialogbox").addClass(type)
+				.appendTo("#canvas-ui");
+		}
 	});
 }
 inherits(UIManager, EventEmitter);
@@ -29,15 +35,22 @@ extend(UIManager.prototype, {
 	skrim : null,
 	dialogs : null,
 	
-	// tb: null, //Text box
-	// db: null, //Dialog box
-	
 	/////////////////////// UI Actions ///////////////////////////
 	
 	/** Show a standard textbox on screen. */
-	showTextBox : function(type, opts) {
+	showTextBox : function(type, html, opts) {
+		if ($.isPlainObject(html) && opts === undefined) {
+			opts = html; html = undefined;
+		}
+		opts = extend(opts, {
+			html: html,
+		});
+		
 		var d = this.dialogs[type];
-		if (!d) throw new Error("Invalid dialog type: "+type);
+		if (!d) {
+			d = this.dialogs["text"];
+			console.error("Invalid dialog type: "+type);
+		}
 		
 		d.show(opts);
 	},
@@ -93,6 +106,7 @@ extend(UIManager.prototype, {
 	
 	
 	////////////////////// Action Queues /////////////////////////
+	currAction : null,
 	actionQueue : [],
 	
 	/** Pass this a set of functions to be run one after the other when the user confirms 
@@ -159,9 +173,40 @@ extend(UIManager.prototype, {
 	//////////////////////////////////////////////////////////////////
 	
 	logicLoop : function(delta) {
+		if (this.currAction) {
+			
+		} else if (this.actionQueue.length) {
+			this.currAction = this.actionQueue.shift();
+			controller.pushInputContext("uiaction");
+			this.currAction();
+			
+			//If the action completed this turn, and didn't push its own context
+			if (controller.popInputContext("uiaction") == "uiaction") {
+				//Clear the current action
+				this.currAction = null;
+			}
+		} 
+		
 		for (var dlog in this.dialogs) {
-			if (this.dialogs[dlog].advance)
-				this.dialogs[dlog].advance();
+			if (this.dialogs[dlog].advance) {
+				if (controller.isDownOnce("Interact", "dlogPrinting")) {
+					this.dialogs[dlog].complete();
+				} else if (controller.isDownOnce("Interact", "dlogWaiting")) {
+					this.dialogs[dlog]._displayNext();
+				} else {
+					this.dialogs[dlog].advance(delta);
+				}
+			}
+				
+		}
+	},
+	
+	_completeCurrAction : function() {
+		if (this.actionQueue.length) {
+			this.currAction = this.actionQueue.shift();
+			this.currAction();
+		} else {
+			controller.popInputContext("uiaction");
 		}
 	},
 	
@@ -177,13 +222,16 @@ extend(DialogBox.prototype, {
 	model : null,
 	element : null,
 	owner : null,
-	html : "",
+	html : [],
+	
 	advance : null,
+	complete: function(){},
+	_completionCallback : null, //callback from the event starting this dialog.
 	
 	show : function(opts) {
-		if (!opts.html) {
-			throw new Error("No HTML given to the dialogbox's show() method!");
-		}
+		// if (!opts.html) {
+		// 	throw new Error("No HTML given to the dialogbox's show() method!");
+		// }
 		
 		opts = extend({
 			owner: null,
@@ -192,17 +240,28 @@ extend(DialogBox.prototype, {
 		
 		this.owner = opts.owner;
 		
-		this.model.morphTargetInfluences[2] = !this.isLast;
-		this.model.morphTargetInfluences[3] = 1;
+		this._completionCallback = opts.complete;
 		
-		this.html = opts.html;
+		if (typeof opts.html == "string") {
+			this.html = [opts.html];
+		} else if ($.isArray(opts.html)) {
+			this.html = opts.html;
+		} else {
+			console.error("Dialog given is of the wrong type! ", opts.html);
+			this.html = ["[ERROR: This dialog text could not be loaded properly!]"];
+		}
+		
 		this._display();
 	},
 	
 	hide : function() {
 		this.model.visible = false;
 		this.element.hide().css({ width:"", height:"", bottom:"", left:"", top:"", right:"" });
-		this.html = "";
+		this.html = [];
+		this.advance = null;
+		
+		if (this._completionCallback)
+			this._completionCallback.call(null);
 	},
 	
 	_display: function() {
@@ -215,16 +274,24 @@ extend(DialogBox.prototype, {
 		var e = this.element;
 		e.css({ width:"", height:"", bottom:"", left:"", top:"", right:"" }); //reset
 		
-		e.css({ "visibility": "hidden" }); //Note: $.show() does not affect "visibility"
-		e.show().html(this.html);
-		var width = e.innerWidth();
-		var height = e.innerHeight();
+		e.css({ "visibility": "hidden" }).show(); //Note: $.show() does not affect "visibility"
+		var width = 0, height = 0;
+		// var w, h;
 		
+		//For each dialog in the text to display, size out the box to fit the largest one
+		for (var i = 0; i < this.html.length; i++) {
+			e.html(this.html[i]);
+			width = Math.max(e.innerWidth(), width);
+			height = Math.max(e.innerHeight(), height);
+		}
+		
+		var difx = e.innerWidth() - e.width();
+		var dify = e.innerHeight() - e.height();
 		
 		// Step 2: resize and position the textboxes
-		this.model.morphTargetInfluences[0] = width;
-		this.model.morphTargetInfluences[1] = height;
-		e.css({ width: e.width()+2, height: e.height() });
+		this.model.morphTargetInfluences[M_WIDTH] = width;
+		this.model.morphTargetInfluences[M_HEIGHT] = height;
+		e.css({ width: width-difx+2, height: height-dify });
 		
 		if (this.owner) {
 			//TODO determine anchor point based on where the owner is on-screen
@@ -235,10 +302,31 @@ extend(DialogBox.prototype, {
 		
 		
 		// Step 3: setup typewriter effect and show dialogbox
-		setupTypewriter(this);
+		this._displayNext();
 		
 		e.css({ "visibility": "" });
 		this.model.visible = true;
+		
+	},
+	
+	/** Dialog is already showing and sized, show next dialog, or close. */
+	_displayNext : function() {
+		if (this.html && this.html.length) {
+			controller.popInputContext("dlogWaiting");
+			controller.pushInputContext("dlogPrinting");
+			
+			this.element.html(this.html.shift()); //put in first dialog
+			this.model.morphTargetInfluences[M_TRIANGLE] = (this.html.length)? 1: 0;
+			
+			setupTypewriter(this, function(){
+				controller.popInputContext("dlogPrinting");
+				controller.pushInputContext("dlogWaiting");
+			});
+			
+		} else {
+			controller.popInputContext("dlogWaiting");
+			this.hide();
+		}
 		
 	},
 	
@@ -390,15 +478,30 @@ extend(DialogBox.prototype, {
 
 
 
-
 function setupTypewriter(textbox, callback) {
 	textbox.advance = null;
 	function setNext(cb) {
 		textbox.advance = cb;
 	}
 	
+	var completedText = textbox.element.html();
+	textbox.complete = function() {
+		textbox.element.html(completedText);
+		textbox.advance = blinkCursor;
+		if (callback) callback();
+	};
+	
+	this.model.morphTargetInfluences[M_HIDE] = 1;
+	
+	//Because textnodes are not "elements", and jquery won't hide text nodes, in 
+	// order to hide everything, we need to wrap everything in span tags...
+	textbox.element.contents()
+		.filter(function(){ return this.nodeType == 3; })
+		.wrap("<span>");
+	
 	var elements = textbox.element.contents();
 	$(elements).hide();
+	
 	
 	//Copied and modified from http://jsfiddle.net/y9PJg/24/
 	var i = 0;
@@ -444,8 +547,8 @@ function setupTypewriter(textbox, callback) {
 	function blinkCursor(delta) {
 		tick -= delta;
 		if (tick <= 0) {
-			tick = 1000;
-			textbox.model.morphTargetInfluences[3] = !textbox.model.morphTargetInfluences[3];
+			tick = 5;
+			textbox.model.morphTargetInfluences[M_HIDE] = !textbox.model.morphTargetInfluences[M_HIDE];
 		}
 	}
 }

@@ -49,10 +49,14 @@ extend(ControlManager.prototype, {
 	
 	pushInputContext: function(ctx) {
 		this.inputContext.push(ctx);
+		this.emit("inputContextChanged");
 	},
 	popInputContext: function(ctx) {
-		if (!ctx || this.inputContext.top == ctx)
-			this.inputContext.pop();
+		if (!ctx || this.inputContext.top == ctx) {
+			var c = this.inputContext.pop();
+			this.emit("inputContextChanged");
+			return c;
+		}
 	},
 	
 	isDown : function(key, ctx) {
@@ -65,6 +69,17 @@ extend(ControlManager.prototype, {
 		}
 		
 		return this.keys_down[key];
+	},
+	isDownOnce : function(key, ctx) {
+		if ($.isArray(ctx)) {
+			var go = false;
+			for (var i = 0; i < ctx.length; i++) go |= ctx[i];
+			if (!go) return;
+		} else {
+			if (this.inputContext.top != ctx) return;
+		}
+		
+		return this.keys_down[key] == 1;
 	},
 	
 	setKeyConfig : function() {
@@ -106,6 +121,13 @@ extend(ControlManager.prototype, {
 			this.emit("control-action", action, down);
 		}
 	},
+	
+	_tick : function() {
+		for (var name in this.keys_down) {
+			if (this.keys_down[name] > 0)
+				this.keys_down[name]++;
+		}
+	}
 	
 });
 
