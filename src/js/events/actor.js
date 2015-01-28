@@ -76,16 +76,16 @@ extend(Actor.prototype, {
 	
 	_avatar_createSprite : function(map) {
 		var self = this;
-		var img = new Image();
-		var texture = self.avatar_tex = new THREE.Texture(img);
+		// var img = new Image();
+		var texture = self.avatar_tex = new THREE.Texture(DEF_SPRITE_IMG);
 		map.gc.collect(texture);
 		
-		// Note: not useing "this.getSpriteFormat", because the defailt sprite
+		// Note: not using "this.getSpriteFormat", because the defailt sprite
 		// format should not be overidden.
 		var spformat = getSpriteFormat(DEF_SPRITE_FORMAT);
 		
-		this.__onLoadSprite(img, spformat, texture);
-		img.src = DEF_SPRITE;
+		this.__onLoadSprite(DEF_SPRITE_IMG, spformat, texture);
+		// img.src = DEF_SPRITE;
 		
 		texture.magFilter = THREE.NearestFilter;
 		texture.minFilter = THREE.NearestFilter;
@@ -104,7 +104,7 @@ extend(Actor.prototype, {
 		// 	transparent: true,
 		// });
 		
-		currentMap.markLoading();
+		currentMap.markLoading("ACTOR_"+self.id);
 		this._avatar_loadSprite(map, texture);
 		
 		//var sprite = self.avatar_sprite = new THREE.Sprite(mat);
@@ -157,10 +157,21 @@ extend(Actor.prototype, {
 			
 			// self.showAnimationFrame("d0");
 			self.playAnimation("stand");
+			currentMap.markLoadFinished("ACTOR_"+self.id);
+			
 			img.removeEventListener("load", f);
-			currentMap.markLoadFinished();
+			img.removeEventListener("load", e);
+		}
+		var e = function() {
+			console.error("Error while loading texture!", img.src);
+			texture.needsUpdate = true; //update the missing texture pre-loaded
+			currentMap.markLoadFinished("ACTOR_"+self.id);
+			
+			img.removeEventListener("load", f);
+			img.removeEventListener("load", e);
 		}
 		img.on("load", f);
+		img.on("error", e);
 	},
 	
 	// Override this function to provide a custom sprite format

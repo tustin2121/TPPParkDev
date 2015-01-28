@@ -491,7 +491,7 @@ function setupTypewriter(textbox, callback) {
 		if (callback) callback();
 	};
 	
-	this.model.morphTargetInfluences[M_HIDE] = 1;
+	textbox.model.morphTargetInfluences[M_HIDE] = 1;
 	
 	//Because textnodes are not "elements", and jquery won't hide text nodes, in 
 	// order to hide everything, we need to wrap everything in span tags...

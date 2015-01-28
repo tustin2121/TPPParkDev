@@ -162,7 +162,6 @@ extend(Map.prototype, {
 	 *  Reads the tile data and begins loading the required resources.
 	 */
 	load : function(){
-		this.markLoading();
 		var self = this;
 		if (!this.file) { //If file isn't downloaded yet, defer loading
 			this.once("downloaded", function(){
@@ -172,6 +171,8 @@ extend(Map.prototype, {
 			//TODO throw up loading gif
 			return;
 		}
+		
+		this.markLoading("MAP_mapdata");
 		
 		this.fileSys.importBlob(this.file, function success(){
 			//load up the map!
@@ -245,10 +246,11 @@ extend(Map.prototype, {
 		}
 		
 		function __loadDone() {
+			console.log("__loadDone", !!self.mapmodel, !!self.tiledata);
 			if (!self.mapmodel || !self.tiledata) return; //don't call on _init before both are loaded
 			
 			self._init();
-			self.markLoadFinished();
+			self.markLoadFinished("MAP_mapdata");
 		}
 	},
 	
@@ -570,7 +572,7 @@ extend(Map.prototype, {
 	
 	loadSprite : function(evtid, filename, callback) {
 		var self = this;
-		this.markLoading();
+		this.markLoading("SPRITE_"+evtid);
 		try {
 			var dir = this.fileSys.root.getChildByName(evtid);
 			if (!dir) {
@@ -588,7 +590,7 @@ extend(Map.prototype, {
 				var url = URL.createObjectURL(data);
 				GC.collectURL(url, GC_BIN);
 				callback(null, url);
-				self.markLoadFinished();
+				self.markLoadFinished("SPRITE_"+evtid);
 			});
 		} catch (e) {
 			callback(e);
@@ -636,6 +638,7 @@ extend(Map.prototype, {
 			this._mapRunState = {
 				loadTotal : 0,
 				loadProgress : 0,
+				loadingAssets : {},
 				
 				isStarted : false,
 				startQueue : [],
@@ -646,13 +649,23 @@ extend(Map.prototype, {
 		return this._mapRunState;
 	},
 	
-	markLoading : function() {
+	markLoading : function(assetId) {
 		var state = this._initMapRunState();
 		state.loadTotal++;
+		if (assetId) {
+			if (!state.loadingAssets[assetId])
+				state.loadingAssets[assetId] = 0;
+			state.loadingAssets[assetId]++;
+		}
 	},
-	markLoadFinished : function() {
+	markLoadFinished : function(assetId) {
 		var state = this._initMapRunState();
 		state.loadProgress++;
+		if (assetId) {
+			if (!state.loadingAssets[assetId])
+				state.loadingAssets[assetId] = 0;
+			state.loadingAssets[assetId]--;
+		}
 		
 		//TODO begin map start
 		if (state.loadProgress >= state.loadTotal) {

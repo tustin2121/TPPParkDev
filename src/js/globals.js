@@ -27,6 +27,6 @@ window.DEBUG = {};
 
 //On Ready
 $(function(){
-	$("<img>").attr("str", DEF_TEXTURE).css({display:"none"}).appendTo("body");
-	$("<img>").attr("str", DEF_SPRITE).css({display:"none"}).appendTo("body");
+	window.DEF_TEXTURE_IMG = $("<img>").attr("src", DEF_TEXTURE).css({display:"none"}).appendTo("body")[0];
+	window.DEF_SPRITE_IMG = $("<img>").attr("src", DEF_SPRITE).css({display:"none"}).appendTo("body")[0];
 });
