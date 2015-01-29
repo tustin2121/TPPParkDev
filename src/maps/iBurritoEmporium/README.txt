@@ -2,20 +2,13 @@ Burrito's Fanfiction Emporium
 
 # Description
 
-A book store wherein burrito's fan fictions are kept and "sold". The player can come 
-through here and browse around, examining the various fan fictions written by real people.
+A book store wherein burrito's fan fictions are kept and "sold". The player can come through here and browse around, examining the various fan fictions written by real people.
 
-The shelves on the lower level are ceiling-height shelves that contain fan fiction works
-categorized by author name. The shelves have signs on them indicating letters in the particular
-aisles. Patrons browse the aisle as well, stopping to sit and read on a particular letter
-occasionally. You'll sometimes find GYMC looking through some fictions.
+The shelves on the lower level are ceiling-height shelves that contain fan fiction works categorized by author name. The shelves have signs on them indicating letters in the particular aisles. Patrons browse the aisle as well, stopping to sit and read on a particular letter occasionally. You'll sometimes find GYMC looking through some fictions.
 
-The upper level has higher ceilings and is somewhat brighter. It has a small reading area, 
-where patrons sit on floor pillows and read, or listen to stories told by others.
+The upper level has higher ceilings and is somewhat brighter. It has a small reading area, where patrons sit on floor pillows and read, or listen to stories told by others.
 
-The southern part of the upper floor has a meet-and-greet area, where people get signed 
-copies of books. Occasionally, featured artists will appear here, and you can read their
-works from the table.
+The southern part of the upper floor has a meet-and-greet area, where people get signed copies of books. Occasionally, featured artists will appear here, and you can read their works from the table.
 
 
 # Contents
@@ -122,5 +115,63 @@ And yet… How ironic, that I must now use their power to Link with the Streamer
 ---
 
 Now onto doing current stuff. Hizzah!
+
+-----------------------------------------------------------------
+
+And now for the current list:
+
+I'll just link some NSFW fanfics right now. [1](http://pastebin.com/9LqA1if5) [2](http://pastebin.com/rGUWHzgb) [3](http://pastebin.com/CzhkwcHS) [4](http://pastebin.com/7qNJdSXd) [5](http://pastebin.com/qjXhUrdE) [6](/25pxc9)
+
+Kilozombie's posts (ASK AOM)
+
+[Link](http://www.reddit.com/r/twitchplayspokemon/comments/2oyuy0/asktwitchpkmn8_event_ideas_read_comment/cmrzs8f) - The night before Helixmas - /u/wheatgrain 
+
+[Link](http://www.reddit.com/r/twitchplayspokemon/comments/2pc17t/mary_did_you_know_twitchplayspokemon_red_songs_of/cmva3al) - Mary Did You Know? - /u/againthesaga 
+
+[Link](/2lxzsf) - Adventures in the TPP Sub (Part 2) - /u/abiyoru 
+
+[Link](/2mnk3x) - Adventures in the TPP Sub (Part 9) - /u/abiyoru 
+
+[Link](https://docs.google.com/document/d/1pYwrhY3kwXYNyWLYPGY66hf59bt0LL8UAcLofKySJMg/pub) - Primal Reversion - /u/faislittlewhiteraven 
+
+[Link](/2g5kf4) - The Story of Super-A part 2: More Origins - /u/loreman12345
+
+[Link](/2frt7j) - The Epic Adventure of Umbrellagator - /u/waluigithyme 
+
+[Link](/2gtgw6) - The Epic Adventures of Umbrellagator Part 5: Tea, crumpets, and Ninjas - /u/waluigithyme 
+
+[Link](/2mfkox) - God Raisers - /u/jukebox108 
+
+[Link](/2mztkf) - Pull up a chair - /u/spoon300 
+
+[Link](/2n81sk) - Haze in Littleroot - /u/kelcyus 
+
+[Link](/2nqpj1) - [TPP Delta Episode 2] Infinity Energy - /u/slowpokeisagamer 
+
+[Link](/2nye2r) - [TPP Delta Episode 6] Courtney is pretty crazy - /u/slowpokeisagamer 
+
+[Link](/2r9nhv) - The End of All. Part 12 - /u/kelcyus 
+
+[Link](https://docs.google.com/document/d/1Fy3BlZtCT8AzhMY8dUfB-AwhVg1cGzmB8FR8WSFA_0M/edit) - It's a Wonderful Run - /u/wheatgrain 
+
+[Link](https://docs.google.com/document/d/1wbQjqytqYEZ9j4wxvGDbglEhPgs0YwANM_tZDXJollo/edit) - GOTPP Chronicles: Twas The Night Before Helixmas - /u/colewalski 
+
+[Link](/2nh0al) - Gods of TPP: A Sudden Epiphany - /u/colewalski 
+
+[Link](/2rfxvw) - The Last Story of Bird Judas - /u/kelcyus 
+
+[Link](/2g34zg) - The Prince and the Pacifist: Part 2 - /u/abiyoru 
+
+[Link](/2hofwn) - A Wish Fulfilled - /u/abiyoru 
+
+[Link](/2d5tai) - Zigzagoon's logs - /u/redwings1340 
+
+[Link](/2n1vph) - Emerald to ORAS (TPP Generations) : The Torch is Passed - /u/colewalski 
+
+[Link](/2n3c5h) - Motion Blur - /u/asiruki 
+
+[Link](/2to6wk) - Operation Obscure Mon: Lord Helix - /u/the_real_lord_helix
+
+Also probably should put in some [Operation Red Rewind](/2t06td) stuff in there as it comes out. And maybe something from [this.](http://archiveofourown.org/series/189002)
 
 -----------------------------------------------------------------

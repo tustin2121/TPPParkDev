@@ -79,6 +79,9 @@ extend(CharacterSpriteMaterial.prototype, {
 				color:		{ type: "c", value: this.color },
 				map:		{ type: "t", value: this.map },
 				opacity:	{ type: "f", value: this.opacity },
+				
+				zoffset:	{ type: "f", value: 0 },
+				sheer:		{ type: "m4", value: new THREE.Matrix4() },
 			},
 		};
 		
@@ -124,6 +127,9 @@ var VERT_SHADER = [
 	'uniform vec2 scale;',
 	'uniform vec2 uvOffset;',
 	'uniform vec2 uvScale;',
+	
+	'uniform float zoffset;',
+	'uniform mat4 sheer;',
 
 	// 'attribute vec2 position;',
 	// 'attribute vec2 uv;',
@@ -139,12 +145,20 @@ var VERT_SHADER = [
 		'vec2 rotatedPosition;',
 		'rotatedPosition.x = cos( rotation ) * alignedPosition.x - sin( rotation ) * alignedPosition.y;',
 		'rotatedPosition.y = sin( rotation ) * alignedPosition.x + cos( rotation ) * alignedPosition.y;',
+		
+		// 'mat4 zsheer = mat4(1, 0, 0, 0,',
+		// 	               '0, 1, 0, 0,',
+		// 	               '0, 0, 1, position.y * zoffset,',
+		// 	               '0, 0, 0, 1);',
 
+		// 'vec4 sheerforce = modelViewMatrix * vec4(0, position.y, position.z, 1);',
+		
 		'vec4 finalPosition;',
 
 		'finalPosition = modelViewMatrix * vec4( 0.0, 0.0, 0.0, 1.0 );',
+		// 'finalPosition.w += (sheerforce.z - finalPosition.z) * zoffset;',
 		'finalPosition.xy += rotatedPosition;',
-		// 'finalPosition.z += position.z;',
+		// 'finalPosition = zsheer * finalPosition;',
 		'finalPosition = projectionMatrix * finalPosition;',
 		
 		'gl_Position = finalPosition;',
