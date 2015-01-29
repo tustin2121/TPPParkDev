@@ -6,7 +6,7 @@ var extend = require("extend");
 var EventEmitter = require("events").EventEmitter;
 var controller = require("tpp-controller");
 
-var M_WIDTH = 0, M_HEIGHT = 1, M_HIDE = 2, M_TRIANGLE = 3;
+var M_WIDTH = 0, M_HEIGHT = 1, M_HIDE = 2, M_TRIANGLE = 3, M_TAILX = 4, M_TAILY = 5;
 
 /**
  *
@@ -293,12 +293,20 @@ extend(DialogBox.prototype, {
 		this.model.morphTargetInfluences[M_HEIGHT] = height;
 		e.css({ width: width-difx+2, height: height-dify });
 		
-		if (this.owner) {
-			//TODO determine anchor point based on where the owner is on-screen
-		}
 		//TODO base on anchor points
 		this.model.position.set(10, 10, 0);
 		e.css({ bottom: 10, left: 10, top: "" });
+		
+		//TODO move into an "advance"
+		if (this.owner && this.owner.getTalkingAnchor) {
+			//TODO determine anchor point based on where the owner is on-screen
+			//Project Vector = 3D to 2D, Unproject Vector = 2D to 3D
+			var anchor = this.owner.getTalkingAnchor();
+			anchor.project(currentMap.camera);
+			this.model.morphTargetInfluences[M_TAILX] = anchor.x - this.model.position.x;
+			this.model.morphTargetInfluences[M_TAILY] = anchor.y - this.model.position.y;
+		}
+		
 		
 		
 		// Step 3: setup typewriter effect and show dialogbox
@@ -361,11 +369,21 @@ extend(DialogBox.prototype, {
 				
 				v3(ins.ax+ins.as, ins.ay+ins.as, 1), v3(ins.ax-ins.as, ins.ay+ins.as, 1), //16-17
 				v3(ins.ax+ins.as, ins.ay-ins.as, 1), v3(ins.ax-ins.as, ins.ay-ins.as, 1), //18-19
+				
+				v3(0, ins.h/2, -1), v3(16, ins.h/2, -1), v3(0, 0, -1), //20-22
 			];
 			f4(geom, 0, 1, 4, 5); f4(geom, 1, 2, 5, 6); f4(geom, 2, 3, 6, 7);
 			f4(geom, 4, 5, 8, 9); f4(geom, 5, 6, 9,10); f4(geom, 6, 7,10,11);
 			f4(geom, 8, 9,12,13); f4(geom, 9,10,13,14); f4(geom,10,11,14,15);
 			f4(geom,16,17,18,19, 1);
+			
+			{
+				geom.faces.push(new THREE.Face3(22, 20, 21, undefined, undefined, 0));
+				// geom.faces.push(new THREE.Face3(22, 21, 20));
+				
+				geom.faceVertexUvs[0].push([ new THREE.Vector2(ins.l, ins.t), new THREE.Vector2(ins.l, ins.t), new THREE.Vector2(ins.l, ins.t), ]);
+				// geom.faceVertexUvs[0].push([ new THREE.Vector2(ins.l, ins.t), new THREE.Vector2(ins.l, ins.t), new THREE.Vector2(ins.l, ins.t), ]);
+			}
 			
 			geom.morphTargets = [
 				{
@@ -377,6 +395,8 @@ extend(DialogBox.prototype, {
 						
 						v3(ins.ax+ins.as+1, ins.ay+ins.as, 1), v3(ins.ax-ins.as+1, ins.ay+ins.as, 1), //16-17
 						v3(ins.ax+ins.as+1, ins.ay-ins.as, 1), v3(ins.ax-ins.as+1, ins.ay-ins.as, 1), //18-19
+						
+						v3(0+0.5, (ins.h)/2, -1), v3(16+0.5, (ins.h)/2, -1), v3(0, 0, -1), //20-22
 					],
 				},
 				{
@@ -388,10 +408,12 @@ extend(DialogBox.prototype, {
 						
 						v3(ins.ax+ins.as, ins.ay+ins.as, 1), v3(ins.ax-ins.as, ins.ay+ins.as, 1), //16-17
 						v3(ins.ax+ins.as, ins.ay-ins.as, 1), v3(ins.ax-ins.as, ins.ay-ins.as, 1), //18-19
+						
+						v3(0, (ins.h+1)/2, -1), v3(16, (ins.h+1)/2, -1), v3(0, 0, -1), //20-22
 					],
 				},
 				{
-					name: "showStop", vertices: [
+					name: "hideStop", vertices: [
 						v3(0,     0), v3(ins.l,     0), v3(ins.r,     0), v3(ins.w,     0), //0-3
 						v3(0, ins.t), v3(ins.l, ins.t), v3(ins.r, ins.t), v3(ins.w, ins.t), //4-7
 						v3(0, ins.b), v3(ins.l, ins.b), v3(ins.r, ins.b), v3(ins.w, ins.b), //8-11
@@ -399,6 +421,8 @@ extend(DialogBox.prototype, {
 						
 						v3(ins.ax+ins.as, ins.ay+ins.as,-1), v3(ins.ax-ins.as, ins.ay+ins.as,-1), //16-17
 						v3(ins.ax+ins.as, ins.ay-ins.as,-1), v3(ins.ax-ins.as, ins.ay-ins.as,-1), //18-19
+						
+						v3(0, ins.h/2, -1), v3(16, ins.h/2, -1), v3(0, 0, -1), //20-22
 					],
 				},
 				{
@@ -410,8 +434,36 @@ extend(DialogBox.prototype, {
 						
 						v3(ins.ax+ins.as, ins.ay+ins.as, 1), v3(ins.ax-ins.as, ins.ay+ins.as, 1), //16-17
 						v3(ins.ax       , ins.ay-ins.as, 1), v3(ins.ax       , ins.ay-ins.as, 1), //18-19
+						
+						v3(0, ins.h/2, -1), v3(16, ins.h/2, -1), v3(0, 0, -1), //20-22
 					],
-				}
+				},
+				{
+					name: "tailX", vertices: [
+						v3(0,     0), v3(ins.l,     0), v3(ins.r,     0), v3(ins.w,     0), //0-3
+						v3(0, ins.t), v3(ins.l, ins.t), v3(ins.r, ins.t), v3(ins.w, ins.t), //4-7
+						v3(0, ins.b), v3(ins.l, ins.b), v3(ins.r, ins.b), v3(ins.w, ins.b), //8-11
+						v3(0, ins.h), v3(ins.l, ins.h), v3(ins.r, ins.h), v3(ins.w, ins.h), //12-15
+						
+						v3(ins.ax+ins.as, ins.ay+ins.as, 1), v3(ins.ax-ins.as, ins.ay+ins.as, 1), //16-17
+						v3(ins.ax+ins.as, ins.ay-ins.as, 1), v3(ins.ax-ins.as, ins.ay-ins.as, 1), //18-19
+						
+						v3(0, ins.h/2, -1), v3(16, ins.h/2, -1), v3(1, 0, -1), //20-22
+					],
+				},
+				{
+					name: "tailY", vertices: [
+						v3(0,     0), v3(ins.l,     0), v3(ins.r,     0), v3(ins.w,     0), //0-3
+						v3(0, ins.t), v3(ins.l, ins.t), v3(ins.r, ins.t), v3(ins.w, ins.t), //4-7
+						v3(0, ins.b), v3(ins.l, ins.b), v3(ins.r, ins.b), v3(ins.w, ins.b), //8-11
+						v3(0, ins.h), v3(ins.l, ins.h), v3(ins.r, ins.h), v3(ins.w, ins.h), //12-15
+						
+						v3(ins.ax+ins.as, ins.ay+ins.as, 1), v3(ins.ax-ins.as, ins.ay+ins.as, 1), //16-17
+						v3(ins.ax+ins.as, ins.ay-ins.as, 1), v3(ins.ax-ins.as, ins.ay-ins.as, 1), //18-19
+						
+						v3(0, ins.h/2, -1), v3(16, ins.h/2, -1), v3(0, 1, -1), //20-22
+					],
+				},
 			];
 		}
 		

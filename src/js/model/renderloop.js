@@ -55,6 +55,7 @@ function renderLoop() {
 	
 	if (UI.scene && UI.camera) {
 		//Render the UI with the UI camera and its scene
+		threeRenderer.clear(false, true, false); //Clear depth buffer
 		threeRenderer.render(UI.scene, UI.camera);
 	}
 	

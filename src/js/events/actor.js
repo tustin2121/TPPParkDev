@@ -46,6 +46,7 @@ extend(Actor.prototype, {
 	avatar_sprite : null,
 	avatar_format : null,
 	avatar_tex : null,
+	_avatar_shadowcaster : null,
 	
 	getAvatar : function(map){ 
 		if (this.avatar_node) return this.avatar_node;
@@ -57,6 +58,12 @@ extend(Actor.prototype, {
 		
 		return node;
 		
+	},
+	
+	getTalkingAnchor : function() {
+		return this._avatar_shadowcaster.localToWorld(
+			this._avatar_shadowcaster.position.clone()
+		);
 	},
 	
 	_avatar_createShadowCaster: function(map) {
@@ -71,7 +78,7 @@ extend(Actor.prototype, {
 		//mesh.visible = false; //?
 		mesh.castShadow = true;
 		mesh.position.set(0, 0.5, 0);
-		return mesh;
+		return this._avatar_shadowcaster = mesh;
 	},
 	
 	_avatar_createSprite : function(map) {
