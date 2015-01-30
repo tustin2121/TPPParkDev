@@ -6,6 +6,7 @@ var ndarray = require("ndarray");
 var extend = require("extend");
 var sync = require("synchronize");
 var archiver = require("archiver");
+var path = require("path");
 
 var evtFinder = require("./event-compiler.js");
 var ByLineReader = require("./transform-streams").ByLineReader;
@@ -37,7 +38,12 @@ function compileMap(id, file) {
 	//Collate the local events
 	var evtjs = evtFinder.findLocalEvents(id, file);
 	if (evtjs) {
-		fs.writeFileSync(BUILD_TEMP+id+"/l_evt.js", evtjs);
+		if (evtjs.bundle) {
+			fs.writeFileSync(BUILD_TEMP+id+"/l_evt.js", evtjs);
+		}
+		if (evtjs.configs) {
+			packageLocalAssets(file, BUILD_TEMP+id, evtjs.configs);
+		}
 	}
 	nextTick();
 	
@@ -48,7 +54,7 @@ function compileMap(id, file) {
 			fs.writeFileSync(BUILD_TEMP+id+"/g_evt.js", evtjs.bundle);
 		}
 		if (evtjs.configs) {
-			packageEventAssets(BUILD_TEMP+id, evtjs.configs);
+			packageGlobalEventAssets(BUILD_TEMP+id, evtjs.configs);
 		}
 	}
 	nextTick();
@@ -322,7 +328,7 @@ function processMapModel(id, file) {
 			case "bump":
 			case "disp":
 			case "decal":
-				this.currMat.texs[comps[0]] = line.substr(comps[0].length).trim();
+				this.currMat.texs[comps[0]] = path.normalize(line.substr(comps[0].length).trim());
 				numTextsDefined++;
 				break;
 			
@@ -531,7 +537,7 @@ function processMapModel(id, file) {
 	}
 }
 
-function packageEventAssets(base, configs) {
+function packageGlobalEventAssets(base, configs) {
 	for (var evt in configs) {
 		if (!fs.existsSync(base+"/"+evt)) fs.mkdirSync(base+"/"+evt);
 		
@@ -541,12 +547,24 @@ function packageEventAssets(base, configs) {
 				var sprite = c.sprites[i];
 				copyFile(
 					c.__path+"/"+sprite, 
-					base+"/"+evt+"/"+sprite
+					base+"/"+evt+"/"+path.basename(sprite)
 				);
 			}
 		}
 	}
-	
+}
+
+function packageLocalAssets(srcdir, base, config) {
+	if (!fs.existsSync(base+"/_local")) fs.mkdirSync(base+"/_local");
+	if (config.sprites) {
+		for (var i = 0; i < c.sprites.length; i++) {
+			var sprite = c.sprites[i];
+			copyFile(
+				srcdir+"/"+sprite, 
+				base+"/_local/"+path.basename(sprite)
+			);
+		}Z
+	}
 }
 
 function zipWorkingDirectory(id) {

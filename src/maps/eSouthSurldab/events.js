@@ -1,8 +1,19 @@
 // eSouthSurldab/events.js
 // Events for South Surldab
 
+//$ PackConfig
+{
+	"sprites" : [
+		"../../events/_spriteRepo/builder.png"
+	] 
+}
+//$!
+
+var Actor = require("tpp-actor");
 var Warp = require("tpp-warp");
 var Event = require("tpp-event");
+
+var barrierGeom; //Geometry for the saw horse barrier blocking unconstructed exits.
 
 add(new Event({
 	id: "MartSignSpin",

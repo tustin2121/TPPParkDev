@@ -115,7 +115,26 @@ module.exports.findGlobalEvents = findGlobalEvents;
 function findLocalEvents(mapid, path) {
 	if (!fs.existsSync(path+"/events.js")) return null;
 	
-	return tryWrapCatch(bundle("./"+path+"/events.js", mapid, "local"), "Local event loading exploded.");
+	var config;
+	{
+		var databuffer = [];
+		var file_reader = fs.createReadStream(path+"/events.js");
+		file_reader.pipe(getPackConfigExtractorTransform()).on('data', function(chunk){
+			databuffer.push(chunk.toString());
+		}).on('end', sync.defer());
+		
+		sync.await();
+		
+		// console.log("Databuffer 1:", databuffer); sleep(100);
+		
+		if (databuffer.length) config = JSON.parse(databuffer.join(" "));
+		else config = {};
+	}
+	
+	return {
+		configs: config,
+		bundle: tryWrapCatch(bundle("./"+path+"/events.js", mapid, "local"), "Local event loading exploded."),
+	};
 }
 module.exports.findLocalEvents = findLocalEvents;
 
