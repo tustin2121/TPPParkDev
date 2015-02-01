@@ -59,6 +59,8 @@ function createEventLibraryBundle(outfile) {
 	bundler.require("./src/js/events/behavior",			{ expose: "tpp-behavior" });
 	bundler.require("./src/js/managers/controller",		{ expose: "tpp-controller" });
 	
+	bundler.require("./src/js/events/tGallery",		{ expose: "tpp-test-gallery" });
+	
 	// This function will collect all the exposed labels, in a process similar to passing
 	// this not-yet-bundled bundler to another bundler through external().
 	bundler.on("label", function(prev, id){

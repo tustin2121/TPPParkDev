@@ -1,5 +1,5 @@
 // Confettibin.member/base.js
-// Defines the base event for myself in the park
+//
 
 //$ PackConfig
 { "sprites" : [ "base.png" ] }
@@ -11,4 +11,6 @@ module.exports = {
 	
 	name: "confettibin",
 	infodex: "meta.community.confettibin",
+	
+	sprite_creator: "Confettibin",
 };

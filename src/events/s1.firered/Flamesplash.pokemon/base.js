@@ -12,4 +12,6 @@ module.exports = {
 	
 	name: "Flamesplash",
 	infodex: "game.firered.pokemon.flamesplash",
+	
+	sprite_creator: "Carlotta4th",
 };

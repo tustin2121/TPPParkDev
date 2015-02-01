@@ -12,4 +12,6 @@ module.exports = {
 	
 	name: "AJ Downs",
 	infodex: "game.crystal.trainer.ajdowns",
+	
+	sprite_creator: "Nintendo",
 };

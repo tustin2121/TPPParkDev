@@ -5,12 +5,15 @@ var Actor = require("tpp-actor");
 var SpriteAnimation = require("tpp-actor-animations").SpriteAnimation;
 
 //$ PackConfig
-{ "sprites" : [ "base.png"] }
+{ "sprites" : [ "base.png", "swim.png" ] }
 //$!
 module.exports = {
 	id: "Kenya.pokemon",
 	sprite: "base.png",
-	sprite_format: "kenya_base",
+	sprite_format: {
+		"base.png": "kenya_base",
+		"swim.png": "kenya_swim"
+	},
 	scale: 2,
 	
 	name: "Kenya",

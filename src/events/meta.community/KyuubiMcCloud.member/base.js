@@ -11,4 +11,6 @@ module.exports = {
 	
 	name: "Kyuubi_McCloud",
 	infodex: "meta.community.kyuubimccloud",
+	
+	sprite_creator: "Kyuubi_McCloud",
 };

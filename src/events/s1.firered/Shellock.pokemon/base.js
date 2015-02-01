@@ -12,4 +12,6 @@ module.exports = {
 	
 	name: "Shellock Holmes",
 	infodex: "game.firered.pokemon.shellock",
+	
+	sprite_creator: "Carlotta4th",
 };

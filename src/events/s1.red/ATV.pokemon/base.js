@@ -16,6 +16,8 @@ module.exports = {
 	name: "ATV",
 	infodex: "game.red.pokemon.atv",
 	
+	sprite_creator: "Carlotta4th",
+	
 	getSpriteFormat : function(format) {
 		var f = Actor.prototype.getSpriteFormat(format);
 		

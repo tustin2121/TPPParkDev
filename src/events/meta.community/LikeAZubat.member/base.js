@@ -9,10 +9,15 @@ var Actor = require("tpp-actor");
 module.exports = {
 	id: "LikeAZubat.member",
 	sprite: "zubat.png",
-	sprite_format: "hg_pokecol-32",
+	sprite_format: {
+		"zubat.png" : "hg_pokecol-32",
+		"base.png" : "hg_vertmix-32",
+	},
 	
 	name: "Like_a_Zubat",
 	infodex: "meta.community.likeazubat",
+	
+	sprite_creator: "Like_a_Zubat",
 	
 	getSpriteFormat : function(format) {
 		var f = Actor.prototype.getSpriteFormat(format);

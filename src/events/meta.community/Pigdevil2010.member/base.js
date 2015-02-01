@@ -11,4 +11,6 @@ module.exports = {
 	
 	name: "Pigdevil2010",
 	infodex: "meta.community.pigdevil2010",
+	
+	sprite_creator: "Pigdevil2010",
 };

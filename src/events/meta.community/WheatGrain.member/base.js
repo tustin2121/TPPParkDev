@@ -11,4 +11,6 @@ module.exports = {
 	
 	name: "wheatgrain",
 	infodex: "meta.community.wheatgrain",
+	
+	sprite_creator: "wheatgrain",
 };

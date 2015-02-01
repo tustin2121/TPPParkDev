@@ -11,4 +11,6 @@ module.exports = {
 	
 	name: "Level44EnderShaman",
 	infodex: "meta.community.endershaman",
+	
+	sprite_creator: "Level44EnderShaman",
 };

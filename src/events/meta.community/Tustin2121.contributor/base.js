@@ -11,4 +11,10 @@ module.exports = {
 	
 	name: "Tustin2121",
 	infodex: "meta.community.tustin2121",
+	
+	sprite_creator: "Tustin2121",
+	
+	shouldAppear : function(mapid) {
+		
+	},
 };

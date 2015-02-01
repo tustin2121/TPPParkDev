@@ -12,4 +12,6 @@ module.exports = {
 	
 	name: "Zexxy",
 	infodex: "game.emerald.pokemon.zexxy",
+	
+	sprite_creator: "Carlotta4th",
 };

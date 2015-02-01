@@ -11,4 +11,6 @@ module.exports = {
 	
 	name: "Carlotta the 4th",
 	infodex: "meta.community.carlotta4th",
+	
+	sprite_creator: "Carlotta4th",
 };

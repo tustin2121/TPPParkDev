@@ -14,9 +14,11 @@ module.exports = {
 	name: "Zexinja",
 	infodex: "game.emerald.pokemon.zexinja",
 	
+	sprite_creator: "Carlotta4th",
+	
 	getSpriteFormat : function(format) {
 		var f = Actor.prototype.getSpriteFormat(format);
-		
+		// Zexinja hovers in mid air while standing
 		if (format == "hg_pokecol-32") {
 			f.anims["stand"] = f.anims["_flap_stand"];
 			f.anims["stand"].options.frameLength = 10;

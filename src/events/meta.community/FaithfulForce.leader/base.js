@@ -1,5 +1,5 @@
 // FaithfulForce.leader/base.js
-// Defines the base event for myself in the park
+// Defines the base event for a community member in the park
 
 //$ PackConfig
 { "sprites" : [ "base.png" ] }
@@ -11,4 +11,6 @@ module.exports = {
 	
 	name: "FaithfulForce",
 	infodex: "meta.community.faithfulforce",
+	
+	sprite_creator: "Carlotta4th",
 };

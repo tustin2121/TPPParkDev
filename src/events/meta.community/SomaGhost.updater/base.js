@@ -11,4 +11,6 @@ module.exports = {
 	
 	name: "SomaGhost",
 	infodex: "meta.community.somaghost",
+	
+	sprite_creator: "SomaGhost",
 };

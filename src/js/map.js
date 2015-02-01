@@ -353,9 +353,15 @@ extend(Map.prototype, {
 			throw new Error("Event requested NPC Spawn Point on a map where none are defined!");
 		}
 		
-		var pts = this.metadata.npcspawns;
+		var pts = this.metadata._npcSpawnsAvail;
+		if (!pts || !pts.length) {
+			pts = this.metadata._npcSpawnsAvail = this.metadata.npcspawns.slice();
+		}
+		
 		var index = Math.floor(Math.random() * pts.length);
-		return new THREE.Vector3(pts[index][0], pts[index][1], pts[index][2] || 1);
+		var vec = new THREE.Vector3(pts[index][0], pts[index][1], pts[index][2] || 1);
+		pts.splice(index, 1);
+		return vec;
 		
 	},
 	

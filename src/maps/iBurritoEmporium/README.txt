@@ -175,3 +175,15 @@ Kilozombie's posts (ASK AOM)
 Also probably should put in some [Operation Red Rewind](/2t06td) stuff in there as it comes out. And maybe something from [this.](http://archiveofourown.org/series/189002)
 
 -----------------------------------------------------------------
+
+So the [Rough Waters link](https://docs.google.com/document/d/11lb3vgALOnK05BRPfFcoUZ1qVskAp8-cxRv4zcPSG6E/edit)
+
+But also I forgot to send you the kilozombie fics I wanted. I asked AOM for his recommendations, he said to use:
+
+[Link](/2dwmym) - Long Awakening Part 1 - /u/kilozombie 
+
+[Link](https://docs.google.com/document/d/1_x3Osf6YqUc25hrBiwvISdWufWVIA8NuVChXUv-2p1Y/edit) -  A Solareon Complex - /u/kilozombie 
+
+And that's it. Woot!
+
+-----------------------------------------------------------------

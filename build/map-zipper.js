@@ -6,6 +6,7 @@ var ndarray = require("ndarray");
 var extend = require("extend");
 var sync = require("synchronize");
 var archiver = require("archiver");
+var markdown = require("marked ");
 var path = require("path");
 
 var evtFinder = require("./event-compiler.js");
@@ -39,7 +40,7 @@ function compileMap(id, file) {
 	var evtjs = evtFinder.findLocalEvents(id, file);
 	if (evtjs) {
 		if (evtjs.bundle) {
-			fs.writeFileSync(BUILD_TEMP+id+"/l_evt.js", evtjs);
+			fs.writeFileSync(BUILD_TEMP+id+"/l_evt.js", evtjs.bundle);
 		}
 		if (evtjs.configs) {
 			packageLocalAssets(file, BUILD_TEMP+id, evtjs.configs);
@@ -57,6 +58,10 @@ function compileMap(id, file) {
 			packageGlobalEventAssets(BUILD_TEMP+id, evtjs.configs);
 		}
 	}
+	nextTick();
+	
+	//Collate extra files: reading material
+	compileReadingMaterial(file+"/books", BUILD_TEMP+id+"/books");
 	nextTick();
 	
 	//Now zip everything up
@@ -104,6 +109,46 @@ function convertTilePropsToShort(props) {
 	return val;
 }
 
+function compileReadingMaterial(src_, dest_) {
+	if (!fs.existsSync(src)) return;
+	
+	console.log("[cMaps] Compiling reading material.");
+	__findFilesIn(src_, dest_);
+	return;
+	
+	function __findFilesIn(src, dest) {
+		if (!fs.existsSync(dest)) { mkdirp(dest); }
+		
+		var total = 0, success = 0;
+		var dirListing = fs.readdirSync(MAP_DIRS[pi]);
+		for (var di = 0; di < dirListing.length; di++) {
+			var file = dirListing[di];
+			
+			var stat = fs.statSync(dir+file);
+			if (stat.isFile() && path.extname(file) != ".md") 
+			{
+				total++;
+				processMarkdown(src+"/"+file, dest+"/"+file);
+				nextTick();
+			} else {
+				__findFilesIn(src+"/"+file, dest+"/"+file);
+			}
+		}
+	}
+	
+	//markdown();
+}
+
+function processMarkdown(infile, outfile, renderer) {
+	renderer = renderer || new markdown.Renderer();
+	
+	if (!fs.existsSync(outfile)) { mkdirp(outfile); }
+	
+	var text = fs.readFileSync(infile);
+	var html = markdown(text, { renderer: renderer });
+	
+	fs.writeFileSync(outfile);
+}
 
 function compressMapJson(id, file) {
 	var json = JSON.parse(fs.readFileSync(file+"/"+id+".json", { encoding: "utf8" }));
@@ -557,13 +602,13 @@ function packageGlobalEventAssets(base, configs) {
 function packageLocalAssets(srcdir, base, config) {
 	if (!fs.existsSync(base+"/_local")) fs.mkdirSync(base+"/_local");
 	if (config.sprites) {
-		for (var i = 0; i < c.sprites.length; i++) {
-			var sprite = c.sprites[i];
+		for (var i = 0; i < config.sprites.length; i++) {
+			var sprite = config.sprites[i];
 			copyFile(
 				srcdir+"/"+sprite, 
 				base+"/_local/"+path.basename(sprite)
 			);
-		}Z
+		}
 	}
 }
 

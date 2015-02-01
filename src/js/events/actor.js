@@ -34,11 +34,27 @@ extend(Actor.prototype, {
 	
 	//////////////// Property Setters /////////////////
 	scale: 1,
+	scale_shadow: 1,
 	
 	setScale : function(scale) {
 		this.scale = scale;
 		scale *= GLOBAL_SCALEUP;
 		this.avatar_sprite.scale.set(scale, scale, scale);
+		this._avatar_shadowcaster.scale.set(
+			this.scale_shadow * scale,
+			this.scale_shadow * scale,
+			this.scale_shadow * scale
+		);
+	},
+	
+	setShadowScale : function(scale) {
+		this.scale_shadow = scale;
+		scale *= GLOBAL_SCALEUP;
+		this._avatar_shadowcaster.scale.set(
+			this.scale * scale,
+			this.scale * scale,
+			this.scale * scale
+		);
 	},
 	
 	/////////////////////// Avatar //////////////////////
@@ -78,6 +94,13 @@ extend(Actor.prototype, {
 		//mesh.visible = false; //?
 		mesh.castShadow = true;
 		mesh.position.set(0, 0.5, 0);
+		
+		// self.setScale(self.scale_shadow);
+		mesh.scale.set(
+			this.scale_shadow * this.scale * GLOBAL_SCALEUP, 
+			this.scale_shadow * this.scale * GLOBAL_SCALEUP, 
+			this.scale_shadow * this.scale * GLOBAL_SCALEUP
+		);
 		return this._avatar_shadowcaster = mesh;
 	},
 	
@@ -121,7 +144,12 @@ extend(Actor.prototype, {
 			offset: new THREE.Vector3(0, 0.3, 0.22),
 			gc: map.gc,
 		});
-		self.setScale(self.scale);
+		//self.setScale(self.scale);
+		sprite.scale.set(
+			self.scale * GLOBAL_SCALEUP, 
+			self.scale * GLOBAL_SCALEUP, 
+			self.scale * GLOBAL_SCALEUP
+		);
 		
 		return sprite;
 	},
@@ -136,10 +164,14 @@ extend(Actor.prototype, {
 			
 			var img = new Image();
 			var format = self.sprite_format;
-			if (typeof format == "function") 
+			if ($.isPlainObject(format)) {
+				format = self.sprite_format[self.sprite];
+			}
+			if (typeof format == "function") {
 				format = self.sprite_format(self.sprite);
+			}
 			if (typeof format != "string") {
-				console.error("INVALID SPRITE FORMAT! 'sprite_format' must be a string or a "+
+				console.error("INVALID SPRITE FORMAT! 'sprite_format' must be a string, an object, or a "+
 					"function that returns a string! To provide a custom format, override "+
 					"getSpriteFormat on the actor instance!");
 				format = DEF_SPRITE_FORMAT;

@@ -56,6 +56,16 @@ function checkJSON(file) {
 	}
 }
 
+function checkMarkdown(file) {
+	try {
+		//TODO
+		
+		return false;
+	} catch (e) {
+		return e;
+	}
+}
+
 function checkPackConfig(content) {
 	var config = [], out = [];
 	var lines = content.split("\n");

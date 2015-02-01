@@ -11,4 +11,6 @@ module.exports = {
 	
 	name: "KyuremTrainer",
 	infodex: "meta.community.kyuremtrainer",
+	
+	sprite_creator: "KyuremTrainer",
 };

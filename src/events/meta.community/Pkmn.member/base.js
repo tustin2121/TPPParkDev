@@ -11,4 +11,6 @@ module.exports = {
 	
 	name: "-pkmn",
 	infodex: "meta.community.pkmn",
+	
+	sprite_creator: "Carlotta4th",
 };

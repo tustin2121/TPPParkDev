@@ -20,6 +20,7 @@
     "jsonlint": "^1.6.2",
     "less": "^2.1.1",
     "local-web-server": "^0.5.15",
+    "marked": "^0.3.3",
     "minifyify": "^5.0.0",
     "mkdirp": "^0.5.0",
     "moment": "^2.8.4",

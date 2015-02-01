@@ -44,7 +44,7 @@ extend(Event.prototype, {
 		return this.id;
 	},
 	
-	shouldAppear : function(){ return true; },
+	shouldAppear : function(mapid){ return true; },
 	canWalkOn : function(){ return true; },
 	
 	/** Returns an object to represent this event in 3D space, or null if there shouldn't be one. */

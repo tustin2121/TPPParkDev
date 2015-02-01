@@ -11,4 +11,6 @@ module.exports = {
 	
 	name: "HedgemazeExpo",
 	infodex: "meta.community.hedgemazeexpo",
+	
+	sprite_creator: "Carlotta4th",
 };
