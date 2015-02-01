@@ -1,0 +1,72 @@
+# Blender MTL File: 'iBurritoEmporium.blend'
+# Material Count: 7
+
+newmtl BLACKOUT
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.000000 0.000000 0.000000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd woodfloor.png
+
+newmtl BrickWall
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.010000 0.010000 0.010000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd redbrick.png
+
+newmtl Glass
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 0.200000
+illum 2
+map_Kd glass.png
+
+newmtl ShelvesBooks
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd shelf_books.png
+
+newmtl ShelvesSides
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd shelf_side.png
+
+newmtl Stairs
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.010000 0.010000 0.010000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd step_both.png
+
+newmtl WoodFloor
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.010417 0.010417 0.010417
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd woodfloor.png

@@ -6,8 +6,9 @@ var ndarray = require("ndarray");
 var extend = require("extend");
 var sync = require("synchronize");
 var archiver = require("archiver");
-var markdown = require("marked ");
+var markdown = require("marked");
 var path = require("path");
+var mkdirp = require("mkdirp").sync;
 
 var evtFinder = require("./event-compiler.js");
 var ByLineReader = require("./transform-streams").ByLineReader;
@@ -110,7 +111,7 @@ function convertTilePropsToShort(props) {
 }
 
 function compileReadingMaterial(src_, dest_) {
-	if (!fs.existsSync(src)) return;
+	if (!fs.existsSync(src_)) return;
 	
 	console.log("[cMaps] Compiling reading material.");
 	__findFilesIn(src_, dest_);
@@ -120,17 +121,17 @@ function compileReadingMaterial(src_, dest_) {
 		if (!fs.existsSync(dest)) { mkdirp(dest); }
 		
 		var total = 0, success = 0;
-		var dirListing = fs.readdirSync(MAP_DIRS[pi]);
+		var dirListing = fs.readdirSync(src);
 		for (var di = 0; di < dirListing.length; di++) {
 			var file = dirListing[di];
 			
-			var stat = fs.statSync(dir+file);
-			if (stat.isFile() && path.extname(file) != ".md") 
+			var stat = fs.statSync(src+"/"+file);
+			if (stat.isFile() && path.extname(file) == ".md") 
 			{
 				total++;
 				processMarkdown(src+"/"+file, dest+"/"+file);
 				nextTick();
-			} else {
+			} else if (stat.isDirectory()) {
 				__findFilesIn(src+"/"+file, dest+"/"+file);
 			}
 		}
@@ -142,12 +143,14 @@ function compileReadingMaterial(src_, dest_) {
 function processMarkdown(infile, outfile, renderer) {
 	renderer = renderer || new markdown.Renderer();
 	
-	if (!fs.existsSync(outfile)) { mkdirp(outfile); }
+	if (!fs.existsSync(outfile)) { mkdirp(path.dirname(outfile)); }
 	
-	var text = fs.readFileSync(infile);
+	var text = fs.readFileSync(infile, { encoding: "utf8" });
 	var html = markdown(text, { renderer: renderer });
 	
-	fs.writeFileSync(outfile);
+	var outpath = outfile.substr(0, outfile.lastIndexOf(".md")) + ".html";
+	
+	fs.writeFileSync(outpath, html, { encoding: "utf8" });
 }
 
 function compressMapJson(id, file) {

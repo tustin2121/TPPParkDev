@@ -1,0 +1,24 @@
+{
+	"areaname" : "Burrito's Fanfiction Emporium",
+	"domain" : "interior",
+	"layers" : [
+		{ "layer" : 1, "3d" : [1, 0, 0, 8.5,   0, 1, 0, 0,   0, 0, 1, -8.5,   0, 0, 0, 1] },
+		{ "layer" : 2, "3d" : [1, 0, 0, 8.5,   0, 1, 0, 0,   0, 0, 1, -8.5,   0, 0, 0, 1] }
+	],
+	"heightstep" : 0.6666,
+	"camera" : {
+		"type" : "gen4",
+		"cameras": {
+			"0": {}
+		}
+	},
+	"lighting" : {
+		"default": true,
+		"lights" : [],
+		"shadowmap": {
+			"width": 512, "height": 512,
+			"top": 22, "bottom": -12, "left": -10, "right": 10,
+			"near": 1, "far": 150
+		}
+	}
+}

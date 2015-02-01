@@ -160,7 +160,7 @@ MaterialCreator.prototype = {
 			var value = mat[prop];
 			switch (prop.toLowerCase()) {
 				case "kd": // Diffuse color
-					params['diffuse'] = new THREE.Color().fromArray(value);
+					params['color'] = new THREE.Color().fromArray(value);
 					break;
 				
 				case "ka": // Ambient color

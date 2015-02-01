@@ -97,9 +97,9 @@ extend(Actor.prototype, {
 		
 		// self.setScale(self.scale_shadow);
 		mesh.scale.set(
-			this.scale_shadow * this.scale * GLOBAL_SCALEUP, 
-			this.scale_shadow * this.scale * GLOBAL_SCALEUP, 
-			this.scale_shadow * this.scale * GLOBAL_SCALEUP
+			this.scale_shadow * this.scale, 
+			this.scale_shadow * this.scale, 
+			this.scale_shadow * this.scale
 		);
 		return this._avatar_shadowcaster = mesh;
 	},
