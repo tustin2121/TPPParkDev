@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tileset name="WarpPointTileData" tilewidth="16" tileheight="16">
- <image source="../../../../Dropbox/Current Projects/TPP Park 2/Maps/WarpPointTileData.png" width="256" height="128"/>
+ <image source="WarpPointTileData.png" width="256" height="128"/>
  <tile id="0">
   <properties>
    <property name="entryanim" value="0"/>

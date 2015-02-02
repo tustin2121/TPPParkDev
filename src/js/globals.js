@@ -1,6 +1,7 @@
 // globals.js
 
 window.SoundManager = require("./managers/soundmanager");
+window.MapManager = require("./managers/mapmanager");
 window.GC = require("./managers/garbage-collector");
 window.UI = require("./managers/ui-manager");
 window.Chat = require("./chat/core.js");

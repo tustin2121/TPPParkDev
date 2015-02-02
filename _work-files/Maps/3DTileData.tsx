@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tileset name="3DTileData" tilewidth="16" tileheight="16">
- <image source="../../../../Dropbox/Current Projects/TPP Park 2/Maps/MapDataTileset.png" width="128" height="128"/>
+ <image source="MapDataTileset.png" width="128" height="128"/>
  <tile id="0">
   <properties>
    <property name="movement" value="0"/>

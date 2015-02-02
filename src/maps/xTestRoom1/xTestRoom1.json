@@ -54,7 +54,7 @@
  "tilesets":[
         {
          "firstgid":1,
-         "image":"..\/..\/..\/..\/..\/Dropbox\/Current Projects\/TPP Park 2\/Maps\/MapDataTileset.png",
+         "image":"..\/..\/..\/_work-files\/Maps\/MapDataTileset.png",
          "imageheight":128,
          "imagewidth":128,
          "margin":0,
@@ -304,7 +304,7 @@
         }, 
         {
          "firstgid":65,
-         "image":"..\/..\/..\/..\/..\/Dropbox\/Current Projects\/TPP Park 2\/Maps\/WarpPointTileData.png",
+         "image":"..\/..\/..\/_work-files\/Maps\/WarpPointTileData.png",
          "imageheight":128,
          "imagewidth":256,
          "margin":0,

@@ -30,6 +30,7 @@
          "objects":[
                 {
                  "height":157,
+                 "id":1,
                  "name":"iChurchOfHelix",
                  "properties":
                     {
@@ -44,6 +45,7 @@
                 }, 
                 {
                  "height":77,
+                 "id":2,
                  "name":"PokeMart",
                  "properties":
                     {
@@ -58,6 +60,7 @@
                 }, 
                 {
                  "height":79,
+                 "id":3,
                  "name":"PokeCenter",
                  "properties":
                     {
@@ -73,6 +76,7 @@
                 {
                  "ellipse":true,
                  "height":177,
+                 "id":4,
                  "name":"Fountain",
                  "properties":
                     {
@@ -87,6 +91,7 @@
                 }, 
                 {
                  "height":0,
+                 "id":5,
                  "name":"Burrito's Fanfiction Emporium",
                  "polygon":[
                         {
@@ -122,6 +127,7 @@
                 }, 
                 {
                  "height":81,
+                 "id":6,
                  "name":"",
                  "properties":
                     {
@@ -136,6 +142,7 @@
                 }, 
                 {
                  "height":98,
+                 "id":7,
                  "name":"",
                  "properties":
                     {
@@ -150,6 +157,7 @@
                 }, 
                 {
                  "height":97,
+                 "id":8,
                  "name":"",
                  "properties":
                     {
@@ -164,6 +172,7 @@
                 }, 
                 {
                  "height":114,
+                 "id":9,
                  "name":"Basketball Court",
                  "properties":
                     {
@@ -178,6 +187,7 @@
                 }, 
                 {
                  "height":43,
+                 "id":10,
                  "name":"BBall Court Bleachers",
                  "properties":
                     {
@@ -192,6 +202,7 @@
                 }, 
                 {
                  "height":30,
+                 "id":11,
                  "name":"Dairy Queen's Ice Cream Stand",
                  "properties":
                     {
@@ -206,6 +217,7 @@
                 }, 
                 {
                  "height":33,
+                 "id":12,
                  "name":"Zigzagoony's Ice Cream Truck",
                  "properties":
                     {
@@ -220,6 +232,7 @@
                 }, 
                 {
                  "height":222,
+                 "id":13,
                  "name":"Napoleon's Casino",
                  "properties":
                     {
@@ -234,6 +247,7 @@
                 }, 
                 {
                  "height":64.6666666666667,
+                 "id":14,
                  "name":"",
                  "properties":
                     {
@@ -248,6 +262,7 @@
                 }, 
                 {
                  "height":80.6666666666666,
+                 "id":15,
                  "name":"",
                  "properties":
                     {
@@ -262,6 +277,7 @@
                 }, 
                 {
                  "height":64,
+                 "id":16,
                  "name":"",
                  "properties":
                     {
@@ -276,6 +292,7 @@
                 }, 
                 {
                  "height":64.6666666666667,
+                 "id":17,
                  "name":"",
                  "properties":
                     {
@@ -290,6 +307,7 @@
                 }, 
                 {
                  "height":65.3333333333333,
+                 "id":18,
                  "name":"",
                  "properties":
                     {
@@ -304,6 +322,7 @@
                 }, 
                 {
                  "height":62.6666666666667,
+                 "id":19,
                  "name":"",
                  "properties":
                     {
@@ -318,6 +337,7 @@
                 }, 
                 {
                  "height":48.6666666666667,
+                 "id":20,
                  "name":"",
                  "properties":
                     {
@@ -332,6 +352,7 @@
                 }, 
                 {
                  "height":62,
+                 "id":21,
                  "name":"",
                  "properties":
                     {
@@ -346,6 +367,7 @@
                 }, 
                 {
                  "height":112,
+                 "id":22,
                  "name":"",
                  "properties":
                     {
@@ -360,6 +382,7 @@
                 }, 
                 {
                  "height":81.3333333333333,
+                 "id":23,
                  "name":"",
                  "properties":
                     {
@@ -374,6 +397,7 @@
                 }, 
                 {
                  "height":112,
+                 "id":24,
                  "name":"Train Station",
                  "properties":
                     {
@@ -388,6 +412,7 @@
                 }, 
                 {
                  "height":112,
+                 "id":25,
                  "name":"iCrystalFlats",
                  "properties":
                     {
@@ -402,6 +427,7 @@
                 }, 
                 {
                  "height":112.666666666667,
+                 "id":26,
                  "name":"",
                  "properties":
                     {
@@ -416,6 +442,7 @@
                 }, 
                 {
                  "height":95.3333333333333,
+                 "id":27,
                  "name":"",
                  "properties":
                     {
@@ -430,6 +457,7 @@
                 }, 
                 {
                  "height":94.6666666666667,
+                 "id":28,
                  "name":"",
                  "properties":
                     {
@@ -444,6 +472,7 @@
                 }, 
                 {
                  "height":113.333333333333,
+                 "id":29,
                  "name":"",
                  "properties":
                     {
@@ -458,6 +487,7 @@
                 }, 
                 {
                  "height":144.666666666667,
+                 "id":30,
                  "name":"Kenyan Post Office",
                  "properties":
                     {
@@ -472,6 +502,7 @@
                 }, 
                 {
                  "height":68,
+                 "id":31,
                  "name":"",
                  "properties":
                     {
@@ -486,6 +517,7 @@
                 }, 
                 {
                  "height":75,
+                 "id":32,
                  "name":"",
                  "properties":
                     {
@@ -500,6 +532,7 @@
                 }, 
                 {
                  "height":129,
+                 "id":33,
                  "name":"",
                  "properties":
                     {
@@ -514,6 +547,7 @@
                 }, 
                 {
                  "height":223,
+                 "id":34,
                  "name":"",
                  "properties":
                     {
@@ -528,6 +562,7 @@
                 }, 
                 {
                  "height":93,
+                 "id":35,
                  "name":"",
                  "properties":
                     {
@@ -542,6 +577,7 @@
                 }, 
                 {
                  "height":97,
+                 "id":36,
                  "name":"",
                  "properties":
                     {
@@ -556,6 +592,7 @@
                 }, 
                 {
                  "height":124,
+                 "id":37,
                  "name":"",
                  "properties":
                     {
@@ -570,6 +607,7 @@
                 }, 
                 {
                  "height":79,
+                 "id":38,
                  "name":"",
                  "properties":
                     {
@@ -584,6 +622,7 @@
                 }, 
                 {
                  "height":194.333333333333,
+                 "id":39,
                  "name":"Hall of Fame",
                  "properties":
                     {
@@ -598,6 +637,7 @@
                 }, 
                 {
                  "height":129,
+                 "id":40,
                  "name":"",
                  "properties":
                     {
@@ -612,6 +652,7 @@
                 }, 
                 {
                  "height":92,
+                 "id":41,
                  "name":"",
                  "properties":
                     {
@@ -626,6 +667,7 @@
                 }, 
                 {
                  "height":94,
+                 "id":42,
                  "name":"",
                  "properties":
                     {
@@ -640,6 +682,7 @@
                 }, 
                 {
                  "height":126,
+                 "id":43,
                  "name":"",
                  "properties":
                     {
@@ -654,6 +697,7 @@
                 }, 
                 {
                  "height":95,
+                 "id":44,
                  "name":"",
                  "properties":
                     {
@@ -668,6 +712,7 @@
                 }, 
                 {
                  "height":160,
+                 "id":45,
                  "name":"",
                  "properties":
                     {
@@ -682,6 +727,7 @@
                 }, 
                 {
                  "height":95,
+                 "id":46,
                  "name":"",
                  "properties":
                     {
@@ -696,6 +742,7 @@
                 }, 
                 {
                  "height":99,
+                 "id":47,
                  "name":"",
                  "properties":
                     {
@@ -710,6 +757,7 @@
                 }, 
                 {
                  "height":98,
+                 "id":48,
                  "name":"",
                  "properties":
                     {
@@ -724,6 +772,7 @@
                 }, 
                 {
                  "height":96,
+                 "id":49,
                  "name":"",
                  "properties":
                     {
@@ -738,6 +787,7 @@
                 }, 
                 {
                  "height":97,
+                 "id":50,
                  "name":"",
                  "properties":
                     {
@@ -752,6 +802,7 @@
                 }, 
                 {
                  "height":96,
+                 "id":51,
                  "name":"",
                  "properties":
                     {
@@ -766,6 +817,7 @@
                 }, 
                 {
                  "height":96,
+                 "id":52,
                  "name":"",
                  "properties":
                     {
@@ -780,6 +832,7 @@
                 }, 
                 {
                  "height":80,
+                 "id":53,
                  "name":"",
                  "properties":
                     {
@@ -794,6 +847,7 @@
                 }, 
                 {
                  "height":127,
+                 "id":54,
                  "name":"",
                  "properties":
                     {
@@ -808,6 +862,7 @@
                 }, 
                 {
                  "height":96,
+                 "id":55,
                  "name":"",
                  "properties":
                     {
@@ -822,6 +877,7 @@
                 }, 
                 {
                  "height":144,
+                 "id":56,
                  "name":"",
                  "properties":
                     {
@@ -836,6 +892,7 @@
                 }, 
                 {
                  "height":126,
+                 "id":57,
                  "name":"",
                  "properties":
                     {
@@ -850,6 +907,7 @@
                 }, 
                 {
                  "height":111,
+                 "id":58,
                  "name":"",
                  "properties":
                     {
@@ -902,6 +960,7 @@
          "x":0,
          "y":0
         }],
+ "nextobjectid":59,
  "orientation":"orthogonal",
  "properties":
     {
@@ -912,7 +971,7 @@
  "tilesets":[
         {
          "firstgid":1,
-         "image":"..\/..\/..\/..\/..\/Dropbox\/Current Projects\/TPP Park 2\/Maps\/MapDataTileset.png",
+         "image":"..\/..\/..\/_work-files\/Maps\/MapDataTileset.png",
          "imageheight":128,
          "imagewidth":128,
          "margin":0,
@@ -1162,7 +1221,7 @@
         }, 
         {
          "firstgid":65,
-         "image":"..\/..\/..\/..\/..\/Dropbox\/Current Projects\/TPP Park 2\/Maps\/WarpPointTileData.png",
+         "image":"..\/..\/..\/_work-files\/Maps\/WarpPointTileData.png",
          "imageheight":128,
          "imagewidth":256,
          "margin":0,

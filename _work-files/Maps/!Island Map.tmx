@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="256" height="256" tilewidth="16" tileheight="16">
+ <tileset firstgid="1" name="PlaceholderSprites" tilewidth="16" tileheight="16">
+  <image source="PlaceholderSprites.png" width="128" height="128"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="256" height="256">
+  <data encoding="base64" compression="zlib">
+   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
+  </data>
+ </layer>
+ <objectgroup color="#000000" name="Location Layer" width="256" height="256" opacity="0.22">
+  <object name="Surldab City" x="2014" y="2888">
+   <polygon points="0,0 -75,105 -205,581 205,603 648,581 478,136 385,4"/>
+  </object>
+  <object name="Gator Plains" x="1807" y="3342">
+   <polygon points="0,0 115,-212 109,-505 8,-610 -153,-645 -347,-598 -536,-522 -602,-429 -604,-314 -523,-166 -431,-15 -256,42"/>
+  </object>
+  <object name="The Anarchy Quagmire" x="958" y="2441" width="429" height="324"/>
+  <object name="The Stadium Clearing" x="2878" y="3013">
+   <polygon points="0,0 106,0 223,-171 286,-323 209,-418 -51,-438 -160,-397 -162,-198"/>
+  </object>
+  <object name="The Community Center" x="3521" y="2518">
+   <polygon points="0,0 4,-232 -161,-250 -405,-246 -489,-177 -501,-25 -403,69 -329,178 -249,296 -116,290 -51,134"/>
+  </object>
+  <object name="Oddish Safari" x="2248" y="2849">
+   <polygon points="0,0 220,-1 320,-136 320,-464 181,-491 -12,-419 -207,-303 -305,-172 -315,-64 -243,-9"/>
+  </object>
+  <object name="Anodomain City" x="2301" y="2168">
+   <polygon points="0,0 -96,-107 -244,-71 -349,45 -417,225 -415,299 -327,344 -193,340 -44,215 -1,107"/>
+  </object>
+  <object name="The Randomized Forest" x="1273" y="1033">
+   <polygon points="0,0 -69,407 -4,456 399,440 595,369 637,184 716,115 717,-12 599,-64 399,-49 253,-8 52,-12"/>
+  </object>
+  <object name="Randomized Town" x="1157" y="1472">
+   <polygon points="0,0 -7,-95 49,-243 85,-371 80,-475 -185,-476 -487,-357 -589,-203 -547,-128 -327,-20 -103,1"/>
+  </object>
+ </objectgroup>
+ <objectgroup color="#00ffff" name="Info Layer" width="256" height="256">
+  <object name="Church of Helix" type="Building" x="2176" y="3208" width="91" height="79"/>
+  <object name="Stadium" x="2761" y="2637" width="313" height="177">
+   <ellipse/>
+  </object>
+  <object name="The Theater" x="1957" y="2915" width="145" height="112"/>
+  <object name="The Cafe" x="3027" y="2401" width="55" height="41"/>
+  <object name="The Blitzed Warroom" x="3252" y="2296" width="72" height="61"/>
+  <object name="Sub Central" x="3253" y="2381" width="116" height="116">
+   <ellipse/>
+  </object>
+  <object name="Artists Corner" x="3132" y="2513" width="101" height="77"/>
+  <object name="Fanfiction Alley" x="3391" y="2516" width="67" height="131"/>
+  <object name="TPPLeague Building" x="3145" y="2297" width="87" height="55"/>
+  <object name="The Meme Factory Outlet" x="3233" y="2623" width="152" height="153"/>
+  <object name="Tumblr Row" x="3065" y="2459" width="149" height="28"/>
+  <object name="Live Updater Newsroom" x="3397" y="2324" width="92" height="47"/>
+  <object name="The Stream Billboard" x="3379" y="2372" width="8" height="124"/>
+  <object name="Helix Station (2nd floor)" x="2147" y="3132" width="143" height="55"/>
+  <object name="Hall of the Gods (Summit)" x="1240" y="1950" width="192" height="123"/>
+  <object name="Wattson's Gym" x="2347" y="2943" width="78" height="54"/>
+  <object name="The Walkway of Legends" x="2183" y="3489" width="79" height="157"/>
+  <object name="Entrance Boat Dock" x="2143" y="3649" width="160" height="95"/>
+  <object name="A's Oddish House" x="2388" y="2770" width="49" height="36"/>
+  <object name="The 100 Club" x="1908" y="3186" width="93" height="68"/>
+  <object name="The Casino" x="2396" y="3186" width="126" height="79"/>
+  <object name="The Pokemon Center" x="2336" y="3289" width="77" height="79"/>
+  <object name="The Pokemart" x="2027" y="3291" width="74" height="84"/>
+  <object name="The Flower Bed" x="1613" y="2958" width="212" height="114">
+   <ellipse/>
+  </object>
+  <object name="The Forum" x="2153" y="2240">
+   <polygon points="-13,-63 -84,-77 -196,59 -184,120 -116,124 -5,5"/>
+  </object>
+  <object name="Wooper Shrine" x="2044" y="2571" width="53" height="41"/>
+  <object name="Court of the Sun" x="2225" y="2015" width="67" height="139"/>
+  <object name="Palace of the Chairman" x="1832" y="2444" width="137" height="65"/>
+  <object name="Chairlift" x="2091" y="2288" width="60" height="45"/>
+  <object name="Helix Square" x="2129" y="3295" width="185" height="172">
+   <ellipse/>
+  </object>
+ </objectgroup>
+</map>
