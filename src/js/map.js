@@ -16,7 +16,6 @@ var mSetup = require("./model/map-setup");
 // These would be CONSTs if we weren't in the browser
 var EXT_MAPBUNDLE = ".zip"; //Extension for requesting map bundles
 var DEF_HEIGHT_STEP = 0.5; //Default Y translation amount a height step takes. This can be defined in a map file.
-var GC_BIN = "map";
 
 
 // If you make any changes here, make sure to mirror them in build/map-zipper.js!
@@ -63,8 +62,8 @@ function Map(id, opts){
 	this.id = id;
 	extend(this, opts);
 	
-	GC.allocateBin(GC_BIN);
-	this.gc = GC.getBin(GC_BIN);
+	GC.allocateBin("map_"+id);
+	this.gc = GC.getBin("map_"+id);
 	
 	this.fileSys = new zip.fs.FS();
 }
@@ -121,7 +120,8 @@ extend(Map.prototype, {
 		delete this.lightNode;
 		delete this.cameraNode;
 		
-		GC.dispose(GC_BIN);
+		this.gc.dispose();
+		delete this.gc;
 	},
 	
 	/** Begin download of this map's zip file, preloading the data. */
@@ -224,13 +224,13 @@ extend(Map.prototype, {
 				file.getBlob("image/png", function(data) {
 					console.log("TEX LOADED:", filename, data);
 					var url = URL.createObjectURL(data);
-					GC.collectURL(url, GC_BIN);
+					self.gc.collectURL(url);
 					callback(url);
 				});
 			}
 			
 			var objldr = new ObjLoader(self.objdata, self.mtldata, loadTexture, {
-				gc: GC_BIN,
+				gc: self.gc,
 			});
 			objldr.on("load", __modelReady);
 			objldr.load();
@@ -460,38 +460,36 @@ extend(Map.prototype, {
 		this.scene.add(this.spriteNode);
 		
 		// Load event js files now:
-		loadScript("l"); // Load locally defined events
-		loadScript("g"); // Load globally defined events
+		this.__loadScript("l"); // Load locally defined events
+		this.__loadScript("g"); // Load globally defined events
 		
 		// Add the player character event
 		this._initPlayerCharacter();
 		
-		return;
-		
-		function loadScript(t) {
-			var file = self.fileSys.root.getChildByName(t+"_evt.js");
-			if (!file) {
-				console.error("ERROR LOADING EVENTS: No "+t+"_evt.js file is present in the map bundle.");
-				return;
-			}
-			file.getBlob("text/javascript", function(data){
-				// NOTE: We cannot use JQuery().append(), as it delibrately cleans the script tags
-				//   out of the dom element we're appending, literally defeating the purpose.
-				// NOTE2: We append to the DOM instead of using eval() or new Function() because
-				//   when appended like so, the in-browserdebugger should be able to find it and
-				//   breakpoint in it.
-				var script = document.createElement("script");
-				script.type = "text/javascript";
-				script.src = URL.createObjectURL(data);
-				document.body.appendChild(script);
-				self[t+"ScriptTag"] = script;
-				// Upon being added to the body, it is evaluated
-				
-				GC.collect(script, GC_BIN);
-				GC.collectURL(script.src, GC_BIN);
-			});
+	},
+	
+	__loadScript : function(t) {
+		var file = this.fileSys.root.getChildByName(t+"_evt.js");
+		if (!file) {
+			console.error("ERROR LOADING EVENTS: No "+t+"_evt.js file is present in the map bundle.");
+			return;
 		}
-		
+		file.getBlob("text/javascript", function(data){
+			// NOTE: We cannot use JQuery().append(), as it delibrately cleans the script tags
+			//   out of the dom element we're appending, literally defeating the purpose.
+			// NOTE2: We append to the DOM instead of using eval() or new Function() because
+			//   when appended like so, the in-browserdebugger should be able to find it and
+			//   breakpoint in it.
+			var script = document.createElement("script");
+			script.type = "text/javascript";
+			script.src = URL.createObjectURL(data);
+			document.body.appendChild(script);
+			this[t+"ScriptTag"] = script;
+			// Upon being added to the body, it is evaluated
+			
+			this.gc.collect(script);
+			this.gc.collectURL(script.src);
+		});
 	},
 	
 	addEvent : function(evt) {
@@ -594,7 +592,7 @@ extend(Map.prototype, {
 			
 			file.getBlob("image/png", function(data){
 				var url = URL.createObjectURL(data);
-				GC.collectURL(url, GC_BIN);
+				self.gc.collectURL(url);
 				callback(null, url);
 				self.markLoadFinished("SPRITE_"+evtid);
 			});

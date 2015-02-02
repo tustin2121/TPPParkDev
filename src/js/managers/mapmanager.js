@@ -13,6 +13,7 @@ extend(MapManager.prototype, {
 	nextMap: null,
 	
 	transitionTo : function(mapid, warpindex) {
+		
 		UI.fadeOut();
 		
 		if (this.id == mapid) {

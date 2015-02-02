@@ -16,12 +16,13 @@ function UIManager() {
 		"text" : new DialogBox("textbox_gold"),
 		"dialog" : new DialogBox("dialog_bubble"),
 	};
+	this.skrim = new Skrim();
 	
 	var self = this;
 	$(function(){
 		self._initUIScene();
 		
-		self.skrim = $("<div>").addClass("skrim").appendTo("#canvas-ui");
+		// self.skrim = $("<div>").addClass("skrim").appendTo("#canvas-ui");
 		
 		for (var type in self.dialogs) {
 			self.dialogs[type].element = $("<div>")
@@ -89,14 +90,58 @@ extend(UIManager.prototype, {
 	},
 	
 	
-	/** Fade the screen out for a transition of some sort. */
-	fadeOut : function(duration) {
+	/** Fade the screen to white for a transition of some sort. */
+	fadeToWhite : function(duration, callback) {
+		if (typeof duration == "function") {
+			callback = duration; duration = undefined;
+		}
 		if (!duration) duration = 1000; //1 second
+		
+		this.skrim.fadeTo({
+			color: 0xFFFFFF,
+			opacity: 1,
+		}, callback);
+		// this.skrim.fadeIn(duration);
+	},
+	
+	/** Fade the screen to black for a transition of some sort. */
+	fadeToBlack : function(duration, callback) {
+		if (typeof duration == "function") {
+			callback = duration; duration = undefined;
+		}
+		if (!duration) duration = 1000; //1 second
+		
+		this.skrim.fadeTo({
+			color: 0x000000,
+			opacity: 1,
+		}, callback);
+		// this.skrim.fadeIn(duration);
+	},
+	
+	/** Fade the screen out for a transition of some sort. */
+	fadeOut : function(duration, callback) {
+		if (typeof duration == "function") {
+			callback = duration; duration = undefined;
+		}
+		if (!duration) duration = 1000; //1 second
+		
+		this.skrim.fadeTo({
+			opacity: 1,
+		}, callback);
+		// this.skrim.fadeIn(duration);
 	},
 	
 	/** Fade the screen in from a transition. */
-	fadeIn : function(duration) {
+	fadeIn : function(duration, callback) {
+		if (typeof duration == "function") {
+			callback = duration; duration = undefined;
+		}
 		if (!duration) duration = 1000; //1 second
+		
+		this.skrim.fadeTo({
+			opacity: 0,
+		}, callback);
+		// this.skrim.fadeOut(duration);
 	},
 	
 	/** Displays the loading icon over the main game screen. Optionally supply text. */
@@ -150,24 +195,30 @@ extend(UIManager.prototype, {
 		this.scene.add(camera);
 		
 		for (var dlog in this.dialogs) {
-			console.log("createDialogModel: ", dlog, this.dialogs[dlog]); 
-			var model = this.dialogs[dlog].createDialogModel();
+			// console.log("createModel: ", dlog, this.dialogs[dlog]); 
+			var model = this.dialogs[dlog].createModel();
 			this.scene.add(model);
 		}
 		
-		// this.tb.model = createDialogModel("textbox_gold");
+		{
+			var model = this.skrim.createModel();
+			this.scene.add(model);
+		}
+		
+		
+		// this.tb.model = createModel("textbox_gold");
 		// // adjust width : this.tb.model.morphTargetInfluences[0] = 1;
 		// // adjust height: this.tb.model.morphTargetInfluences[1] = 1;
 		// this.tb.model.visible = false;
 		// this.scene.add(this.tb.model);
 		
-		// this.db.model = createDialogModel("dialog_bubble");
+		// this.db.model = createModel("dialog_bubble");
 		// // adjust width : this.db.model.morphTargetInfluences[0] = 1;
 		// // adjust height: this.db.model.morphTargetInfluences[1] = 1;
 		// this.db.model.visible = false;
 		// this.scene.add(this.db.model);
 		
-		// createDEBUGSetup.call(this);
+		createDEBUGSetup.call(this);
 	},
 	
 	//////////////////////////////////////////////////////////////////
@@ -197,8 +248,9 @@ extend(UIManager.prototype, {
 					this.dialogs[dlog].advance(delta);
 				}
 			}
-				
 		}
+		
+		this.skrim.advance(delta);
 	},
 	
 	_completeCurrAction : function() {
@@ -212,8 +264,7 @@ extend(UIManager.prototype, {
 	
 });
 
-module.exports = new UIManager();
-
+//////////////////////////////////////////////////////////////////////
 
 function DialogBox(type) {
 	this.type = type;
@@ -339,7 +390,7 @@ extend(DialogBox.prototype, {
 	},
 	
 	
-	createDialogModel: function() {
+	createModel: function() {
 		var self = this;
 		var ins; //insets
 		switch (this.type) {
@@ -523,10 +574,144 @@ extend(DialogBox.prototype, {
 			g.faceVertexUvs[0].push([ uv(g.vertices[a]), uv(g.vertices[d]), uv(g.vertices[c]) ]);
 		}
 	}
-	
 });
 
-
+///////////////////////////////////////////////////////////////////////
+function Skrim() {
+	this._createAnimProp("opacity");
+	this._createAnimProp("color_r");
+	this._createAnimProp("color_g");
+	this._createAnimProp("color_b");
+	
+}
+extend(Skrim.prototype, {
+	model : null,
+	animating : false,
+	callback : null,
+	
+	_createAnimProp: function(prop) {
+		this[prop] = {
+			curr: 1,
+			src : 1,
+			dest: 1,
+			alpha: 1,
+		};
+	},
+	
+	fadeTo : function(opts, callback) {
+		var self = this;
+		
+		if (opts["color"] !== undefined) {
+			var hex = Math.floor(opts["color"]);
+			opts["color_r"] = ((hex >> 16) & 255) / 255;
+			opts["color_g"] = ((hex >>  8) & 255) / 255;
+			opts["color_b"] = ((hex      ) & 255) / 255;
+		}
+		
+		if (this.callback) {
+			this.callback();
+			this.callback = null;
+		}
+		
+		var willAnim = false;
+		
+		willAnim |= setFade("opacity", opts);
+		willAnim |= setFade("color_r", opts);
+		willAnim |= setFade("color_g", opts);
+		willAnim |= setFade("color_b", opts);
+		
+		if (willAnim) {
+			this.callback = callback;
+			this.animating = true;
+		} else {
+			//Won't animate, do the callback immedeately
+			if (callback) callback();
+		}
+		
+		return;
+		
+		function setFade(prop, opts) {
+			if (opts[prop] === undefined) return;
+			self[prop].src = self[prop].curr;
+			self[prop].dest = opts[prop];
+			if (self[prop].src - self[prop].dest == 0) {
+				self[prop].alpha = 1;
+			} else {
+				self[prop].alpha = 0;
+			}
+			
+			return self[prop].alpha == 0;
+		}
+	},
+	
+	advance : function(delta) {
+		if (!this.animating) return;
+		var self = this;
+		
+		var updated = false;
+		
+		updated |= _anim("opacity");
+		updated |= _anim("color_r");
+		updated |= _anim("color_g");
+		updated |= _anim("color_b");
+		
+		if (updated) {
+			this.model.material.opacity = this.opacity.curr;
+			this.model.material.color.r = Math.clamp(this.color_r.curr);
+			this.model.material.color.g = Math.clamp(this.color_g.curr);
+			this.model.material.color.b = Math.clamp(this.color_b.curr);
+			this.model.material.needsUpdate = true;
+		} else {
+			this.animating = false;
+			if (this.callback) this.callback();
+			this.callback = null;
+		}
+		
+		return;
+		
+		function _anim(prop) {
+			var updated = self[prop].alpha < 1;
+			
+			self[prop].alpha += delta * (0.1);
+			if (self[prop].alpha > 1) {
+				self[prop].alpha = 1;
+			}
+			
+			self[prop].curr = self[prop].src + (self[prop].dest - self[prop].src) * self[prop].alpha;
+			return updated;
+		}
+	},
+	
+	createModel: function() {
+		var self = this;
+		
+		var sw = $("#gamescreen").width()+1;
+		var sh = $("#gamescreen").height()+1;
+		
+		var geom = new THREE.Geometry();
+		{
+			geom.vertices = [
+				new THREE.Vector3(-1, -1, 40),
+				new THREE.Vector3(sw, -1, 40),
+				new THREE.Vector3(sw, sh, 40),
+				new THREE.Vector3(-1, sh, 40),
+			];
+			geom.faces = [
+				new THREE.Face3(0, 1, 2),
+				new THREE.Face3(2, 3, 0),
+			];
+		}
+		
+		var mat = new THREE.MeshBasicMaterial({
+			color: 0x000000,
+			transparent: true,
+		});
+		// mat.morphTargets = true;
+		
+		this.model = new THREE.Mesh(geom, mat);
+		return this.model;
+	},
+});
 
 
 
@@ -626,3 +811,6 @@ function createDEBUGSetup() {
 		oldlogic.call(this, delta);
 	};
 }
+
+///////////////////////////////////////////////////////////////////////////
+module.exports = new UIManager();
