@@ -48,7 +48,7 @@ extend(Event.prototype, {
 	canWalkOn : function(){ return true; },
 	
 	/** Returns an object to represent this event in 3D space, or null if there shouldn't be one. */
-	getAvatar : function(){ return null; },
+	getAvatar : function(map, gc){ return null; },
 	
 	onEvents : null, //a object, event-names -> functions to call, to be registered in constructor
 	

@@ -6,7 +6,7 @@ module.exports = {
 	// Map Transition
 	mapTransition : {
 		nextMap : "iChurchOfHelix",
-		warp: 0,
+		warp: 0x10,
 		animOverride: 0,
 	},
 	

@@ -14,8 +14,9 @@ require("./globals");
 //On Ready
 $(function(){
 	
-	currentMap = new Map("iChurchOfHelix");
-	currentMap.load();
+	// currentMap = new Map("iChurchOfHelix");
+	// currentMap.load();
+	MapManager.transitionTo();
 	
 	renderLoop.start({
 		clearColor : 0xFF0000,

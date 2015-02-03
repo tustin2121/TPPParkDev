@@ -64,13 +64,13 @@ extend(Actor.prototype, {
 	avatar_tex : null,
 	_avatar_shadowcaster : null,
 	
-	getAvatar : function(map){ 
+	getAvatar : function(map, gc){ 
 		if (this.avatar_node) return this.avatar_node;
 		
 		var node = this.avatar_node = new THREE.Object3D();
 		
-		node.add(this._avatar_createSprite(map));
-		node.add(this._avatar_createShadowCaster(map));
+		node.add(this._avatar_createSprite(map, gc));
+		node.add(this._avatar_createShadowCaster(map, gc));
 		
 		return node;
 		
@@ -82,13 +82,13 @@ extend(Actor.prototype, {
 		);
 	},
 	
-	_avatar_createShadowCaster: function(map) {
+	_avatar_createShadowCaster: function(map, gc) {
 		var mat = new THREE.MeshBasicMaterial();
 		mat.visible = false; //The object won't render, but the shadow still will
-		map.gc.collect(mat);
+		gc.collect(mat);
 		
 		var geom = new THREE.SphereGeometry(0.3, 7, 3);
-		map.gc.collect(geom);
+		gc.collect(geom);
 		
 		var mesh = new THREE.Mesh(geom, mat);
 		//mesh.visible = false; //?
@@ -104,11 +104,11 @@ extend(Actor.prototype, {
 		return this._avatar_shadowcaster = mesh;
 	},
 	
-	_avatar_createSprite : function(map) {
+	_avatar_createSprite : function(map, gc) {
 		var self = this;
 		// var img = new Image();
 		var texture = self.avatar_tex = new THREE.Texture(DEF_SPRITE_IMG);
-		map.gc.collect(texture);
+		gc.collect(texture);
 		
 		// Note: not using "this.getSpriteFormat", because the defailt sprite
 		// format should not be overidden.
@@ -142,7 +142,7 @@ extend(Actor.prototype, {
 			map: texture,
 			color: 0xFFFFFF,
 			offset: new THREE.Vector3(0, 0.3, 0.22),
-			gc: map.gc,
+			gc: gc,
 		});
 		//self.setScale(self.scale);
 		sprite.scale.set(

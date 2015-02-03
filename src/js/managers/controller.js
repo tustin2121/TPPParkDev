@@ -58,6 +58,15 @@ extend(ControlManager.prototype, {
 			return c;
 		}
 	},
+	removeInputContext: function(ctx) {
+		if (!ctx) return;
+		var index = this.inputContext.lastIndexOf(ctx);
+		if (index > -1) {
+			this.inputContext.splice(index, 1);
+			this.emit("inputContextChanged");
+			return ctx;
+		}
+	},
 	
 	isDown : function(key, ctx) {
 		if ($.isArray(ctx)) {

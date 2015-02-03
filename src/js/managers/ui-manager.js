@@ -218,7 +218,7 @@ extend(UIManager.prototype, {
 		// this.db.model.visible = false;
 		// this.scene.add(this.db.model);
 		
-		createDEBUGSetup.call(this);
+		// createDEBUGSetup.call(this);
 	},
 	
 	//////////////////////////////////////////////////////////////////
@@ -578,10 +578,10 @@ extend(DialogBox.prototype, {
 
 ///////////////////////////////////////////////////////////////////////
 function Skrim() {
-	this._createAnimProp("opacity");
-	this._createAnimProp("color_r");
-	this._createAnimProp("color_g");
-	this._createAnimProp("color_b");
+	this._createAnimProp("opacity", 1);
+	this._createAnimProp("color_r", 0);
+	this._createAnimProp("color_g", 0);
+	this._createAnimProp("color_b", 0);
 	
 }
 extend(Skrim.prototype, {
@@ -589,11 +589,11 @@ extend(Skrim.prototype, {
 	animating : false,
 	callback : null,
 	
-	_createAnimProp: function(prop) {
+	_createAnimProp: function(prop, def) {
 		this[prop] = {
-			curr: 1,
-			src : 1,
-			dest: 1,
+			curr: def,
+			src : def,
+			dest: def,
 			alpha: 1,
 		};
 	},
@@ -609,8 +609,9 @@ extend(Skrim.prototype, {
 		}
 		
 		if (this.callback) {
-			this.callback();
-			this.callback = null;
+			var cb = this.callback;
+			this.callback = null; //Make sure to remove the stored callback IMMEDEATELY lest it be called twice somehow.
+			cb();
 		}
 		
 		var willAnim = false;
@@ -663,8 +664,11 @@ extend(Skrim.prototype, {
 			this.model.material.needsUpdate = true;
 		} else {
 			this.animating = false;
-			if (this.callback) this.callback();
-			this.callback = null;
+			if (this.callback) {
+				var cb = this.callback;
+				this.callback = null;
+				cb();
+			}
 		}
 		
 		return;

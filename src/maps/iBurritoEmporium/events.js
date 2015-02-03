@@ -69,5 +69,6 @@ add(new Event({
 add(new Warp({
 	id: "EXIT_Surldab",
 	locations: [10, 33],
+	exit_to: { map: "eSouthSurldab", warp: 0x10 },
 }));
 

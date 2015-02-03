@@ -58,14 +58,13 @@ GarbageCollector.prototype.dispose = function(binId) {
 	delete this.bins[binId];
 }
 
-module.exports = new GarbageCollector();
-
 
 
 function GarbageBin() {
 	this.disposal = []; //Objects that can have "dispose" called on them
 	this.listeners = []; //Objects with listeners attached to them
 	this.tags = []; //Script tags and other disposable tags
+	this.specificListeners = []; //Specific listeners
 	
 	this.bloburls = []; //Object URLs that can be revoked with URL.revokeObjectURL
 }
@@ -88,6 +87,12 @@ GarbageBin.prototype = {
 		this.bloburls.push(url);
 	},
 	
+	collectListener: function(obj, evt, listener) {
+		this.specificListeners.push({
+			obj: obj,   evt: evt,   l: listener
+		});
+	},
+	
 	dispose: function() {
 		for (var i = 0; i < this.disposal.length; i++) {
 			this.disposal[i].dispose();
@@ -107,6 +112,13 @@ GarbageBin.prototype = {
 		}
 		this.tags = null;
 		
+		for (var i = 0; i < this.specificListeners.length; i++) {
+			var o = this.specificListeners[i];
+			o.obj.removeListener(o.evt, o.l);
+			this.specificListeners[i] = null;
+			o = null;
+		}
+		this.specificListeners = null;
 		
 		
 		for (var i = 0; i < this.bloburls.length; i++) {
@@ -117,3 +129,6 @@ GarbageBin.prototype = {
 	},
 };
 
+
+
+module.exports = new GarbageCollector();

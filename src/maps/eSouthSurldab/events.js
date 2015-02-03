@@ -10,6 +10,7 @@
 //$!
 
 var Actor = require("tpp-actor");
+var Trigger = require("tpp-trigger");
 var Warp = require("tpp-warp");
 var Event = require("tpp-event");
 

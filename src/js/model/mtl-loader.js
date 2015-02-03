@@ -159,6 +159,10 @@ MaterialCreator.prototype = {
 		for (var prop in mat) {
 			var value = mat[prop];
 			switch (prop.toLowerCase()) {
+				case "name":
+					params['name'] = value;
+					break;
+				
 				case "kd": // Diffuse color
 					params['color'] = new THREE.Color().fromArray(value);
 					break;
@@ -221,7 +225,7 @@ MaterialCreator.prototype = {
 					break;
 					
 				default:
-					console.log("Unhandled MTL data:", prop, "=", value);
+					// console.log("Unhandled MTL data:", prop, "=", value);
 					break;
 			}
 		}

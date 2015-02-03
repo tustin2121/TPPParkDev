@@ -74,6 +74,7 @@ extend(Map.prototype, {
 	file: null, //Zip file holding all data
 	fileSys: null, //Current zip file system for this map
 	xhr: null, //active xhr request
+	loadError : null,
 	
 	metadata : null,
 	objdata : null,
@@ -99,9 +100,12 @@ extend(Map.prototype, {
 		$(this.lScriptTag).remove();
 		$(this.gScriptTag).remove();
 		
+		if (player && player.parent) player.parent.remove(player);
+		
 		delete this.file;
 		delete this.fileSys;
 		delete this.xhr;
+		delete this.loadError;
 		
 		delete this.metadata;
 		delete this.objdata;
@@ -120,6 +124,7 @@ extend(Map.prototype, {
 		delete this.lightNode;
 		delete this.cameraNode;
 		
+		this.removeAllListeners();
 		this.gc.dispose();
 		delete this.gc;
 	},
@@ -143,15 +148,19 @@ extend(Map.prototype, {
 			// console.log("PROGRESS:", e);
 			if (e.lengthComputable) {
 				var percentDone = e.loaded / e.total;
+				self.emit("progress", percentDone);
 			} else {
 				//marquee bar
+				self.emit("progress", -1);
 			}
 		});
 		xhr.on("error", function(e){
 			console.error("ERROR:", e);
+			self.loadError = e;
 		});
 		xhr.on("canceled", function(e){
 			console.error("CANCELED:", e);
+			self.loadError = e;
 		});
 		//TODO on error and on canceled
 		
@@ -214,7 +223,6 @@ extend(Map.prototype, {
 			if (!self.objdata || !self.mtldata) return; //don't begin parsing until they're both loaded
 			
 			function loadTexture(filename, callback) {
-				console.log("LOAD TEX:", filename);
 				var file = self.fileSys.root.getChildByName(filename);
 				if (!file) {
 					console.error("ERROR LOADING TEXTURE: No such file in map bundle! "+filename);
@@ -222,7 +230,6 @@ extend(Map.prototype, {
 					return;
 				}
 				file.getBlob("image/png", function(data) {
-					console.log("TEX LOADED:", filename, data);
 					var url = URL.createObjectURL(data);
 					self.gc.collectURL(url);
 					callback(url);
@@ -237,7 +244,6 @@ extend(Map.prototype, {
 		}
 		
 		function __modelReady(obj) {
-			console.log("__modelReady");
 			self.mapmodel = obj;
 			// __test__outputTree(obj);
 			self.objdata = self.mtldata = true; //wipe the big strings from memory
@@ -246,7 +252,7 @@ extend(Map.prototype, {
 		}
 		
 		function __loadDone() {
-			console.log("__loadDone", !!self.mapmodel, !!self.tiledata);
+			// console.log("__loadDone", !!self.mapmodel, !!self.tiledata);
 			if (!self.mapmodel || !self.tiledata) return; //don't call on _init before both are loaded
 			
 			self._init();
@@ -469,6 +475,7 @@ extend(Map.prototype, {
 	},
 	
 	__loadScript : function(t) {
+		var self = this;
 		var file = this.fileSys.root.getChildByName(t+"_evt.js");
 		if (!file) {
 			console.error("ERROR LOADING EVENTS: No "+t+"_evt.js file is present in the map bundle.");
@@ -487,8 +494,8 @@ extend(Map.prototype, {
 			this[t+"ScriptTag"] = script;
 			// Upon being added to the body, it is evaluated
 			
-			this.gc.collect(script);
-			this.gc.collectURL(script.src);
+			self.gc.collect(script);
+			self.gc.collectURL(script.src);
 		});
 	},
 	
@@ -514,7 +521,7 @@ extend(Map.prototype, {
 		}
 		
 		//registering listeners on the event
-		evt.on("moving", function(srcX, srcY, destX, destY){
+		evt.on("moving", _moving = function(srcX, srcY, destX, destY){
 			//Started moving to a new tile
 			self.eventMap.put(destX, destY, this);
 			self.eventMap.remove(srcX, srcY, this);
@@ -538,7 +545,9 @@ extend(Map.prototype, {
 				}
 			}
 		});
-		evt.on("moved", function(srcX, srcY, destX, destY){
+		this.gc.collectListener(evt, "moving", _moving);
+		
+		evt.on("moved", _moved = function(srcX, srcY, destX, destY){
 			//Finished moving from the old tile
 			
 			var dir = new THREE.Vector3(srcX-destX, 0, destY-srcY);
@@ -560,8 +569,10 @@ extend(Map.prototype, {
 				}
 			}
 		});
+		this.gc.collectListener(evt, "moved", _moved);
 		
-		var avatar = evt.getAvatar(this);
+		var gc = (evt == player)? GC.getBin() : this.gc; //don't put the player in this map's bin
+		var avatar = evt.getAvatar(this, gc);
 		if (avatar) {
 			var loc = evt.location;
 			var loc3 = this.get3DTileLocation(loc.x, loc.y, loc.z);
@@ -695,6 +706,7 @@ extend(Map.prototype, {
 			callback();
 		}
 		state.isStarted = true;
+		this.emit("map-started");
 	},
 	
 	_executeMapEndCallbacks : function() {

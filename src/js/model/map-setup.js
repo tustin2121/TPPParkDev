@@ -85,6 +85,8 @@ module.exports = {
 				if (cname == 0) this.camera = c;
 			}
 			
+			if (!this.camera) throw new Error("No cameras defined!");
+			
 			// this.camera = new THREE.PerspectiveCamera(75, scrWidth / scrHeight, 1, 1000);
 			// this.camera.position.y = 5;
 			// this.camera.position.z = 5;
