@@ -17,6 +17,7 @@ function UIManager() {
 		"dialog" : new DialogBox("dialog_bubble"),
 	};
 	this.skrim = new Skrim();
+	this.loader = new AjaxLoader()
 	
 	var self = this;
 	$(function(){
@@ -33,6 +34,7 @@ function UIManager() {
 }
 inherits(UIManager, EventEmitter);
 extend(UIManager.prototype, {
+	loader: null,
 	skrim : null,
 	dialogs : null,
 	
@@ -717,7 +719,84 @@ extend(Skrim.prototype, {
 	},
 });
 
+//////////////////////////////////////////////////////////////////////
+function AjaxLoader() {
+	
+}
+extend(AjaxLoader.prototype, {
+	node : null,
+	m_helix : null,
+	m_letter : [],
+	
+	letterdefs : {
+		"A" : [3, 3],
+		"B" : [4, 3],
+		"X" : [3, 2],
+		"Y" : [4, 2],
+		"L" : [0, 0],
+		"R" : [1, 0],
+		"S" : [2, 0],
+		"UA": [3, 1],
+		"DA": [4, 1],
+		"LA": [3, 0],
+		"RA": [4, 0],
+	}
+	
+	createModel: function(){
+		var self = this;
+		
+		this.node = new THREE.Object3D();
+		
+		var geom = new THREE.PlaneBufferGeometry(8, 8);
+		
+		var tex = new THREE.Texture(AJAX_TEXTURE_IMG);
+		tex.magFilter = THREE.NearestFilter;
+		tex.minFilter = THREE.NearestFilter;
+		tex.repeat = new THREE.Vector2(48/128, 48/64);
+		tex.offset = new THREE.Vector2(0, 16/64); //Remember, bottom right is origin
+		tex.generateMipmaps = false;
+		
+		var mat = new THREE.MeshBasicMaterial({
+			map: tex,
+			transparent: true,
+			opacity: 0,
+		});
+		
+		this.m_helix = new THREE.Mesh(geom, mat);
+		this.m_helix.scale.set(3, 3, 3);
+		this.node.add(this.m_helix);
+		
+		//for (var i = 0; i < )
+		
+		this.m_letter1 = _createLetter();
+		this.m_letter2 = _createLetter();
+		this.m_letter3 = _createLetter();
+		this.m_letter4 = _createLetter();
+		this.m_letter5 = _createLetter();
+		
+		return this.node;
+		
+		function _createLetter() {
+			var tex = new THREE.Texture(AJAX_TEXTURE_IMG);
+			tex.magFilter = THREE.NearestFilter;
+			tex.minFilter = THREE.NearestFilter;
+			tex.repeat = new THREE.Vector2(16/128, 16/64);
+			tex.offset = new THREE.Vector2(0, 0);
+			tex.generateMipmaps = false;
+			
+			var mat = new THREE.MeshBasicMaterial({
+				map: tex,
+				transparent: true,
+				opacity: 0,
+			});
+			
+			return new THREE.Mesh(geom, mat);
+		}
+		
+	},
+});
 
+//////////////////////////////////////////////////////////////////////
 
 function setupTypewriter(textbox, callback) {
 	textbox.advance = null;
