@@ -371,7 +371,7 @@ function enumeratePlayerCharacters() {
 		if (path.extname(file) == ".png") {
 			var res = /^([^\[]+)\[([^\]]+)\].png$/.exec(file);
 		
-			var name = res[1];
+			var name = file;
 			var format = res[2];
 			pcs[name] = format;
 		}

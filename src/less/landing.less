@@ -47,3 +47,29 @@ body {
 	display: none;
 }
 
+#charSelector {
+	height: (87+3+23);
+	overflow-x: scroll;
+	overflow-y: hidden;
+	white-space: nowrap;
+	background-color: #78D6FF;
+	
+	& > div {
+		position: relative;
+		display: inline-block;
+		background-image: url("ticket.png");
+		width: 44px; height: 87px;
+		border: solid 3px #78D6FF;
+		
+		&.selected {
+			border: solid 3px red;
+			background-color: red;
+		}
+		
+		& > div {
+			position: absolute;
+			top: 7px; left: 6px;
+			width: 32px; height: 32px;
+		}
+	}
+}

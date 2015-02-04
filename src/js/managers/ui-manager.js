@@ -17,7 +17,7 @@ function UIManager() {
 		"dialog" : new DialogBox("dialog_bubble"),
 	};
 	this.skrim = new Skrim();
-	this.loader = new AjaxLoader()
+	// this.loader = new AjaxLoader();
 	
 	var self = this;
 	$(function(){
@@ -740,7 +740,7 @@ extend(AjaxLoader.prototype, {
 		"DA": [4, 1],
 		"LA": [3, 0],
 		"RA": [4, 0],
-	}
+	},
 	
 	createModel: function(){
 		var self = this;
