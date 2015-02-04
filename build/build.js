@@ -94,6 +94,7 @@ function build(){
 	
 	//Compile Less files
 	compileLess("src/less/game.less", BUILD_OUT+"css/game.css");
+	compileLess("src/less/landing.less", BUILD_OUT+"css/landing.css");
 	
 	//Bundler the event library
 	createEventLibraryBundle();
@@ -103,6 +104,11 @@ function build(){
 	
 	//Browserify the source code
 	bundle("game");
+	bundle("characterSelect", {
+		globals: {
+			PLAYERCHARS: function() { return JSON.stringify(enumeratePlayerCharacters()); },
+		},
+	});
 	
 	//Bundle the dev tools
 	copyDevTools();
@@ -354,6 +360,25 @@ function copyDirectory(src, dest, noDefer) {
 }
 
 ////////////////////////////////////////////////////////////
+
+function enumeratePlayerCharacters() {
+	var pcs = {};
+	
+	var dirListing = fs.readdirSync("img/pcs/");
+	for (var di = 0; di < dirListing.length; di++) {
+		var file = dirListing[di];
+		
+		if (path.extname(file) == ".png") {
+			var res = /^([^\[]+)\[([^\]]+)\].png$/.exec(file);
+		
+			var name = res[1];
+			var format = res[2];
+			pcs[name] = format;
+		}
+	}
+	
+	return pcs;
+}
 
 function findMaps() {
 	console.log("[cMaps] Begining Map Compilation");

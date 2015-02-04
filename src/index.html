@@ -1,29 +1,87 @@
 <html>
 <head>
 	<script>window.BASEURL = "{{ baseurl }}";</script>
+	<link rel="stylesheet" type="text/css" href="css/landing.css">
+	<script src="{{ baseurl }}/js/jquery-2.1.1.min.js"></script>
+	<script src="{{ baseurl }}/js/jquery.cookie.js"></script>
+	<script>
+$(function(){ //On Ready
+	var webgl = (function(){
+		try {
+			var canvas = document.createElement("canvas");
+			var support = !!(
+					canvas.getContext("webgl") ||
+					canvas.getContext("experimental-webgl")
+				);
+			canvas = null;
+			return support;
+		} catch (e) {
+			return false;
+		}
+	})();
+	var smallscreen = (function(){
+		var rw = $(".size-ref div").width(); //recommended size
+		var rh = $(".size-ref div").height();
+		var w = $(window).width();
+		var h = $(window).height();
+		return w < rw || h < rh;
+	})();
+	
+	
+	if (webgl) {
+		$(".welcome").show();
+		
+		if (smallscreen) $(".small-screen").show();
+	} else {
+		$(".bad-support").show();
+	}
+});
+	</script>
 </head>
 <body>
-	Thank you for travelling to Twitch Plays Pokemon Park!
-	
-	<div class="welcome">
-		Beyond these gates lies the park. But first, please stamp the ticket which looks like yourself.
+	<div class="size-ref" style="padding-top: 20px;">
+		Thank you for travelling to the <em>new</em><br/>
+		<img src="img/TPPPark_Logo.png" />
+		<h2>Twitch Plays Pokemon Park!</h2>
 	</div>
-	<div class="small-screen warning">
-		Please note: we recommend a browser window size of at least 800x600. Your experiance may be hindered or unplayable at lower resolutions.
-	</div>
-	<div class="bad-support reject">
-		Unfortunately, this browser does not support entrance into the park. Please upgrade your browser to one of the following known supported browsers:
-		<ul>
-			<li>Chrome 23+</li> <!--TODO-->
-			<li>Firefox 14+</li> <!--TODO-->
-		</ul>
-	</div>
-	<div class="mobile reject">
-		Unfortunately, we are unable to allow mobile phone users into the park at this time. If you are on a tablet device and have gotten this message in error, please contact /u/tustin2121 via <a href="">the feedback thread</a> or <a href="">submit a bug report on github</a>.
+	<div class="wrapper">
+		<center>
+			<noscript>
+				Javascript and WebGL are required to run the Park. Please make an exception in your script-blocking plugin of choice for this domain if you wish to enter the park.
+			</noscript>
+		</center>
+		
+		<div class="small-screen warning">
+			Please note: we recommend a browser window size of at least <span id="size-recommend">x</span>. Your experiance may be hindered or unplayable at lower resolutions. If possible, resize your browser window until you can see the dark blue edges of the light blue square in the background.
+		</div>
+		<div class="bad-support reject">
+			Unfortunately, this browser does not support WebGL, which is required to enter the Park. Please upgrade your browser or change to one of the following known supported browsers:
+			<ul>
+				<li>Chrome 18+</li>
+				<li>Internet Explorer 11+</li>
+				<li>Firefox 30+</li>
+				<li>Opera 15+</li>
+			</ul>
+		</div>
+		<div class="mobile reject">
+			Unfortunately, we are unable to allow mobile phone users into the park at this time. If you are on a tablet device and have gotten this message in error, please contact /u/tustin2121 via <a href="">the feedback thread</a> or <a href="">submit a bug report on github</a>.
+		</div>
+		
+		<div class="welcome">
+			<p>Beyond these gates lies the park. You can move around using the Arrow Keys or WASD. Use Space or Enter to interact with things in the world. Backspace opens the menu, and Ctrl or Esc backs out or cancels things.</p>
+			
+			<p>You may also use a controller attached to your computer. (TODO)</p>
+			
+			<p>But first, please stamp the ticket which looks like yourself.</p>
+			
+			<div id="charSelector"></div>
+			
+			<a id="enter" href="game.html">Enter the Park</a>
+		</div>
+		
+		<p>If you came here to look at the Classic TPP Park, <a href="http://tustin2121.github.io/TPPParkClassic/">please step this way instead.</a></p>
 	</div>
 	
 	
-	
-	If you came here to look at the Classic TPP Park, <a href="http://tustin2121.github.io/TPPParkClassic/">please step this way instead.</a>
 </body>
 </html>

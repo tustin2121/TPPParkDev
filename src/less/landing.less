@@ -1,0 +1,49 @@
+// landing.less
+// Defining styles for the landing page
+
+// Import only as reference, so we may reference @game-width, etc
+@import (reference) "game.less";
+
+html {
+	margin: 0;
+	background-color: #C2ECFF;
+}
+
+body {
+	margin: 0;
+}
+
+.rheight {
+	height: @game-height;
+}
+.rwidth {
+	width: @game-width + @chat-width-min;
+}
+.size-ref {
+	.rheight;
+	.rwidth;
+	border: 1px #4F5BFF solid;
+	background-color: #78D6FF;
+	margin: 16px auto 0;
+	text-align: center;
+	
+}
+.wrapper {
+	max-width: (@game-width + @chat-width-min) - (20*2);
+	margin: 0 auto;
+	padding: 10px 20px;
+}
+
+#size-recommend {
+	&:before {
+		content: (@game-width + @chat-width-min);
+	}
+	&:after {
+		content: @game-height;
+	}
+}
+
+.reject, .warning, .welcome {
+	display: none;
+}
+
