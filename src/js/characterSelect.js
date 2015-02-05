@@ -25,7 +25,7 @@ $(function(){
 		.on("click", function(){
 			cSel.children().removeClass("selected");
 			$(this).addClass("selected");
-			
+			$.cookie("playerSprite", $(this).attr("name"), { path: BASEURL });
 		})
 		.appendTo(cSel);
 	}

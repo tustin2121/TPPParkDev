@@ -4,6 +4,8 @@
 //$ PackConfig
 { "sprites" : [ "base.png" ] }
 //$!
+var Actor = require("tpp-actor");
+
 module.exports = {
 	id: "Katie.pokemon",
 	sprite: "base.png",

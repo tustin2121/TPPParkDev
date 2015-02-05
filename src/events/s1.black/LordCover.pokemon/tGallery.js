@@ -1,6 +1,6 @@
 // tGallery.js file
 
-var base = require("./base.js")
-var Actor = require("tpp-test-gallery");
+var base = require("./base.js");
+var ActorGala = require("tpp-test-gallery");
 
-add(new Actor(base));
+add(new ActorGala(base));

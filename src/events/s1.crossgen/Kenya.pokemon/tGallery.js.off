@@ -1,6 +1,6 @@
 // tGallery.js file
 
-var base = require("./base.js")
+var base = require("./base.js");
 var Actor = require("tpp-actor");
 
 var MeanderBehav = require("tpp-behavior").Meander;

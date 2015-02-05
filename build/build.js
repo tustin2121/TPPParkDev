@@ -88,7 +88,7 @@ function build(){
 	
 	//Copy over non-compiled files
 	copyLibraryFiles();
-	copyStaticFiles();
+	copyResourceFiles();
 	copyHtmlFiles();
 	copyConfigFiles();
 	
@@ -248,12 +248,12 @@ function copyLibraryFiles() {
 	console.log("[Copy ] Copied", l.length, "library files.");
 }
 
-function copyStaticFiles() {
+function copyResourceFiles() {
 	//These copies can happen in parallel
 	sync.parallel(function(){
-		copyDirectory("img/", BUILD_OUT+"img/");
-		copyDirectory("snd/", BUILD_OUT+"snd/");
-		copyDirectory("img/css/", BUILD_OUT+"css/");
+		copyDirectory("res/img/", BUILD_OUT+"img/");
+		copyDirectory("res/snd/", BUILD_OUT+"snd/");
+		copyDirectory("res/css/", BUILD_OUT+"css/");
 		
 	});
 	var l = sync.await();
@@ -364,7 +364,7 @@ function copyDirectory(src, dest, noDefer) {
 function enumeratePlayerCharacters() {
 	var pcs = {};
 	
-	var dirListing = fs.readdirSync("img/pcs/");
+	var dirListing = fs.readdirSync("res/img/pcs/");
 	for (var di = 0; di < dirListing.length; di++) {
 		var file = dirListing[di];
 		

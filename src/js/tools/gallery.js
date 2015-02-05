@@ -17,10 +17,13 @@ $(function(){
 	
 	currentMap = new Map("tGallery");
 	currentMap.load();
+	currentMap.queueForMapStart(function(){
+		UI.fadeIn();
+	});
 	
 	renderLoop.start({
 		clearColor: 0x000000,
-		ticksPerSecond : 30,
+		ticksPerSecond : 20,
 	});
 	
 });

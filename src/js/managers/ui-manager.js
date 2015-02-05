@@ -298,7 +298,7 @@ extend(DialogBox.prototype, {
 		if (typeof opts.html == "string") {
 			this.html = [opts.html];
 		} else if ($.isArray(opts.html)) {
-			this.html = opts.html;
+			this.html = opts.html.slice();
 		} else {
 			console.error("Dialog given is of the wrong type! ", opts.html);
 			this.html = ["[ERROR: This dialog text could not be loaded properly!]"];
@@ -559,6 +559,7 @@ extend(DialogBox.prototype, {
 		
 		this.model = new THREE.Mesh(geom, mat);
 		this.model.visible = false;
+		this.model.renderDepth = 0;
 		return this.model;
 		
 		//--------------------------------------------------------------------//
@@ -664,6 +665,9 @@ extend(Skrim.prototype, {
 			this.model.material.color.g = Math.clamp(this.color_g.curr);
 			this.model.material.color.b = Math.clamp(this.color_b.curr);
 			this.model.material.needsUpdate = true;
+			
+			//This fixes a problem where the Skrim blocks rendering the dialog boxes behind it
+			this.model.visible = !!this.model.material.opacity;
 		} else {
 			this.animating = false;
 			if (this.callback) {
@@ -697,10 +701,10 @@ extend(Skrim.prototype, {
 		var geom = new THREE.Geometry();
 		{
 			geom.vertices = [
-				new THREE.Vector3(-1, -1, 40),
-				new THREE.Vector3(sw, -1, 40),
-				new THREE.Vector3(sw, sh, 40),
-				new THREE.Vector3(-1, sh, 40),
+				new THREE.Vector3(-1, -1, 30),
+				new THREE.Vector3(sw, -1, 30),
+				new THREE.Vector3(sw, sh, 30),
+				new THREE.Vector3(-1, sh, 30),
 			];
 			geom.faces = [
 				new THREE.Face3(0, 1, 2),
@@ -715,6 +719,7 @@ extend(Skrim.prototype, {
 		// mat.morphTargets = true;
 		
 		this.model = new THREE.Mesh(geom, mat);
+		this.model.renderDepth = -30;
 		return this.model;
 	},
 });
