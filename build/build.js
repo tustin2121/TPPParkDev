@@ -239,6 +239,7 @@ function copyLibraryFiles() {
 	sync.parallel(function(){
 		copyFile("lib/jquery-2.1.1.min.js", BUILD_OUT+"js/jquery-2.1.1.min.js");
 		copyFile("lib/jquery.cookie.js", BUILD_OUT+"js/jquery.cookie.js");
+		copyFile("lib/jquery.base64.js", BUILD_OUT+"js/jquery.base64.js");
 		
 		copyFile("lib/three.min.js", BUILD_OUT+"js/three.min.js");
 		
