@@ -12,4 +12,10 @@ module.exports = {
 	
 	name: "Red",
 	infodex: "game.red.trainer.red",
+	
+	schedule: {
+		"0000": "iChurchOfHelix", //midnight to 10am
+		"1000": null, //TODO
+		"2200": "iChurchOfHelix", //10pm to midnight
+	},
 };

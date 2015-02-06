@@ -19,11 +19,16 @@ function Actor(base, opts) {
 	Event.call(this, base, opts);
 	
 	this.on("tick", this._actorTick);
-	this.on("interacted", this._actorInteractFace);
+	this.on("interacted", this._doBehavior_interact);
+	this.on("bumped", this._doBehavior_bump);
 	this.on("cant-move", this._actorBump);
 	this.facing = new THREE.Vector3(0, 0, 1);
 	
 	this._initBehaviorStack();
+	
+	if (this.schedule) {
+		this.schedule = ActorScheduler.createSchedule(this.id, this.schedule);
+	}
 }
 inherits(Actor, Event);
 extend(Actor.prototype, {
@@ -381,6 +386,10 @@ extend(Actor.prototype, {
 		this.moveTo(x, y, z);
 	},
 	
+	faceInteractor : function(vector) {
+		this.facing = vector.clone().negate();
+	},
+	
 	faceDir : function(x, y) {
 		this.facing.set(-x, 0, y);
 	},
@@ -485,6 +494,31 @@ extend(Actor.prototype, {
 		behav._tick(this, delta);
 	},
 	
+	_doBehavior_interact : function(fromDir) {
+		var behav = this.behaviorStack.top;
+		if (!behav || !behav._interact) return;
+		behav._interact(this, fromDir);
+	},
+	
+	_doBehavior_bump : function(fromDir) {
+		var behav = this.behaviorStack.top;
+		if (!behav || !behav._bump) return;
+		behav._bump(this, fromDir);
+	},
+	
+	////////////////////////////////////////////////////////////
+	
+	shouldAppear: function(mapid) {
+		if (this.schedule) {
+			var timestamp = ActorScheduler.getTimestamp();
+			var should = this.schedule[timestamp] == mapid;
+			if (!should) console.log("Actor", this.id, "should NOT appear according to scheduler... ", this.schedule[timestamp]);
+			return should;
+		}
+		return true; //no schedule, always appear
+	},
+	
+	schedule: null,
 	
 	///////////////////// Private Methods //////////////////////
 	
@@ -517,9 +551,9 @@ extend(Actor.prototype, {
 			this._tick_doBehavior(delta);
 	},
 	
-	_actorInteractFace : function(vector) {
-		this.facing = vector.clone().negate();
-	},
+	// _actorInteractFace : function(vector) {
+	// 	this.facing = vector.clone().negate();
+	// },
 	
 	_actorBump : function(srcx, srcy, x, y, reason) {
 		// console.warn(this.id, ": Cannot walk to location", "("+x+","+y+")");

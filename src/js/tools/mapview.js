@@ -135,7 +135,7 @@ function showMovementGrid() {
 			var jumps = [];
 			
 			function __drawLine(sx, sy, dx, dy) {
-				var mv = map.canWalkBetween(sx, sy, dx, dy);
+				var mv = map.canWalkBetween(sx, sy, dx, dy, true); //ignore events
 				if (!mv) return;
 				
 				var v1 = map.get3DTileLocation(sx, sy, li);

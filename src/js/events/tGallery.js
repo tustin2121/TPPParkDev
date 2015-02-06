@@ -5,8 +5,8 @@ var inherits = require("inherits");
 var extend = require("extend");
 
 var Actor = require("tpp-actor");
-var MeanderBehav = new require("tpp-behavior").Meander;
-var TalkingBehav = new require("tpp-behavior").Talking;
+var MeanderBehav = require("tpp-behavior").Meander;
+var TalkingBehav = require("tpp-behavior").Talking;
 
 function ActorGala(base, ext) {
 	ext = extend({
@@ -19,10 +19,15 @@ function ActorGala(base, ext) {
 					""+this.name+" waves at you in greeting before continuing to meander about the Gallery."
 				];
 				
-				UI.showTextBox(self.dialog_type, dlog, { complete: function(){
-					self.behaviorStack.pop();
-				}});
-				self.behaviorStack.push(TalkingBehav);
+				// UI.showTextBox(self.dialog_type, dlog, { complete: function(){
+				// 	self.behaviorStack.pop();
+				// }});
+				// self.behaviorStack.push(TalkingBehav);
+				
+				self.behaviorStack.push(new TalkingBehav({
+					dialog: dlog,
+					dialog_type: self.dialog_type,
+				}));
 			},
 		},
 		

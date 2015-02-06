@@ -16,9 +16,16 @@ function Behavior(opts) {
 	extend(this, opts);
 }
 extend(Behavior.prototype, {
+	faceOnInteract: true,
+	talkBehav: null,
+	
 	tick : null,
-	interact : null,
 	bump : null,
+	interact : function(me, from_dir){
+		if (!this.talkBehav) {
+			me.behaviorStack.push(this.talkBehav);
+		}
+	},
 	
 	_tick : function(me, delta) {
 		if (this.tick)
@@ -26,6 +33,9 @@ extend(Behavior.prototype, {
 	},
 	_interact : function(me, from_dir) {
 		//TODO do standard stuff here
+		if (this.faceOnInteract)
+			me.faceInteractor(from_dir);
+		
 		if (this.interact)
 			this.interact(me, from_dir);
 	},
@@ -44,9 +54,43 @@ function Talking(opts) {
 }
 inherits(Talking, Behavior);
 extend(Talking.prototype, {
-	tick: function(me, delta) {},
+	dialog: null,
+	dialog_type: "dialog",
+	__ui_fired: false,
+	
+	// reset: function() { this.__ui_fired = false; },
+	
+	tick: function(me, delta) {
+		if (!this.__ui_fired) {
+			UI.showTextBox(this.dialog_type, this.dialog, {
+				complete: function() {
+					me.behaviorStack.pop();
+					this.__ui_fired = false;
+				},
+			});
+			this.__ui_fired = true;
+		}
+	},
 });
 module.exports.Talking = Talking;
+
+
+
+function FaceDirection(x, y, opts) {
+	Behavior.call(this, opts);
+	this.dir_x = x;
+	this.dir_y = y;
+}
+inherits(FaceDirection, Behavior);
+extend(FaceDirection.prototype, {
+	dir_x: 0,
+	dir_y: 1,
+	
+	tick: function(me, delta) {
+		me.faceDir(this.dir_x, this.dir_y);
+	},
+});
+module.exports.FaceDirection = FaceDirection;
 
 
 

@@ -16,4 +16,9 @@ module.exports = {
 	infodex: "game.red.pokemon.birdjesus",
 	
 	sprite_creator: "Carlotta4th",
+	
+	schedule: {
+		"0000": "iChurchOfHelix",
+		//TODO
+	},
 };

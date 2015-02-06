@@ -71,6 +71,10 @@ extend(Event.prototype, {
 				throw new Error("Event was initialized with both location and locations! They cannot be both defined!");
 			
 			var loc = this.location;
+			if ($.isFunction(loc)) {
+				locs = loc.call(this);
+			}
+			
 			if ($.isArray(loc) && loc.length == 2 && typeof loc[0] == "number" && typeof loc[1] == "number") 
 			{
 				loc = new THREE.Vector2(loc[0], loc[1]);
