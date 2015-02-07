@@ -108,6 +108,8 @@ extend(PlayerChar.prototype, {
 				"interacted", this.facing);
 		}
 		
+		var run = controller.isDown("Run", "game");
+		
 		if ((y || x) && !(x && y)) { //one, but not both
 			if (this.controlTimeout < 1) {
 				this.controlTimeout += CONFIG.timeout.walkControl * delta;
@@ -117,10 +119,13 @@ extend(PlayerChar.prototype, {
 				}
 			} else {
 				if (!this._initPathingState().moving) {
-					this.moveTo(this.location.x+x, this.location.y+y);
+					this.moveTo(this.location.x+x, this.location.y+y, {
+						speed: (run)? 2 : 1,
+					});
 				}
 			}
 		} else {
+			//This makes it so you can tap a direction to face, instead of just always walking in said direction
 			if (this.controlTimeout > 0)
 				this.controlTimeout -= CONFIG.timeout.walkControl * delta;
 		}

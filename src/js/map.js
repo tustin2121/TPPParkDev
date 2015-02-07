@@ -456,6 +456,10 @@ extend(Map.prototype, {
 		this.eventMap.remove = function(x, y, val) {
 			if (!this.get(x, y)) return null;
 			var i = this.get(x, y).indexOf(val);
+			if (this.get(x, y).length-1 > 0) {
+				//Trying to find the Bug of the Phantom Sprites!
+				console.warn("REMOVING EVENT FROM NON-EMPTY LIST: ", this.get(x, y), "index:", i);
+			}
 			if (i == -1) return null;
 			return this.get(x, y).splice(i, 1);
 		};
@@ -525,6 +529,10 @@ extend(Map.prototype, {
 			//Started moving to a new tile
 			self.eventMap.put(destX, destY, this);
 			self.eventMap.remove(srcX, srcY, this);
+			if (self.eventMap.get(srcX, srcY).length > 0) {
+				//Trying to find the Bug of the Phantom Sprites!
+				console.warn("EVENT HAS MOVED FROM NON-EMPTY LOCATION!", evt.name);
+			}
 			
 			var dir = new THREE.Vector3(srcX-destX, 0, destY-srcY);
 			var lst = self.eventMap.get(destX, destY);

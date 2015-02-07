@@ -34,7 +34,7 @@ module.exports = {
 		animOverride: 0,
 	},
 	
-	playerSprite : "youngster[hg_vertmix-32].png",
+	playerSprite : "melody[hg_vertmix-32].png",
 	
 };
 

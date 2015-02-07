@@ -36,6 +36,8 @@ extend(ControlManager.prototype, {
 		Left: [37, "Left", 65, "a"], 
 		Right: [39, "Right", 68, "d"],
 		Interact: [13, "Enter", 32, " "],
+		Cancel: [27, "Escape", 17, "Ctrl"],
+		Run: [16, "Shift"],
 		FocusChat: [191, "/"],
 	},
 	

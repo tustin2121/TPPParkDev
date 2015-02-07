@@ -209,57 +209,77 @@ var FRAG_SHADER = [
 		'#endif',
 
 	'}'
-].join( '\n' )
+].join( '\n' );
 
 
+//////////////////////////////////////////////////////////////////////////////////
 
 
-/*
-var indices = new Uint16Array( [ 0, 1, 2,  0, 2, 3 ] );
-var vertices = new Float32Array( [ - 0.5, - 0.5, 0,   0.5, - 0.5, 0,   0.5, 0.5, 0,   - 0.5, 0.5, 0 ] );
-var uvs = new Float32Array( [ 0, 0,   1, 0,   1, 1,   0, 1 ] );
+function SpriteGlowMaterial(opts) {
+	if (!(this instanceof SpriteGlowMaterial)) {
+		return new SpriteGlowMaterial(opts);
+	}
+	
+	//TODO write it so when we replace the values here, we replace the ones in the uniforms
+	// Object.defineProperties(this, {
+	// 	uvOffset : {}
+	// });
 
-var geometry = new THREE.BufferGeometry();
-geometry.addAttribute( 'index', new THREE.BufferAttribute( indices, 1 ) );
-geometry.addAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
-geometry.addAttribute( 'uv', new THREE.BufferAttribute( uvs, 2 ) );
-
-
-function SpriteCharacter(material) {
-	THREE.Object3D.call( this );
-
-	this.type = 'SpriteCharacter';
-
-	this.geometry = geometry;
-	this.material = ( material !== undefined ) ? material : new THREE.SpriteMaterial();
-
+	this.color = (opts.color instanceof THREE.Color)? opts.color : new THREE.Color(opts.color);
+	// this.opacity = opts.opacity || 1;
+	
+	var params = this._createMatParams(opts);
+	THREE.ShaderMaterial.call(this, params);
+	this.type = "SpriteGlowMaterial";
+	
+	this.transparent = (opts.transparent !== undefined)? opts.transparent : true;
+	this.alphaTest = 0.05;
+	// this.depthWrite = false;
 }
-
-SpriteCharacter.prototype = Object.create( THREE.Object3D.prototype );
-
-SpriteCharacter.prototype.raycast = ( function () {
-	var matrixPosition = new THREE.Vector3();
-
-	return function ( raycaster, intersects ) {
-		matrixPosition.setFromMatrixPosition( this.matrixWorld );
-
-		var distance = raycaster.ray.distanceToPoint( matrixPosition );
-		if ( distance > this.scale.x ) return;
-
-		intersects.push( {
-			distance: distance,
-			point: this.position,
-			face: null,
-			object: this
-		} );
-	};
-}() );
-
-
-SpriteCharacter.prototype.clone = function ( object ) {
-	if ( object === undefined ) 
-		object = new SpriteCharacter( this.material );
-	THREE.Object3D.prototype.clone.call( this, object );
-	return object;
-
-};*/
+inherits(SpriteGlowMaterial, THREE.ShaderMaterial);
+extend(SpriteGlowMaterial.prototype, {
+	map : null,
+	
+	_createMatParams : function() {
+		var params = {
+			uniforms : {
+				"c":   { type: "f", value: 1.0 },
+				"p":   { type: "f", value: 1.4 },
+				glowColor: { type: "c", value: this.color },//new THREE.Color(0xffff00) },
+				// viewVector: { type: "v3", value: camera.position }
+			},
+		};
+		
+		params.vertexShader = this._vertShader;
+		params.fragmentShader = this._fragShader;
+		params.blending = THREE.AdditiveBlending;
+		return params;
+	},
+	
+	_vertShader: [
+		// "uniform vec3 viewVector;",
+		"uniform float c;",
+		"uniform float p;",
+		"varying float intensity;",
+		
+		"void main() {",
+			"vec3 vNorm = normalize( normalMatrix * normal );",
+			// "vec3 vNormCamera = normalize( normalMatrix * viewVector );",
+			"vec3 vNormCamera = normalize( normalMatrix * normalize( modelViewMatrix * vec4(0, 0, 1, 1) ).xyz );",
+			"intensity = pow( c - dot(vNorm, vNormCamera), p );",
+			
+			"gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );",
+		"}",
+	].join("\n"),
+	
+	_fragShader: [
+		"uniform vec3 glowColor;",
+		"varying float intensity;",
+		
+		"void main() {",
+			"vec3 glow = glowColor * intensity;",
+			"gl_FragColor = vec4( glow, 1.0 );",
+		"}",
+	].join("\n"),
+});
+module.exports.SpriteGlowMaterial = SpriteGlowMaterial;

@@ -6,6 +6,7 @@ var inherits = require("inherits");
 var extend = require("extend");
 
 var CharacterSprite = require("../model/spritemodel.js").CharacterSprite;
+var SpriteGlowMaterial = require("../model/spritemodel.js").SpriteGlowMaterial;
 var getSpriteFormat = require("tpp-actor-animations").getSpriteFormat;
 
 var GLOBAL_SCALEUP = 1.65;
@@ -76,6 +77,9 @@ extend(Actor.prototype, {
 		
 		node.add(this._avatar_createSprite(map, gc));
 		node.add(this._avatar_createShadowCaster(map, gc));
+		// if (this.glow_color) {
+		// 	node.add(this._avatar_createGlowCaster(map, gc));
+		// }
 		
 		return node;
 		
@@ -87,6 +91,27 @@ extend(Actor.prototype, {
 		);
 	},
 	
+	_avatar_createGlowCaster: function(map, gc) {
+		var mat = new SpriteGlowMaterial({
+			color: this.glow_color,
+		});
+		gc.collect(mat);
+		
+		var geom = new THREE.SphereGeometry(0.8, 21, 10);
+		gc.collect(geom);
+		
+		var mesh = new THREE.Mesh(geom, mat);
+		mesh.position.set(0, 0.5, 0);
+		
+		// self.setScale(self.scale_shadow);
+		// mesh.scale.set(
+		// 	this.scale_shadow * this.scale, 
+		// 	this.scale_shadow * this.scale, 
+		// 	this.scale_shadow * this.scale
+		// );
+		return this._avatar_glowcaster = mesh;
+	},
+	
 	_avatar_createShadowCaster: function(map, gc) {
 		var mat = new THREE.MeshBasicMaterial();
 		mat.visible = false; //The object won't render, but the shadow still will
@@ -96,7 +121,6 @@ extend(Actor.prototype, {
 		gc.collect(geom);
 		
 		var mesh = new THREE.Mesh(geom, mat);
-		//mesh.visible = false; //?
 		mesh.castShadow = true;
 		mesh.position.set(0, 0.5, 0);
 		
@@ -394,7 +418,12 @@ extend(Actor.prototype, {
 		this.facing.set(-x, 0, y);
 	},
 	
-	moveTo : function(x, y, layer, bypass) { //bypass Walkmask check
+	moveTo : function(x, y, layer, opts) { //bypass Walkmask Check
+		if ($.isPlainObject(layer) && opts === undefined) {
+			opts = layer; layer = undefined;
+		}
+		if (opts === undefined) opts = {};
+		
 		var state = this._initPathingState();
 		var src = this.location;
 		layer = (layer == undefined)? this.location.z : layer;
@@ -402,7 +431,7 @@ extend(Actor.prototype, {
 		this.facing.set(src.x-x, 0, y-src.y);
 		
 		var walkmask = currentMap.canWalkBetween(src.x, src.y, x, y);
-		if (bypass !== undefined) walkmask = bypass;
+		if (opts.bypass !== undefined) walkmask = opts.bypass;
 		if (!walkmask) {
 			this.emit("cant-move", src.x, src.y, x, y);
 			currentMap.dispatch(x, y, "bumped", this.facing);
@@ -430,12 +459,14 @@ extend(Actor.prototype, {
 		state.destLocC.set(x, y, layer);
 		state.destLoc3.set(currentMap.get3DTileLocation(x, y, layer));
 		state.delta = 0;
-		state.speed = 1;
+		state.speed = opts.speed || 1;
 		state.moving = true;
+		animopts.speed = opts.speed || 1;
 		
 		if ((walkmask & 0x2) === 0x2) {
 			state.midpointOffset.setY(0.6);
 			state.jumping = true;
+			state.speed = 1; //enforce a jumping speed of 1
 			SoundManager.playSound("walk_jump");
 			animopts.speed = 1.5;
 		}
