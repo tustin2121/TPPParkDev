@@ -1,5 +1,5 @@
 # Blender MTL File: 'iBurritoEmporium.blend'
-# Material Count: 7
+# Material Count: 15
 
 newmtl BLACKOUT
 Ns 96.078431
@@ -9,7 +9,26 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 1
+map_Kd shelf_books.png
+
+newmtl BLACKOUT_woodfloor.png
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.000000 0.000000 0.000000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
 map_Kd woodfloor.png
+
+newmtl Brass
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.477748 0.451827 0.568442
+Ks 0.645833 0.645833 0.645833
+Ni 1.000000
+d 1.000000
+illum 2
 
 newmtl BrickWall
 Ns 96.078431
@@ -21,6 +40,16 @@ d 1.000000
 illum 2
 map_Kd redbrick.png
 
+newmtl Counter
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.010417 0.010417 0.010417
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd counter.png
+
 newmtl Glass
 Ns 96.078431
 Ka 0.000000 0.000000 0.000000
@@ -31,6 +60,26 @@ d 0.200000
 illum 2
 map_Kd glass.png
 
+newmtl Godrays
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.000000 0.000000 0.000000
+Ks 0.010417 0.010417 0.010417
+Ni 1.000000
+d 0.500000
+illum 2
+Ke 1.000000
+map_Kd godrays.png
+
+newmtl Rope
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.389517 0.001673 0.000000
+Ks 0.010000 0.010000 0.010000
+Ni 1.000000
+d 1.000000
+illum 2
+
 newmtl ShelvesBooks
 Ns 96.078431
 Ka 0.000000 0.000000 0.000000
@@ -40,6 +89,16 @@ Ni 1.000000
 d 1.000000
 illum 1
 map_Kd shelf_books.png
+
+newmtl ShelvesBooks_shelf_side.png
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd shelf_side.png
 
 newmtl ShelvesSides
 Ns 96.078431
@@ -69,4 +128,24 @@ Ks 0.010417 0.010417 0.010417
 Ni 1.000000
 d 1.000000
 illum 2
+map_Kd playrug.png
+
+newmtl WoodFloor_woodfloor.png
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.010417 0.010417 0.010417
+Ni 1.000000
+d 1.000000
+illum 2
 map_Kd woodfloor.png
+
+newmtl desk
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.501952 0.501952 0.501952
+Ks 0.010417 0.010417 0.010417
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\_Objects\desk02a_lm1.png

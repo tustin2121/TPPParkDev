@@ -49,6 +49,9 @@ function createEventLibraryBundle(outfile) {
 	bundler.exclude("three");
 	bundler.exclude("jquery");
 	
+	bundler.require("extend",		{ expose: "extend" });
+	bundler.require("inherits",		{ expose: "inherits" });
+	
 	bundler.require("./src/js/events/event",		{ expose: "tpp-event" });
 	bundler.require("./src/js/events/trigger",		{ expose: "tpp-trigger" });
 	bundler.require("./src/js/events/warp",			{ expose: "tpp-warp" });

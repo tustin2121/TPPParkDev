@@ -44,6 +44,9 @@ function loadMap(id) {
 	
 	currentMap = new Map(id);
 	currentMap.load();
+	currentMap.queueForMapStart(function(){
+		UI.fadeIn();
+	});
 	
 	currentMap.once("map-ready", function(){
 		var scrWidth = $("#gamescreen").width();

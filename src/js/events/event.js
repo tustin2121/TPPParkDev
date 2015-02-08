@@ -167,6 +167,20 @@ extend(Event.prototype, {
 		}
 	},
 	
+	
+	divideFacing: function(dirvector) {
+		var x = dirvector.x, y = dirvector.z;
+		// console.log("DIRFACING:", x, y);
+		if (Math.abs(x) > Math.abs(y)) { //Direction vector is pointing along x axis
+			if (x > 0) return "w";
+			else return "e";
+		} else { //Direction vector is pointing along y axis
+			if (y > 0) return "s";
+			else return "n";
+		}
+		return "s";
+	}
+	
 });
 module.exports = Event;
 

@@ -283,6 +283,9 @@ MaterialCreator.prototype = {
 				texture.wrapT = THREE.ClampToEdgeWrapping;
 			}
 			
+			texture.magFilter = THREE.NearestFilter;
+			texture.minFilter = THREE.NearestMipMapLinearFilter;
+			
 			if (args['o_u'] || args['o_v']) {
 				texture.offset = new Vector2(args['o_u'] || 0, args['o_v'] || 0);
 			}
