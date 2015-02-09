@@ -1,0 +1,112 @@
+// touchcontrols.less
+// Defines what the touch screen controls look like and where they are
+
+#touchcontrols {
+	position: fixed;
+	top: 0; bottom: 0;
+	left: 0; right: 0;
+	z-index: 100; //float over everything
+	// pointer-events: none; //???
+}
+
+@dpad-divide: 50px;
+.dpad {
+	position: absolute;
+	width: @dpad-divide;
+	height: @dpad-divide;
+	
+	@media (orientation: portrait) {
+		bottom: 100px; left: 100px;
+	}
+	@media (orientation: landscape) {
+		bottom: 50%; left: 100px;
+	}
+}
+
+.button {
+	position: absolute;
+	border-radius: 50%;
+	background-color: rgba(128, 128, 128, 0.3);
+	width: 80px; height: 80px;
+	display:table;
+	
+	&:after {
+		display:table-cell;
+		color: rgba(200, 200, 200, 0.8);
+		vertical-align: middle;
+		text-align: center;
+	}
+	
+	&.a {
+		&:after { content: "A"; }
+		@media (orientation: portrait) {
+			bottom: 60%; right: 10px;
+		}
+		@media (orientation: landscape) {
+			bottom: 60%; right: 20px;
+		}
+	}
+	
+	&.b {
+		&:after { content: "B"; }
+		@media (orientation: portrait) {
+			bottom: 30%; right: 20px;
+		}
+		@media (orientation: landscape) {
+			bottom: 38%; right: 10px;
+		}
+	}
+	
+	&.run {
+		&:after { content: "Run"; }
+		@media (orientation: portrait) {
+			bottom: 20px; right: 20px;
+		}
+		@media (orientation: landscape) {
+			bottom: 48%; right: 80px;
+		}
+	}
+	
+	&.menu {
+		width: 110px; height: 60px;
+		
+		&:after { content: "Start"; }
+		@media (orientation: portrait) {
+			top: 10px; left: 20px;
+		}
+		@media (orientation: landscape) {
+			top: 10px; right: 20px;
+		}
+	}
+	
+	&.up {
+		border-radius: 0%;
+		height: 90px; width: 60px;
+		bottom: @dpad-divide; left: (@dpad-divide / 2) - (60px / 2);
+		
+		&:after { content: "/\\"; }
+	}
+	&.down {
+		border-radius: 0%;
+		height: 90px; width: 60px;
+		top: @dpad-divide; left: (@dpad-divide / 2) - (60px / 2);
+		
+		&:after { content: "\\/"; }
+	}
+	&.left {
+		border-radius: 0%;
+		height: 60px; width: 90px;
+		right: @dpad-divide; top: (@dpad-divide / 2) - (60px / 2);
+		
+		&:after { content: "<"; }
+	}
+	&.right {
+		border-radius: 0%;
+		height: 60px; width: 90px;
+		left: @dpad-divide; top: (@dpad-divide / 2) - (60px / 2);
+		
+		&:after { content: ">"; }
+	}
+}
+
+

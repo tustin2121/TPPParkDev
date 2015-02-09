@@ -22,7 +22,7 @@ extend(Behavior.prototype, {
 	tick : null,
 	bump : null,
 	interact : function(me, from_dir){
-		if (!this.talkBehav) {
+		if (this.talkBehav) {
 			me.behaviorStack.push(this.talkBehav);
 		}
 	},

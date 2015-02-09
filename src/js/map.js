@@ -148,6 +148,7 @@ extend(Map.prototype, {
 			// console.log("PROGRESS:", e);
 			if (e.lengthComputable) {
 				var percentDone = e.loaded / e.total;
+				UI.updateLoadingProgress(e.loaded, e.total);
 				self.emit("progress", percentDone);
 			} else {
 				//marquee bar

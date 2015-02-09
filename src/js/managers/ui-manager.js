@@ -17,7 +17,7 @@ function UIManager() {
 		"dialog" : new DialogBox("dialog_bubble"),
 	};
 	this.skrim = new Skrim();
-	// this.loader = new AjaxLoader();
+	this.loader = new AjaxLoader();
 	
 	var self = this;
 	$(function(){
@@ -149,6 +149,16 @@ extend(UIManager.prototype, {
 	/** Displays the loading icon over the main game screen. Optionally supply text. */
 	showLoadingAjax : function(loadingText) {
 		if (!loadingText) loadingText = "Loading...";
+		this.loader.show();
+	},
+	
+	hideLoadingAjax : function() {
+		this.loader.hide();
+	},
+	
+	updateLoadingProgress: function(progress, total) {
+		if (progress !== undefined) this.loader.progress = progress;
+		if (total !== undefined) this.loader.progress_total = total;
 	},
 	
 	
@@ -201,24 +211,13 @@ extend(UIManager.prototype, {
 			var model = this.dialogs[dlog].createModel();
 			this.scene.add(model);
 		}
-		
 		{
 			var model = this.skrim.createModel();
 			this.scene.add(model);
+		}{
+			var model = this.loader.createModel();
+			this.scene.add(model);
 		}
-		
-		
-		// this.tb.model = createModel("textbox_gold");
-		// // adjust width : this.tb.model.morphTargetInfluences[0] = 1;
-		// // adjust height: this.tb.model.morphTargetInfluences[1] = 1;
-		// this.tb.model.visible = false;
-		// this.scene.add(this.tb.model);
-		
-		// this.db.model = createModel("dialog_bubble");
-		// // adjust width : this.db.model.morphTargetInfluences[0] = 1;
-		// // adjust height: this.db.model.morphTargetInfluences[1] = 1;
-		// this.db.model.visible = false;
-		// this.scene.add(this.db.model);
 		
 		// createDEBUGSetup.call(this);
 	},
@@ -253,6 +252,7 @@ extend(UIManager.prototype, {
 		}
 		
 		this.skrim.advance(delta);
+		this.loader.advance(delta);
 	},
 	
 	_completeCurrAction : function() {
@@ -731,24 +731,86 @@ function AjaxLoader() {
 extend(AjaxLoader.prototype, {
 	node : null,
 	m_helix : null,
-	m_letter : [],
+	m_progress : [],
+	m_spinner : [],
 	
-	letterdefs : {
-		"A" : [3, 3],
-		"B" : [4, 3],
-		"X" : [3, 2],
-		"Y" : [4, 2],
-		"L" : [0, 0],
-		"R" : [1, 0],
-		"S" : [2, 0],
-		"UA": [3, 1],
-		"DA": [4, 1],
-		"LA": [3, 0],
-		"RA": [4, 0],
+	progress: 0,
+	progress_total: 100,
+	opacity: 0,
+	_opacity_speed: 0.2,
+	spin: 0,
+	_spin_speed: 90,
+	_spin_falloff: 500,
+	
+	letterdefs : [
+		/*"A" :*/ [3, 3],
+		/*"B" :*/ [4, 3],
+		/*"X" :*/ [3, 2],
+		/*"Y" :*/ [4, 2],
+		/*"L" :*/ [0, 0],
+		/*"R" :*/ [1, 0],
+		/*"S" :*/ [2, 0],
+		/*"UA":*/ [3, 1],
+		/*"DA":*/ [4, 1],
+		/*"LA":*/ [3, 0],
+		/*"RA":*/ [4, 0],
+	],
+	
+	show: function() {
+		this.opacity = 1;
+		for (var i = 0; i < this.m_progress.length; i++) {
+			var rnd = Math.floor(Math.random() * this.letterdefs.length);
+			this.m_progress[i].material.map.offset.set(
+				(this.letterdefs[rnd][0] * 16) / 128, 
+				(this.letterdefs[rnd][1] * 16) / 64
+			)
+		}
+	},
+	
+	hide: function() {
+		this.opacity = 0;
+	},
+	
+	advance: function(delta) {
+		if (this.opacity == 0 && this.m_helix.material.opacity <= 0) return;
+		
+		if (this.opacity > this.m_helix.material.opacity) {
+			this.m_helix.material.opacity =
+				Math.clamp(this.m_helix.material.opacity + delta * this._opacity_speed);
+		} else if (this.opacity < this.m_helix.material.opacity) {
+			this.m_helix.material.opacity = 
+				Math.clamp(this.m_helix.material.opacity - delta * this._opacity_speed);
+		}
+		
+		var nl = this.m_progress.length; //number of letters
+		for (var i = 0; i < nl; i++) {
+			//var o = (this.progress / this.progress_total) * nl;
+			var o = (this.progress_total / nl);
+			this.m_progress[i].material.opacity = this.m_helix.material.opacity * Math.clamp((this.progress-(o*i)) / o);
+		}
+		
+		this.spin += delta * this._spin_speed;
+		if (this.spin > 800) this.spin -= 800;
+		for (var i = 0; i < this.m_spinner.length; i++) {
+			var o = this.spin - (i * 100);
+			if (o < 0) o += 800;
+			o = (-o + this._spin_falloff) / this._spin_falloff;
+			this.m_spinner[i].material.opacity = this.m_helix.material.opacity * Math.clamp(o);
+			
+			if (o < 0) {
+				var rnd = Math.floor(Math.random() * this.letterdefs.length);
+				this.m_spinner[i].material.map.offset.set(
+					(this.letterdefs[rnd][0] * 16) / 128, 
+					(this.letterdefs[rnd][1] * 16) / 64
+				)
+			}
+		}
 	},
 	
 	createModel: function(){
 		var self = this;
+		var sw = $("#gamescreen").width();
+		var sh = $("#gamescreen").height();
 		
 		this.node = new THREE.Object3D();
 		
@@ -760,6 +822,7 @@ extend(AjaxLoader.prototype, {
 		tex.repeat = new THREE.Vector2(48/128, 48/64);
 		tex.offset = new THREE.Vector2(0, 16/64); //Remember, bottom right is origin
 		tex.generateMipmaps = false;
+		_ensureUpdate(tex);
 		
 		var mat = new THREE.MeshBasicMaterial({
 			map: tex,
@@ -769,15 +832,32 @@ extend(AjaxLoader.prototype, {
 		
 		this.m_helix = new THREE.Mesh(geom, mat);
 		this.m_helix.scale.set(3, 3, 3);
+		this.m_helix.position.set(16+24, sh-24-16, 40);
+		this.m_helix.renderDepth = -40;
 		this.node.add(this.m_helix);
 		
-		//for (var i = 0; i < )
+		for (var i = 0; i < 8; i++) {
+			this.m_spinner[i] = _createLetter();
+			this.m_spinner[i].position.set(
+				this.m_helix.position.x + (Math.sin(i*(Math.PI/4)) * 24),
+				this.m_helix.position.y + (Math.cos(i*(Math.PI/4)) * 24), 
+				39);
+			this.m_spinner[i].renderDepth = -40;
+			
+			var rnd = Math.floor(Math.random() * this.letterdefs.length);
+			this.m_spinner[i].material.map.offset.set(
+				(this.letterdefs[rnd][0] * 16) / 128, 
+				(this.letterdefs[rnd][1] * 16) / 64
+			)
+		}
 		
-		this.m_letter1 = _createLetter();
-		this.m_letter2 = _createLetter();
-		this.m_letter3 = _createLetter();
-		this.m_letter4 = _createLetter();
-		this.m_letter5 = _createLetter();
+		for (var i = 0; i < 10; i++) {
+			this.m_progress[i] = _createLetter();
+			this.m_progress[i].position.set(
+				this.m_helix.position.x+44+(i*16), 
+				this.m_helix.position.y, 40);
+			this.m_progress[i].renderDepth = -40;
+		}
 		
 		return this.node;
 		
@@ -785,9 +865,12 @@ extend(AjaxLoader.prototype, {
 			var tex = new THREE.Texture(AJAX_TEXTURE_IMG);
 			tex.magFilter = THREE.NearestFilter;
 			tex.minFilter = THREE.NearestFilter;
+			tex.wrapS = THREE.RepeatWrapping;
+			tex.wrapT = THREE.RepeatWrapping;
 			tex.repeat = new THREE.Vector2(16/128, 16/64);
 			tex.offset = new THREE.Vector2(0, 0);
 			tex.generateMipmaps = false;
+			_ensureUpdate(tex);
 			
 			var mat = new THREE.MeshBasicMaterial({
 				map: tex,
@@ -795,9 +878,16 @@ extend(AjaxLoader.prototype, {
 				opacity: 0,
 			});
 			
-			return new THREE.Mesh(geom, mat);
+			var mesh = new THREE.Mesh(geom, mat);
+			self.node.add(mesh);
+			return mesh;
 		}
 		
+		function _ensureUpdate(tex) {
+			AJAX_TEXTURE_IMG.on("load", function(){
+				tex.needsUpdate = true;
+			});
+		}
 	},
 });
 

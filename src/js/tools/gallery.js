@@ -15,11 +15,13 @@ var warp = require("tpp-warp");
 //On Ready
 $(function(){
 	
-	currentMap = new Map("tGallery");
-	currentMap.load();
-	currentMap.queueForMapStart(function(){
-		UI.fadeIn();
-	});
+	MapManager.transitionTo("tGallery", 0);
+	
+	// currentMap = new Map("tGallery");
+	// currentMap.load();
+	// currentMap.queueForMapStart(function(){
+	// 	UI.fadeIn();
+	// });
 	
 	renderLoop.start({
 		clearColor: 0x000000,

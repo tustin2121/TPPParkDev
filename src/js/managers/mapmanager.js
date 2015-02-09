@@ -34,6 +34,7 @@ extend(MapManager.prototype, {
 		var fadeOutDone = false;
 		var finishedDownload = false;
 		UI.fadeOut(function(){
+			UI.showLoadingAjax();
 			fadeOutDone = true;
 			if (finishedDownload && fadeOutDone) {
 				__beginLoad();
@@ -82,6 +83,7 @@ extend(MapManager.prototype, {
 			currentMap.load();
 		}
 		function __mapStart() {
+			UI.hideLoadingAjax();
 			UI.fadeIn();
 			controller.removeInputContext("_map_warping_");
 		}

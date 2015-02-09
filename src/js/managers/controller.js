@@ -24,6 +24,8 @@ function ControlManager() {
 			if (self.inputContext.top == "chat")
 				self.inputContext.pop(); 
 		});
+		
+		self.touchManager();
 	})
 }
 inherits(ControlManager, EventEmitter);
@@ -38,6 +40,7 @@ extend(ControlManager.prototype, {
 		Interact: [13, "Enter", 32, " "],
 		Cancel: [27, "Escape", 17, "Ctrl"],
 		Run: [16, "Shift"],
+		Menu: [8, "Backspace", 46, "Delete"],
 		FocusChat: [191, "/"],
 	},
 	
@@ -47,6 +50,7 @@ extend(ControlManager.prototype, {
 		Up: false, Down: false,
 		Left: false, Right: false,
 		Interact: false, FocusChat: false,
+		Run: false, Cancel: false,
 	},
 	
 	pushInputContext: function(ctx) {
@@ -141,6 +145,61 @@ extend(ControlManager.prototype, {
 	}
 	
 });
+
+ControlManager.prototype.touchManager = function() {
+	var self = this;
+	
+	$(document).one("touchstart", function(){
+		$("html").addClass("touchmode");
+		if (!$("#touchcontrols").length) {
+			function __map(btn, key) {
+				btn.on("touchstart", function(e){
+					console.log("TOUCHSTART: ", key);
+					e.preventDefault();
+					self.emitKey(key, true);
+				});
+				btn.on("touchend", function(e){
+					console.log("TOUCHEND: ", key);
+					e.preventDefault();
+					self.emitKey(key, false);
+				});
+				btn.on("touchcancel", function(e){
+					console.log("TOUCHCANCEL: ", key);
+					e.preventDefault();
+					self.emitKey(key, false);
+				});
+				btn.on("touchmove", function(e){
+					console.log("TOUCHMOVE: ", key);
+					e.preventDefault();
+				})
+				return btn;
+			}
+			
+			$("<div>").attr("id", "touchcontrols")
+			.append (
+				__map($("<div>").addClass("button").addClass("a"), "Interact")
+			).append (
+				__map($("<div>").addClass("button").addClass("b"), "Cancel")
+			).append (
+				__map($("<div>").addClass("button").addClass("menu"), "Menu")
+			).append (
+				__map($("<div>").addClass("button").addClass("run"), "Run")
+			).append (
+				$("<div>").addClass("dpad")
+				.append (
+					__map($("<div>").addClass("button").addClass("up"), "Up")
+				).append (
+					__map($("<div>").addClass("button").addClass("down"), "Down")
+				).append (
+					__map($("<div>").addClass("button").addClass("left"), "Left")
+				).append (
+					__map($("<div>").addClass("button").addClass("right"), "Right")
+				)
+			).appendTo("body");
+		}
+	});
+}
+
 
 
 module.exports = new ControlManager();
