@@ -1,13 +1,26 @@
 {
+	"areaname" : "The Walkway of Legends",
+	"domain" : "interior",
 	"layers" : [
-		{ "layer" : 1, "3d" : [1, 0, 0, -3.5,   0, 1, 0, 0,   0, 0, 1, 10.5,   0, 0, 0, 1] },
-		{ "layer" : 2, "3d" : [1, 0, 0, -39.5,   0, 1, 0, 2.5,   0, 0, 1, -26.5,   0, 0, 0, 1] }
+		{ "layer" : 1, "3d" : [1, 0, 0, -3.5,   0, 1, 0, 0,   0, 0, 1, -10.5,   0, 0, 0, 1] },
+		{ "layer" : 2, "3d" : [1, 0, 0, -39.5,   0, 1, 0, 2.5,   0, 0, 1, 26.5,   0, 0, 0, 1] }
 	],
 	"warps" : [
 		{ "loc" : [0, 0], "anim" : 0 }
 	],
 	"heightstep" : 0.25,
 	"camera" : {
-		"type" : "gen5"
+		"type" : "gen4",
+		"cameras": {
+			"0": {}
+		}
+	},
+	"lighting" : {
+		"default": true,
+		"shadowmap": {
+			"width": 512, "height": 512,
+			"top": 10, "bottom": -25, "left": -20, "right": 20,
+			"near": 70, "far": 80
+		}
 	}
 }

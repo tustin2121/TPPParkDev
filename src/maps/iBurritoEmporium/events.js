@@ -145,14 +145,21 @@ extend(Shelf.prototype, {
 
 
 
-add(new Event({
+add(new Warp({
 	id: "OpenSecretDoor",
 	locations: [23, 3],
+	exit_to: null,//{ map: "", warp: 0 },
 	
-	secretShelf: currentMap.mapmodel.getChildByName("2ndSecretShelves"),
+	secretShelf: null,
 	_speed: 0.08,
 	_alpha: 0,
 	isOpen: false,
+	
+	getAvatar : function(map) {
+		this.secretShelf = currentMap.mapmodel.getChildByName("2ndSecretShelves");
+		
+		return null;
+	},
 	
 	canWalkOn: function(){ return this.isOpen && this._alpha < 0.2; },
 	

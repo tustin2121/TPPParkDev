@@ -14,6 +14,24 @@ var Trigger = require("tpp-trigger");
 var Warp = require("tpp-warp");
 var Event = require("tpp-event");
 
+////////////////////////// Model Modifications ///////////////////////////
+$(function() {
+	var ch = currentMap.mapmodel.children;
+	for (var i = 0; i < ch.length; i++) {
+		// 
+		if (ch[i].name.indexOf("Tree") == 0) {
+			var tree = ch[i];
+			for (var j = 0; j < tree.children.length; j++) {
+				var m = tree.children[i].material;
+				m.side = THREE.DoubleSide;
+				m.alphaTest = 0.1;
+				m.transparent = true;
+			}
+		}
+	}
+	
+});
+
 ///////////////////////////// Construction ///////////////////////////////
 
 var barrierGeom; //Geometry for the saw horse barrier blocking unconstructed exits.

@@ -164,7 +164,7 @@ MaterialCreator.prototype = {
 					break;
 				
 				case "kd": // Diffuse color
-					params['color'] = new THREE.Color().fromArray(value);
+					params['diffuse'] = new THREE.Color().fromArray(value);
 					break;
 				
 				case "ka": // Ambient color
@@ -230,11 +230,10 @@ MaterialCreator.prototype = {
 			}
 		}
 		
-		// WHAT?!?! NO!!!!!!
-		// if ( params[ 'diffuse' ] ) {
-		// 	if ( !params[ 'ambient' ]) params[ 'ambient' ] = params[ 'diffuse' ];
-		// 	params[ 'color' ] = params[ 'diffuse' ];
-		// }
+		if ( params[ 'diffuse' ] ) {
+			if ( !params[ 'ambient' ]) params[ 'ambient' ] = params[ 'diffuse' ];
+			params[ 'color' ] = params[ 'diffuse' ];
+		}
 		
 		this.materials[ matName ] = new THREE.MeshPhongMaterial( params );
 		scope.gc.collect( this.materials[matName] );
@@ -257,12 +256,15 @@ MaterialCreator.prototype = {
 			var image = new Image();
 			image.src = DEF_TEXTURE;
 			var texture = new THREE.Texture(image);
+			texture.name = args.src;
 			scope.gc.collect(texture);
 			
+			console.log("CREATE IMG: ", args.src);
 			currentMap.markLoading("MTL_"+args.src);
 			scope.loadTexture(args.src, function(url){
 				// Even though the images are in memory, apparently they still aren't "loaded"
 				// at the point when they are assigned to the src attribute.
+				console.log("FINISH CREATE IMG: ", args.src);
 				image.on("load", function(){
 					texture.needsUpdate = true;
 					currentMap.markLoadFinished("MTL_"+args.src);

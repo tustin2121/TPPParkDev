@@ -9,6 +9,7 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
+Ke 0.000000
 
 newmtl None
 Ns 0
@@ -107,6 +108,7 @@ Ks 0.500000 0.500000 0.500000
 Ni 1.000000
 d 1.000000
 illum 2
+Ke 0.000000
 map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\Walkway of Legends\decorativepath.png
 
 newmtl Peir_NONE
@@ -117,6 +119,7 @@ Ks 0.500000 0.500000 0.500000
 Ni 1.000000
 d 1.000000
 illum 2
+Ke 0.000000
 
 newmtl Peir_concrete_light.png
 Ns 96.078431
@@ -126,6 +129,7 @@ Ks 0.500000 0.500000 0.500000
 Ni 1.000000
 d 1.000000
 illum 2
+Ke 0.000000
 map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\Walkway of Legends\concrete_light.png
 
 newmtl Peir_stone_stairs.png
@@ -136,6 +140,7 @@ Ks 0.500000 0.500000 0.500000
 Ni 1.000000
 d 1.000000
 illum 2
+Ke 0.000000
 map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\Walkway of Legends\stone_stairs.png
 
 newmtl h.002
@@ -146,6 +151,7 @@ Ks 0.500000 0.500000 0.500000
 Ni 1.000000
 d 1.000000
 illum 2
+Ke 0.000000
 map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\Walkway of Legends\seafoam.png
 map_d C:\\Users\\Tim\\Dropbox\\Apps\\Emulator\\Pokemon White\\Buildings\\Ships\\ship03\\h.png
 
@@ -157,6 +163,7 @@ Ks 0.500000 0.500000 0.500000
 Ni 1.000000
 d 1.000000
 illum 2
+Ke 0.000000
 map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon White\Buildings\Ships\ship03\mado.png
 map_d C:\\Users\\Tim\\Dropbox\\Apps\\Emulator\\Pokemon White\\Buildings\\Ships\\ship03\\mado.png
 
@@ -168,4 +175,5 @@ Ks 0.500000 0.500000 0.500000
 Ni 1.000000
 d 1.000000
 illum 2
+Ke 0.000000
 map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\Walkway of Legends\ship_tex.png
