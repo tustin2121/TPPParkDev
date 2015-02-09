@@ -4,18 +4,47 @@
 	<link rel="stylesheet" type="text/css" href="{{ baseurl }}/css/game.css">
 	<script src="{{ baseurl }}/js/jquery-2.1.1.min.js"></script>
 	<script src="{{ baseurl }}/js/jquery.cookie.js"></script>
-	<script src="{{ baseurl }}/js/three.min.js"></script>
+	<link href="{{ baseurl }}/js/three.min.js" rel="subresource"></link>
 	
-	<script src="OrbitControls.js"></script>
+	<link href="OrbitControls.js" rel="subresource"></link>
 	
 	<script src="{{ baseurl }}/js/zip/zip.js"></script>
 	<script src="{{ baseurl }}/js/zip/zip-fs.js"></script>
 	<script src="{{ baseurl }}/js/zip/zip-ext.js"></script>
 	<script src="{{ baseurl }}/js/zip/inflate.js"></script>
 	<script>zip.workerScriptsPath = "{{ baseurl }}/js/zip/";</script>
+	<script src="{{ baseurl }}/js/preload.js"></script>
 	
-	<script src="{{ baseurl }}/js/eventlib.js"></script>
-	<script src="gallery.js"></script>
+	<link href="{{ baseurl }}/js/eventlib.js" rel="subresource"></link>
+	<link href="gallery.js" rel="subresource"></link>
+	
+	<script> 
+	//Async Loader! http://www.html5rocks.com/en/tutorials/speed/script-loading/
+	var num = 0;
+	[
+		"{{ baseurl }}/js/three.min.js",
+		"OrbitControls.js",
+		"{{ baseurl }}/js/eventlib.js",
+		"gallery.js"
+	].forEach(function(src) {
+		var script = document.createElement('script');
+		script.src = src;
+		script.async = false;
+		document.head.appendChild(script);
+		
+		num++;
+		script.addEventListener("load", function(){ 
+			$("#preloadScreen progress")[0].value++;
+			console.log("LOAD", $("#preloadScreen progress")[0].value);
+		});
+	});
+	
+	$(function(){ 
+		$("#preloadScreen progress").attr("max", num); 
+		console.log("TOTAL", $("#preloadScreen progress").attr("max"));
+	});
+	
+	</script>
 </head>
 <body>
 	<table id="overtable">
@@ -24,6 +53,11 @@
 				<div class="canvas-wrap" style="background-color: #000000;">
 					<div id="canvas-ui">
 						<canvas id="gamescreen"></canvas>
+						<div id="preloadScreen">
+							<!--<img src="{{ baseurl }}/img/TPPPark_Logo.png" />-->
+							<h3>Downloading data... one moment please...</h3>
+							<progress />
+						</div>
 					</div>
 					<div id="statusbar">Now with a <strike>Run</strike> Power Walk Button! (Hold Shift)<br/>Also a lot of new people milling about.</div>
 				</div>

@@ -244,6 +244,8 @@ function copyLibraryFiles() {
 		copyFile("lib/three.min.js", BUILD_OUT+"js/three.min.js");
 		
 		copyDirectory("lib/zip/", BUILD_OUT+"js/zip/");
+		
+		copyFile("src/js/preload.js", BUILD_OUT+"js/preload.js");
 	});
 	var l = sync.await();
 	console.log("[Copy ] Copied", l.length, "library files.");

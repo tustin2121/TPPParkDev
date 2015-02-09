@@ -1,10 +1,5 @@
 // globals.js
 
-window.DEF_TEXTURE = BASEURL+"/img/missing_tex.png";
-window.DEF_SPRITE = BASEURL+"/img/missing_sprite.png";
-window.DEF_SPRITE_FORMAT = "pt_horzrow-32";
-window.AJAX_TEXTURE = "/img/ui/helix_doritos.png";
-
 window.CONFIG = {
 	speed : {
 		pathing: 0.25,
@@ -17,13 +12,9 @@ window.CONFIG = {
 
 window.DEBUG = {};
 
-
 //On Ready
 $(function(){
-	window.AJAX_TEXTURE_IMG = $("<img>").attr("src", AJAX_TEXTURE).css({display:"none"}).appendTo("body")[0];
 	
-	window.DEF_TEXTURE_IMG = $("<img>").attr("src", DEF_TEXTURE).css({display:"none"}).appendTo("body")[0];
-	window.DEF_SPRITE_IMG = $("<img>").attr("src", DEF_SPRITE).css({display:"none"}).appendTo("body")[0];
 });
 
 window.SoundManager = require("./managers/soundmanager");

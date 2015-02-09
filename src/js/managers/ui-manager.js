@@ -23,7 +23,9 @@ function UIManager() {
 	$(function(){
 		self._initUIScene();
 		
-		// self.skrim = $("<div>").addClass("skrim").appendTo("#canvas-ui");
+		$("#preloadScreen").fadeOut(800, function(){
+			$(this).remove();
+		});
 		
 		for (var type in self.dialogs) {
 			self.dialogs[type].element = $("<div>")
@@ -887,6 +889,7 @@ extend(AjaxLoader.prototype, {
 			AJAX_TEXTURE_IMG.on("load", function(){
 				tex.needsUpdate = true;
 			});
+			tex.needsUpdate = true;
 		}
 	},
 });
