@@ -85,6 +85,10 @@ extend(MapManager.prototype, {
 			self.nextMap.removeListener("downloaded", __finishedDownload);
 			
 			currentMap = self.nextMap; self.nextMap = null;
+			
+			if (DEBUG && DEBUG.runOnMapReady)
+				currentMap.once("map-ready", DEBUG.runOnMapReady);
+			
 			currentMap.load();
 		}
 		function __mapStart() {

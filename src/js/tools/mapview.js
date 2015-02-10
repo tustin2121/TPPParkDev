@@ -35,25 +35,8 @@ $(function(){
 	}
 	$("#idin").after(datalist);
 	
-});
-
-function loadMap(id) {
-	if (currentMap) {
-		currentMap.dispose();
-		_infoParent = null;
-		_node_movementGrid = null;
-	}
 	
-	if (/^(dd|hell|[iex]doritodungeon)$/i.test(id)) {
-		currentMap = new DoritoDungeon();
-	} else {
-		currentMap = new Map(id);
-	}
-	currentMap.queueForMapStart(function(){
-		UI.fadeIn();
-	});
-	//*
-	currentMap.once("map-ready", function(){
+	DEBUG.runOnMapReady = function(){
 		var scrWidth = $("#gamescreen").width();
 		var scrHeight = $("#gamescreen").height();
 		
@@ -88,7 +71,30 @@ function loadMap(id) {
 		
 		// showWalkableTiles();
 		showMovementGrid();
-	}); //*/
+	}; 
+	
+});
+
+function loadMap(id) {
+	if (currentMap) {
+		currentMap.dispose();
+		_infoParent = null;
+		_node_movementGrid = null;
+	}
+	
+	if (/^(dd|hell|[iex]doritodungeon)$/i.test(id)) {
+		currentMap = new DoritoDungeon();
+	} else {
+		currentMap = new Map(id);
+	}
+	currentMap.queueForMapStart(function(){
+		UI.fadeIn();
+	});
+	//*
+	
+	currentMap.once("map-ready", DEBUG.runOnMapReady);
+	
+	//*/
 	
 	currentMap.load();
 }
