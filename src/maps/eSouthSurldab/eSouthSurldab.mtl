@@ -1,18 +1,17 @@
 # Blender MTL File: 'SurldabSouth.blend'
 # Material Count: 45
 
-newmtl BldFace
+newmtl BldT2_Face
 Ns 92.156863
 Ka 0.000000 0.000000 0.000000
 Kd 0.501952 0.501952 0.501952
-Ks 0.500000 0.500000 0.500000
+Ks 0.005000 0.005000 0.005000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon White\Buildings\Building01\t2_buil1_lm.png
-map_d C:\\Users\\Tim\\Dropbox\\Apps\\Emulator\\Pokemon White\\Buildings\\Building01\\t2_buil1_lm.png
+map_Kd textures\bld_t2_brick.png
 
-newmtl BldRoof
+newmtl BldT2_Roof
 Ns 92.156863
 Ka 0.000000 0.000000 0.000000
 Kd 0.501952 0.501952 0.501952
@@ -20,7 +19,7 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon White\Buildings\Building01\t2_buil2_lm2.png
+map_Kd textures\bld_t2_roof.png
 
 newmtl BlueBlocks
 Ns 96.078431
@@ -190,12 +189,12 @@ newmtl Glass
 Ns 92.156863
 Ka 0.000000 0.000000 0.000000
 Kd 0.501952 0.501952 0.501952
-Ks 0.500000 0.500000 0.500000
+Ks 0.005000 0.005000 0.005000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon White\Buildings\Building01\h_mado_lm3.png
-map_d C:\\Users\\Tim\\Dropbox\\Apps\\Emulator\\Pokemon White\\Buildings\\Building01\\h_mado_lm3.png
+Ke 1.000000
+map_Kd textures\bld_glass.png
 
 newmtl Grass
 Ns 96.078431
