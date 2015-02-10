@@ -54,18 +54,24 @@ extend(MapManager.prototype, {
 		}
 		
 		function __loadError(e) {
+			self.nextMap.removeListener("load-error", __loadError);
+			self.nextMap.removeListener("progress", __progressUpdate);
+			self.nextMap.removeListener("downloaded", __finishedDownload);
+			self.nextMap.removeListener("map-started", __mapStart);
+			
 			self.nextMap = new DoritoDungeon();
+			self.nextMap.on("load-error", __loadError);
+			self.nextMap.once("map-started", __mapStart);
+			
 			finishedDownload = true;
 			if (finishedDownload && fadeOutDone) {
 				__beginLoad();
 			}
 		}
-		function __progressUpdate(percent) {
-			//TODO show loading gif
+		function __progressUpdate(loaded, total) {
+			UI.updateLoadingProgress(loaded, total);
 		}
 		function __finishedDownload() {
-			//TODO hide loading gif
-			
 			finishedDownload = true;
 			if (finishedDownload && fadeOutDone) {
 				__beginLoad();
@@ -75,7 +81,6 @@ extend(MapManager.prototype, {
 			if (currentMap) currentMap.dispose();
 			console.log("============BEGIN LOAD==============");
 			
-			self.nextMap.removeListener("load-error", __loadError);
 			self.nextMap.removeListener("progress", __progressUpdate);
 			self.nextMap.removeListener("downloaded", __finishedDownload);
 			
@@ -83,6 +88,8 @@ extend(MapManager.prototype, {
 			currentMap.load();
 		}
 		function __mapStart() {
+			currentMap.removeListener("load-error", __loadError);
+			
 			UI.hideLoadingAjax();
 			UI.fadeIn();
 			controller.removeInputContext("_map_warping_");

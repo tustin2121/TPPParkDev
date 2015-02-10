@@ -141,15 +141,20 @@ extend(Map.prototype, {
 		xhr.responseType = "blob";
 		xhr.on("load", function(e) {
 			// console.log("LOAD:", e);
-			self.file = xhr.response;
-			self.emit("downloaded");
+			if (xhr.status == 200) {
+				self.file = xhr.response;
+				self.emit("downloaded");
+			} else {
+				console.error("ERROR:", xhr.statusText);
+				self.loadError = xhr.statusText;
+				self.emit("load-error", xhr.statusText);
+			}
 		});
 		xhr.on("progress", function(e){
 			// console.log("PROGRESS:", e);
 			if (e.lengthComputable) {
-				var percentDone = e.loaded / e.total;
-				UI.updateLoadingProgress(e.loaded, e.total);
-				self.emit("progress", percentDone);
+				// var percentDone = e.loaded / e.total;
+				self.emit("progress", e.loaded, e.total);
 			} else {
 				//marquee bar
 				self.emit("progress", -1);
@@ -158,10 +163,12 @@ extend(Map.prototype, {
 		xhr.on("error", function(e){
 			console.error("ERROR:", e);
 			self.loadError = e;
+			this.emit("load-error", e);
 		});
 		xhr.on("canceled", function(e){
 			console.error("CANCELED:", e);
 			self.loadError = e;
+			this.emit("load-error", e);
 		});
 		//TODO on error and on canceled
 		
@@ -278,6 +285,9 @@ extend(Map.prototype, {
 		this.cameraLogics = [];
 		mSetup.setupRigging.call(this);
 		// Map Model is now ready
+		
+		if (this.metadata.clearColor)
+			threeRenderer.setClearColorHex( this.metadata.clearColor );
 		
 		this._initEventMap();
 		

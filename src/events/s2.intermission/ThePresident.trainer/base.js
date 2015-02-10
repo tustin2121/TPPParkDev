@@ -30,4 +30,6 @@ http://www.reddit.com/r/twitchplayspokemon/comments/2vdbbv/art_the_president/
 The main character of RoboPon Sun, Cody. Though we gave him many other four-letter names,
 the most famous being "Cunt", and "Anal".
 
+The president apparently went to war, as the next intermission game was Battleship.
+
 */

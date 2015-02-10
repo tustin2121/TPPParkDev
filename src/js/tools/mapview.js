@@ -12,6 +12,8 @@ require("../globals");
 
 var warp = require("tpp-warp");
 
+var DoritoDungeon = require("../model/dungeon-map.js");
+
 console.log(COMPILED_MAPS);
 
 //On Ready
@@ -42,32 +44,53 @@ function loadMap(id) {
 		_node_movementGrid = null;
 	}
 	
-	currentMap = new Map(id);
-	currentMap.load();
+	if (/^(dd|hell|[iex]doritodungeon)$/i.test(id)) {
+		currentMap = new DoritoDungeon();
+	} else {
+		currentMap = new Map(id);
+	}
 	currentMap.queueForMapStart(function(){
 		UI.fadeIn();
 	});
-	
+	//*
 	currentMap.once("map-ready", function(){
 		var scrWidth = $("#gamescreen").width();
 		var scrHeight = $("#gamescreen").height();
 		
-		currentMap.camera = new THREE.PerspectiveCamera(75, scrWidth / scrHeight, 1, 1000);
-		currentMap.camera.position.z = 10;
+		createInfoParent();
 		
-		var controls = new THREE.OrbitControls(currentMap.camera);
+		currentMap.__origCamera = currentMap.camera;
+		currentMap.__debugCamera = new THREE.PerspectiveCamera(75, scrWidth / scrHeight, 1, 1000);
+		// currentMap.camera = currentMap.__debugCamera;
+		currentMap.__debugCamera.position.z = 10;
+		
+		DEBUG.switchDebugCamera = function() {
+			if (currentMap.camera == currentMap.__origCamera) {
+				currentMap.camera = currentMap.__debugCamera;
+			} else {
+				currentMap.camera = currentMap.__origCamera;
+			}
+		}
+		
+		var controls = new THREE.OrbitControls(currentMap.__debugCamera);
 		controls.damping = 0.2;
+		
+		var helper = new THREE.CameraHelper(currentMap.__origCamera);
+		_infoParent.add(helper);
 		
 		var map = currentMap;
 		var oldlogic = map.logicLoop;
 		map.logicLoop = function(delta){
 			controls.update();
+			helper.update();
 			oldlogic.call(map, delta);
 		};
 		
 		// showWalkableTiles();
 		showMovementGrid();
-	});
+	}); //*/
+	
+	currentMap.load();
 }
 
 var _infoParent;
@@ -76,6 +99,10 @@ function createInfoParent() {
 		_infoParent = new THREE.Object3D();
 		_infoParent.name = "DEBUG Info Rigging";
 		currentMap.scene.add(_infoParent);
+		
+		DEBUG.hideInfoLayer = function() {
+			_infoParent.visible = !_infoParent.visible;
+		}
 	}
 }
 /*
