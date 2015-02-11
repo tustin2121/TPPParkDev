@@ -156,6 +156,12 @@ extend(DoritoDungeon.prototype, {
 			})
 		);
 		
+		this.queueForMapStart(function() {
+			SoundManager.playMusic("m_tornworld");
+			UI.skrim.speed = 0.2; //This will override the speed of the fadein done by the map manager.
+			// UI.fadeOut(0.2);
+		});
+		
 		threeRenderer.setClearColorHex( 0x000000 );
 		
 		// Map Model is now ready

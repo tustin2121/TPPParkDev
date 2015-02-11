@@ -98,6 +98,8 @@ function initGameLoop(ticksPerSec) {
 		
 		if (controller && controller._tick)
 			controller._tick();
+		if (SoundManager && SoundManager._tick)
+			SoundManager._tick();
 		
 		accum -= wholeTick;
 	}

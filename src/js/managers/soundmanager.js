@@ -14,10 +14,17 @@ function SoundManager() {
 	this.preloadSound("walk_jump");
 	this.preloadSound("walk_jump_land");
 	this.preloadSound("exit_walk");
+	
+	this.registerPreloadedMusic("m_tornworld", {
+		tag: DORITO_MUSIC,
+		loopStart: 13.304,
+		loopEnd: 22.842,
+	});
 }
 inherits(SoundManager, EventEmitter);
 extend(SoundManager.prototype, {
 	sounds : {},
+	music: {},
 	ext : null,
 	
 	testSupport : function() {
@@ -48,6 +55,102 @@ extend(SoundManager.prototype, {
 			return;
 		}
 		this.sounds[id].play();
+	},
+	
+	
+	registerPreloadedMusic: function(id, info) {
+		if (!this.music[id]) {
+			var snd = this.music[id] = extend({
+				tag: null,
+				playing: false,
+				loopStart: 0,
+				loopEnd: 0,
+			}, info);
+			
+			snd.tag.on("ended", function(){
+				snd.playing = false;
+				snd.currentTime = 0;
+			});
+			
+			snd.tag.load();
+		}
+		return this.music[id];
+	},
+	
+	loadMusic: function(id, info) {
+		if (!this.music[id]) {
+			var snd = this.music[id] = extend({
+				tag: null,
+				playing: false,
+				loopStart: 0,
+				loopEnd: 0,
+			}, info);
+			
+			snd.tag = new Audio();
+			snd.tag.autoplay = false;
+			snd.tag.autobuffer = true;
+			snd.tag.preload = "auto";
+			snd.tag.src = info.url;
+			$("body").append( $(snd.tag).css({display:"none"}) );
+			
+			snd.tag.on("ended", function(){
+				snd.playing = false;
+				snd.currentTime = 0;
+			});
+			
+			snd.tag.load();
+		}
+		return this.music[id];
+	},
+	
+	unloadMusic: function(id) {
+		//TODO
+	},
+	
+	playMusic: function(id){
+		var m = this.music[id];
+		if (!m) return;
+		m.playing = true;
+		m.tag.play();
+	},
+	
+	pauseMusic: function(id){
+		var m = this.music[id];
+		if (!m) return;
+		m.playing = false;
+		m.tag.pause();
+	},
+	
+	toggleMusic: function(id) {
+		var m = this.music[id];
+		if (!m) return;
+		if (m.playing) {
+			m.playing = false;
+			m.tag.pause();
+		} else {
+			m.playing = true;
+			m.tag.play();
+		}
+	},
+	
+	stopMusic: function(id){
+		var m = this.music[id];
+		if (!m) return;
+		m.playing = false;
+		m.tag.pause();
+		m.tag.currentTime = 0;
+	},
+	
+	
+	_tick: function() {
+		for (var id in this.music) {
+			if (!this.music[id].loopEnd || !this.music[id].playing) continue;
+			
+			var m = this.music[id];
+			if (m.tag.currentTime >= m.loopEnd) {
+				m.tag.currentTime -= (m.loopEnd - m.loopStart);
+			}
+		}
 	},
 });
 

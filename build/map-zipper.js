@@ -61,6 +61,11 @@ function compileMap(id, file) {
 	}
 	nextTick();
 	
+	//Collage extra files: sounds and music
+	compileSoundFiles(file+"/bgmusic", BUILD_TEMP+id+"/bgmusic");
+	compileSoundFiles(file+"/snd", BUILD_TEMP+id+"/snd");
+	nextTick();
+	
 	//Collate extra files: reading material
 	compileReadingMaterial(file+"/books", BUILD_TEMP+id+"/books");
 	nextTick();
@@ -136,8 +141,38 @@ function compileReadingMaterial(src_, dest_) {
 			}
 		}
 	}
+}
+
+function compileSoundFiles(src_, dest_) {
+	if (!fs.existsSync(src_)) return;
 	
-	//markdown();
+	console.log("[cMaps] Compiling sound files.");
+	__findFilesIn(src_, dest_);
+	return;
+	
+	function __findFilesIn(src, dest) {
+		if (!fs.existsSync(dest)) { mkdirp(dest); }
+		
+		var total = 0, success = 0;
+		var dirListing = fs.readdirSync(src);
+		for (var di = 0; di < dirListing.length; di++) {
+			var file = dirListing[di];
+			
+			var stat = fs.statSync(src+"/"+file);
+			if (stat.isFile()) {
+				switch(path.extname(file)) {
+					case ".ogg":
+					case ".mp3":
+						total++;
+						copyFile(src+"/"+file, dest+"/"+file);
+						nextTick();
+						break;
+				}
+			} else if (stat.isDirectory()) {
+				__findFilesIn(src+"/"+file, dest+"/"+file);
+			}
+		}
+	}
 }
 
 function processMarkdown(infile, outfile, renderer) {

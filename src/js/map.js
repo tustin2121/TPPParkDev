@@ -215,6 +215,10 @@ extend(Map.prototype, {
 				self.metadata["heightstep"] = DEF_HEIGHT_STEP;
 			}
 			
+			if (self.metadata["bgmusic"] !== undefined) {
+				self._loadMusic(self.metadata["bgmusic"]);
+			}
+			
 			self.emit("loaded-meta");
 			__loadDone();
 		}
@@ -266,6 +270,57 @@ extend(Map.prototype, {
 			self._init();
 			self.markLoadFinished("MAP_mapdata");
 		}
+	},
+	
+	
+	_loadMusic: function(musicdef) {
+		var self = this;
+		
+		if (!musicdef) return;
+		if (!$.isArray(musicdef)) musicdef = [musicdef];
+		
+		for (var i = 0; i < musicdef.length; i++) {
+			__loadMusicFromFile(musicdef[i].id, i, function(idx, url){
+				SoundManager.loadMusic(musicdef[idx].id, {
+					url: url,
+					loopStart: musicdef[idx].loopStart,
+					loopEnd: musicdef[idx].loopEnd,
+				});
+			});
+		}
+		
+		self.queueForMapStart(function(){
+			SoundManager.playMusic(musicdef[0].id);
+		});
+		
+		return;
+		
+		function __loadMusicFromFile(musicid, idx, callback) {
+			self.markLoading("BGMUSIC_"+musicid);
+			try {
+				var dir = self.fileSys.root.getChildByName("bgmusic");
+				if (!dir) {
+					console.error("No bgmusic folder in the map file!");
+					return;
+				}
+				
+				var file = dir.getChildByName(musicid+".mp3");
+				if (!file) {
+					console.error("No bgmusic with name '"+musicid+".mp3"+"' !");
+					return;
+				}
+				
+				file.getBlob("audio/mpeg", function(data){
+					var url = URL.createObjectURL(data);
+					self.gc.collectURL(url);
+					callback(idx, url);
+					self.markLoadFinished("BGMUSIC_"+musicid);
+				});
+			} catch (e) {
+				callback(e);
+			}
+		}
+		
 	},
 	
 	/**

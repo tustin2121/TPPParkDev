@@ -22,5 +22,13 @@
 			"top": 10, "bottom": -25, "left": -20, "right": 20,
 			"near": 70, "far": 80
 		}
-	}
+	},
+	
+	"bgmusic" : [
+		{
+			"id": "m_welcomexy",
+			"loopStart": 5.374,
+			"loopEnd": 41.354
+		}
+	]
 }

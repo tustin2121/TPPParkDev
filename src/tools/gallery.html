@@ -35,16 +35,25 @@
 		num++;
 		script.addEventListener("load", function(){ 
 			$("#preloadScreen progress")[0].value++;
-			console.log("LOAD", $("#preloadScreen progress")[0].value);
 		});
 	});
 	
 	$(function(){ 
 		$("#preloadScreen progress").attr("max", num); 
-		console.log("TOTAL", $("#preloadScreen progress").attr("max"));
+		
+		$("#mutebutton").on("click", function(){
+			if (!SoundManager) return;
+			SoundManager.toggleMusic("m_gallery");
+		});
 	});
 	
 	</script>
+	<style>
+	#mutebutton {
+		position: fixed;
+		top: 10px; right: 10px;
+	}
+	</style>
 </head>
 <body>
 	<table id="overtable">
@@ -59,11 +68,12 @@
 							<progress />
 						</div>
 					</div>
-					<div id="statusbar">Now with a <strike>Run</strike> Power Walk Button! (Hold Shift)<br/>Also a lot of new people milling about.</div>
+					<div id="statusbar">Now with background music! (Volume Slide to come)</div>
 				</div>
 			</td>
 		</tr>
 	</table>
+	<button id="mutebutton">Mute</button>
 	
 </body>
 </html>

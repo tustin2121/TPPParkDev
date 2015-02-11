@@ -17,5 +17,13 @@
 			"top": 10, "bottom": -25, "left": -20, "right": 20,
 			"near": 70, "far": 80
 		}
-	}
+	},
+	
+	"bgmusic" : [
+		{
+			"id": "m_gallery",
+			"loopStart": 0.773,
+			"loopEnd": 89.554
+		}
+	]
 }

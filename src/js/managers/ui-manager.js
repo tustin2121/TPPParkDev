@@ -95,57 +95,61 @@ extend(UIManager.prototype, {
 	
 	
 	/** Fade the screen to white for a transition of some sort. */
-	fadeToWhite : function(duration, callback) {
-		if (typeof duration == "function") {
-			callback = duration; duration = undefined;
+	fadeToWhite : function(speed, callback) {
+		if (typeof speed == "function") {
+			callback = speed; speed = undefined;
 		}
-		if (!duration) duration = 1000; //1 second
+		if (!speed) speed = 1; //1 second
 		
 		this.skrim.fadeTo({
 			color: 0xFFFFFF,
 			opacity: 1,
+			speed: speed,
 		}, callback);
-		// this.skrim.fadeIn(duration);
+		// this.skrim.fadeIn(speed);
 	},
 	
 	/** Fade the screen to black for a transition of some sort. */
-	fadeToBlack : function(duration, callback) {
-		if (typeof duration == "function") {
-			callback = duration; duration = undefined;
+	fadeToBlack : function(speed, callback) {
+		if (typeof speed == "function") {
+			callback = speed; speed = undefined;
 		}
-		if (!duration) duration = 1000; //1 second
+		if (!speed) speed = 1; //1 second
 		
 		this.skrim.fadeTo({
 			color: 0x000000,
 			opacity: 1,
+			speed: speed,
 		}, callback);
-		// this.skrim.fadeIn(duration);
+		// this.skrim.fadeIn(speed);
 	},
 	
 	/** Fade the screen out for a transition of some sort. */
-	fadeOut : function(duration, callback) {
-		if (typeof duration == "function") {
-			callback = duration; duration = undefined;
+	fadeOut : function(speed, callback) {
+		if (typeof speed == "function") {
+			callback = speed; speed = undefined;
 		}
-		if (!duration) duration = 1000; //1 second
+		if (!speed) speed = 1; //1 second
 		
 		this.skrim.fadeTo({
 			opacity: 1,
+			speed: speed,
 		}, callback);
-		// this.skrim.fadeIn(duration);
+		// this.skrim.fadeIn(speed);
 	},
 	
 	/** Fade the screen in from a transition. */
-	fadeIn : function(duration, callback) {
-		if (typeof duration == "function") {
-			callback = duration; duration = undefined;
+	fadeIn : function(speed, callback) {
+		if (typeof speed == "function") {
+			callback = speed; speed = undefined;
 		}
-		if (!duration) duration = 1000; //1 second
+		if (!speed) speed = 1; //1 second
 		
 		this.skrim.fadeTo({
 			opacity: 0,
+			speed: speed,
 		}, callback);
-		// this.skrim.fadeOut(duration);
+		// this.skrim.fadeOut(speed);
 	},
 	
 	/** Displays the loading icon over the main game screen. Optionally supply text. */
@@ -593,6 +597,7 @@ extend(Skrim.prototype, {
 	model : null,
 	animating : false,
 	callback : null,
+	speed: 1,
 	
 	_createAnimProp: function(prop, def) {
 		this[prop] = {
@@ -625,6 +630,8 @@ extend(Skrim.prototype, {
 		willAnim |= setFade("color_r", opts);
 		willAnim |= setFade("color_g", opts);
 		willAnim |= setFade("color_b", opts);
+		
+		this.speed = opts["speed"] || 1;
 		
 		if (willAnim) {
 			this.callback = callback;
@@ -684,7 +691,7 @@ extend(Skrim.prototype, {
 		function _anim(prop) {
 			var updated = self[prop].alpha < 1;
 			
-			self[prop].alpha += delta * (0.1);
+			self[prop].alpha += delta * (0.1 * self.speed);
 			if (self[prop].alpha > 1) {
 				self[prop].alpha = 1;
 			}
