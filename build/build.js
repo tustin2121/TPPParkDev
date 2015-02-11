@@ -50,6 +50,7 @@ global.EVENT_DIRS = [
 	"src/events/s1.omegaruby/",
 	"src/events/s1.conquest/",
 	"src/events/s1.crossgen/",
+	"src/events/s2.intermission/",
 ];
 
 global.nextTick = function() {

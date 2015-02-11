@@ -54,6 +54,11 @@ $(function(){
 				currentMap.camera = currentMap.__origCamera;
 			}
 		}
+		$(document).on("keyup", function(e){ 
+			if (e.which == 192) {
+				DEBUG.switchDebugCamera();
+			}
+		});
 		
 		var controls = new THREE.OrbitControls(currentMap.__debugCamera);
 		controls.damping = 0.2;

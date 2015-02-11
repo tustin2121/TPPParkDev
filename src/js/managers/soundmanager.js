@@ -27,12 +27,27 @@ extend(SoundManager.prototype, {
 	music: {},
 	ext : null,
 	
+	__muted_music: false,
+	__muted_sound: false,
+	__vol_music: 0.5,
+	__vol_sound: 0.5,
+	
 	testSupport : function() {
 		var testsound = new Audio();
 		var ogg = testsound.canPlayType("audio/ogg; codecs=vorbis");
 		if (ogg) this.ext = ".ogg";
 		else this.ext = ".mp3";
 	},
+	
+	setMusicVolume: function(vol) {
+		
+	},
+	setSoundVolume: function(vol) {
+		
+	},
+	
+	
+	
 	
 	preloadSound : function(id) {
 		if (!this.sounds[id]) {
@@ -50,6 +65,7 @@ extend(SoundManager.prototype, {
 	},
 	
 	playSound : function(id) {
+		if (this.muted_sound) return;
 		if (!this.sounds[id]) {
 			console.error("Sound is not loaded!", id);
 			return;
@@ -153,5 +169,50 @@ extend(SoundManager.prototype, {
 		}
 	},
 });
+
+Object.defineProperties(SoundManager.prototype, {
+	vol_music: {
+		enumerable: true,
+		get: function() { return this.__vol_music; },
+		set: function(vol) {
+			this.__vol_music = Math.clamp(vol);
+			for (var i = 0; i < this.music.length; i++) {
+				this.music[i].tag.volume = this.__vol_music;
+			}
+		},
+	},
+	vol_sound: {
+		enumerable: true,
+		get: function() { return this.__vol_sound; },
+		set: function(vol) {
+			this.__vol_sound = Math.clamp(vol);
+			for (var i = 0; i < this.sounds.length; i++) {
+				this.sounds[i].volume = this.__vol_sound;
+			}
+		},
+	},
+	muted_music: {
+		enumerable: true,
+		get: function() { return this.__muted_music; },
+		set: function(val) {
+			this.__muted_music = val;
+			
+		},
+	},
+	muted_sound: {
+		enumerable: true,
+		get: function() { return this.__muted_sound; },
+		set: function(val) {
+			this.__muted_sound = val;
+			
+		},
+	},
+	
+	__vol_music: { enumerable: false, writable: true, },
+	__vol_sound: { enumerable: false, writable: true, },
+	__muted_music: { enumerable: false, writable: true, },
+	__muted_sound: { enumerable: false, writable: true, },
+});
+
 
 module.exports = new SoundManager();

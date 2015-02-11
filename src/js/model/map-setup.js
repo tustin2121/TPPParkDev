@@ -41,7 +41,7 @@ module.exports = {
 			var node = new THREE.Object3D();
 			node.name = "Othrographic Camera Rig";
 			
-			this.camera = new THREE.OrthographicCamera(scrWidth/-2, scrWidth/2, scrHeight/2, scrHeight/-2, 1, 1000);
+			this.camera = new THREE.OrthographicCamera(scrWidth/-2, scrWidth/2, scrHeight/2, scrHeight/-2, 0.1, 150);
 			this.camera.position.y = 100;
 			this.camera.roation.x = -Math.PI / 2;
 			node.add(this.camera);
@@ -59,7 +59,7 @@ module.exports = {
 			var camlist = camdef["cameras"];
 			if (!camlist) throw new Error("No cameras defined!");
 			for (var cname in camlist) {
-				var c = new THREE.PerspectiveCamera(55, scrWidth / scrHeight, 1, 1000);
+				var c = new THREE.PerspectiveCamera(55, scrWidth / scrHeight, 0.1, 150);
 				c.name = "Camera ["+cname+"]";
 				c.my_camera = c;
 				
@@ -104,7 +104,7 @@ module.exports = {
 			var node = new THREE.Object3D();
 			node.name = "Gen 5 Camera Rig";
 			
-			this.camera = new THREE.PerspectiveCamera(75, scrWidth / scrHeight, 1, 1000);
+			this.camera = new THREE.PerspectiveCamera(75, scrWidth / scrHeight, 0.1, 150);
 			//parse up the gen 5 camera definitions
 			node.add(this.camera);
 			

@@ -585,6 +585,84 @@ extend(DialogBox.prototype, {
 	}
 });
 
+
+function setupTypewriter(textbox, callback) {
+	textbox.advance = null;
+	function setNext(cb) {
+		textbox.advance = cb;
+	}
+	
+	var completedText = textbox.element.html();
+	textbox.complete = function(){};
+	function _complete() {
+		textbox.element.html(completedText);
+		textbox.advance = blinkCursor;
+		if (callback) callback();
+	};
+	
+	textbox.model.morphTargetInfluences[M_HIDE] = 1;
+	
+	//Because textnodes are not "elements", and jquery won't hide text nodes, in 
+	// order to hide everything, we need to wrap everything in span tags...
+	textbox.element.contents()
+		.filter(function(){ return this.nodeType == 3; })
+		.wrap("<span>");
+	
+	var elements = textbox.element.contents();
+	$(elements).hide();
+	
+	
+	//Copied and modified from http://jsfiddle.net/y9PJg/24/
+	var i = 0;
+	function iterate() {
+		textbox.complete = _complete;
+		if (i < elements.length) {
+			$(elements[i]).show();
+			animateNode(elements[i], iterate); 
+			i++;
+		} else {
+			if (callback) callback();
+			textbox.advance = blinkCursor;
+		}
+	}
+	textbox.advance = iterate;
+	
+	function animateNode(element, callback) {
+		var pieces = [];
+		if (element.nodeType==1) { //element node
+			while (element.hasChildNodes()) {
+				pieces.push( element.removeChild(element.firstChild) );
+			}
+			
+			setNext(function childStep() {
+				if (pieces.length) {
+					animateNode(pieces[0], childStep); 
+					element.appendChild(pieces.shift());
+				} else {
+					callback();
+				}
+			});
+		
+		} else if (element.nodeType==3) { //text node
+			pieces = element.data.match(/.{0,2}/g); // 2: Number of chars per frame
+			element.data = "";
+			(function addText(){
+				element.data += pieces.shift();
+				setNext(pieces.length ? addText : callback);
+			})();
+		}
+	}
+	
+	var tick = 0;
+	function blinkCursor(delta) {
+		tick -= delta;
+		if (tick <= 0) {
+			tick = 5;
+			textbox.model.morphTargetInfluences[M_HIDE] = !textbox.model.morphTargetInfluences[M_HIDE];
+		}
+	}
+}
+
 ///////////////////////////////////////////////////////////////////////
 function Skrim() {
 	this._createAnimProp("opacity", 1);
@@ -902,81 +980,6 @@ extend(AjaxLoader.prototype, {
 });
 
 //////////////////////////////////////////////////////////////////////
-
-function setupTypewriter(textbox, callback) {
-	textbox.advance = null;
-	function setNext(cb) {
-		textbox.advance = cb;
-	}
-	
-	var completedText = textbox.element.html();
-	textbox.complete = function() {
-		textbox.element.html(completedText);
-		textbox.advance = blinkCursor;
-		if (callback) callback();
-	};
-	
-	textbox.model.morphTargetInfluences[M_HIDE] = 1;
-	
-	//Because textnodes are not "elements", and jquery won't hide text nodes, in 
-	// order to hide everything, we need to wrap everything in span tags...
-	textbox.element.contents()
-		.filter(function(){ return this.nodeType == 3; })
-		.wrap("<span>");
-	
-	var elements = textbox.element.contents();
-	$(elements).hide();
-	
-	
-	//Copied and modified from http://jsfiddle.net/y9PJg/24/
-	var i = 0;
-	function iterate() {
-		if (i < elements.length) {
-			$(elements[i]).show();
-			animateNode(elements[i], iterate); 
-			i++;
-		} else {
-			if (callback) callback();
-			textbox.advance = blinkCursor;
-		}
-	}
-	textbox.advance = iterate;
-	
-	function animateNode(element, callback) {
-		var pieces = [];
-		if (element.nodeType==1) { //element node
-			while (element.hasChildNodes()) {
-				pieces.push( element.removeChild(element.firstChild) );
-			}
-			
-			setNext(function childStep() {
-				if (pieces.length) {
-					animateNode(pieces[0], childStep); 
-					element.appendChild(pieces.shift());
-				} else {
-					callback();
-				}
-			});
-		
-		} else if (element.nodeType==3) { //text node
-			pieces = element.data.match(/.{0,2}/g); // 2: Number of chars per frame
-			element.data = "";
-			(function addText(){
-				element.data += pieces.shift();
-				setNext(pieces.length ? addText : callback);
-			})();
-		}
-	}
-	
-	var tick = 0;
-	function blinkCursor(delta) {
-		tick -= delta;
-		if (tick <= 0) {
-			tick = 5;
-			textbox.model.morphTargetInfluences[M_HIDE] = !textbox.model.morphTargetInfluences[M_HIDE];
-		}
-	}
-}
 
 function createDEBUGSetup() {
 	this._mainCamera = this.camera;

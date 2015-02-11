@@ -20,13 +20,20 @@ body {
 	width: @game-width + @chat-width-min;
 }
 .size-ref {
-	.rheight;
+	position: relative;
+	height: @game-height - 20px;
 	.rwidth;
 	border: 1px #4F5BFF solid;
 	background-color: #78D6FF;
-	margin: 16px auto 0;
+	margin: 16px auto 16px;
 	text-align: center;
+	padding-top: 20px;
 	
+	#credit {
+		position: absolute;
+		top: @game-height + 5px; right: 0;
+		font-size: 8pt;
+	}
 }
 .wrapper {
 	max-width: (@game-width + @chat-width-min) - (20*2);
