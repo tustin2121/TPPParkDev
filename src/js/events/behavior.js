@@ -56,16 +56,19 @@ inherits(Talking, Behavior);
 extend(Talking.prototype, {
 	dialog: null,
 	dialog_type: "dialog",
+	owner: null,
 	__ui_fired: false,
 	
 	// reset: function() { this.__ui_fired = false; },
 	
 	tick: function(me, delta) {
+		var self = this;
 		if (!this.__ui_fired) {
 			UI.showTextBox(this.dialog_type, this.dialog, {
+				owner: this.owner,
 				complete: function() {
 					me.behaviorStack.pop();
-					this.__ui_fired = false;
+					self.__ui_fired = false;
 				},
 			});
 			this.__ui_fired = true;

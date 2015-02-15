@@ -1,16 +1,16 @@
-// FaithfulForce.leader/base.js
+// sohippy.member/base.js
 // 
 
 //$ PackConfig
 { "sprites" : [ "base.png" ] }
 //$!
 module.exports = {
-	id: "FaithfulForce.leader",
+	id: "sohippy.member",
 	sprite: "base.png",
 	sprite_format: "pt_vertcol-32",
 	
-	name: "FaithfulForce",
-	infodex: "meta.community.faithfulforce",
+	name: "sohippy",
+	infodex: "meta.community.sohippy",
 	
 	sprite_creator: "Carlotta4th",
 };

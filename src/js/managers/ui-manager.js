@@ -6,6 +6,8 @@ var extend = require("extend");
 var EventEmitter = require("events").EventEmitter;
 var controller = require("tpp-controller");
 
+var BubbleSprite = require("tpp-spritemodel").BubbleSprite;
+
 var M_WIDTH = 0, M_HEIGHT = 1, M_HIDE = 2, M_TRIANGLE = 3, M_TAILX = 4, M_TAILY = 5;
 
 /**
@@ -18,6 +20,9 @@ function UIManager() {
 	};
 	this.skrim = new Skrim();
 	this.loader = new AjaxLoader();
+	
+	this.bubblePool = [];
+	this.allBubbles = [];
 	
 	var self = this;
 	$(function(){
@@ -39,6 +44,9 @@ extend(UIManager.prototype, {
 	loader: null,
 	skrim : null,
 	dialogs : null,
+	
+	bubblePool: null,
+	allBubbles: null,
 	
 	/////////////////////// UI Actions ///////////////////////////
 	
@@ -91,6 +99,22 @@ extend(UIManager.prototype, {
 	
 	openInfodexPage : function(pageid) {
 		
+	},
+	
+	
+	getEmoteBubble : function() {
+		var self = this;
+		var emote = this.bubblePool.unshift();
+		if (!emote) {
+			emote = new BubbleSprite();
+			emote.release = function(){
+				self.parent.remove(self);
+				self.bubblePool.push(emote);
+			};
+			this.allBubbles.push(emote);
+		}
+		// emote.setType(type);
+		return emote;
 	},
 	
 	
@@ -259,6 +283,12 @@ extend(UIManager.prototype, {
 		
 		this.skrim.advance(delta);
 		this.loader.advance(delta);
+		
+		for (var i = 0; i < this.allBubbles.length; i++) {
+			if (this.allBubbles[i].visible) {
+				this.allBubbles[i]._tick(delta);
+			}
+		}
 	},
 	
 	_completeCurrAction : function() {
@@ -339,7 +369,9 @@ extend(DialogBox.prototype, {
 		
 		//For each dialog in the text to display, size out the box to fit the largest one
 		for (var i = 0; i < this.html.length; i++) {
-			e.html(this.html[i]);
+			var f = this.html[i];
+			if (typeof f != "string") continue;
+			e.html(f);
 			width = Math.max(e.innerWidth(), width);
 			height = Math.max(e.innerHeight(), height);
 		}
@@ -378,11 +410,28 @@ extend(DialogBox.prototype, {
 	
 	/** Dialog is already showing and sized, show next dialog, or close. */
 	_displayNext : function() {
-		if (this.html && this.html.length) {
+		var txt;
+		while(this.html && this.html.length) {
+			txt = this.html.shift();
+			console.log("shift: ", txt);
+			if (typeof txt == "function") {
+				try {
+					txt = txt.call(this.owner);
+				} catch(e) { console.error("Dialog function threw an error!", e); }
+				if (!txt) continue;
+			}
+			break;
+		}
+		console.log("break: ", txt);
+			
+		if (txt) {
+			
 			controller.popInputContext("dlogWaiting");
 			controller.pushInputContext("dlogPrinting");
 			
-			this.element.html(this.html.shift()); //put in first dialog
+			console.log("push: ", txt);
+			
+			this.element.html(txt); //put in first dialog
 			this.model.morphTargetInfluences[M_TRIANGLE] = (this.html.length)? 1: 0;
 			
 			setupTypewriter(this, function(){
@@ -391,6 +440,7 @@ extend(DialogBox.prototype, {
 			});
 			
 		} else {
+			console.log("end: ", txt);
 			controller.popInputContext("dlogWaiting");
 			this.hide();
 		}
@@ -979,6 +1029,7 @@ extend(AjaxLoader.prototype, {
 	},
 });
 
+
 //////////////////////////////////////////////////////////////////////
 
 function createDEBUGSetup() {
@@ -1003,5 +1054,5 @@ function createDEBUGSetup() {
 	};
 }
 
-///////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
 module.exports = new UIManager();

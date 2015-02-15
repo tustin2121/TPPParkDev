@@ -280,8 +280,9 @@ extend(Map.prototype, {
 		if (!$.isArray(musicdef)) musicdef = [musicdef];
 		
 		for (var i = 0; i < musicdef.length; i++) {
-			__loadMusicFromFile(musicdef[i].id, i, function(idx, url){
+			__loadMusicFromFile(musicdef[i].id, i, function(idx, url, data){
 				SoundManager.loadMusic(musicdef[idx].id, {
+					data: data,
 					url: url,
 					loopStart: musicdef[idx].loopStart,
 					loopEnd: musicdef[idx].loopEnd,
@@ -313,7 +314,7 @@ extend(Map.prototype, {
 				file.getBlob("audio/mpeg", function(data){
 					var url = URL.createObjectURL(data);
 					self.gc.collectURL(url);
-					callback(idx, url);
+					callback(idx, url, data);
 					self.markLoadFinished("BGMUSIC_"+musicid);
 				});
 			} catch (e) {

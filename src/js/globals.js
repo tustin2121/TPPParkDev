@@ -4,6 +4,7 @@ window.CONFIG = {
 	speed : {
 		pathing: 0.25,
 		animation: 3,
+		bubblepop: 0.95,
 	},
 	timeout : {
 		walkControl : 1,

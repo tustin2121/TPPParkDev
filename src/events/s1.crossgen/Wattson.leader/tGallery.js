@@ -8,6 +8,7 @@ add(new ActorGala(base, {
 	dialog: [
 		"Did you know they're building a gym just for me in Surldab City?",
 		"I'll be able to keep taunting you guys forever there!",
-		"WAHAHAHAHAHAHAHAHAHAHAHAHAHA!",
+		function(){ this.showEmote(":D", 40); },
+		"WAHAHAHAHAHAHAHAHAHAHAHAHAHA!!",
 	],
 }));

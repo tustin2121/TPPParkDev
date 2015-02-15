@@ -27,6 +27,7 @@ function ActorGala(base, ext) {
 				self.behaviorStack.push(new TalkingBehav({
 					dialog: dlog,
 					dialog_type: self.dialog_type,
+					owner: self,
 				}));
 			},
 		},

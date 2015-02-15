@@ -61,6 +61,7 @@ function createEventLibraryBundle(outfile) {
 	bundler.require("./src/js/events/actor_animations",	{ expose: "tpp-actor-animations" });
 	bundler.require("./src/js/events/behavior",			{ expose: "tpp-behavior" });
 	bundler.require("./src/js/managers/controller",		{ expose: "tpp-controller" });
+	bundler.require("./src/js/model/spritemodel",		{ expose: "tpp-spritemodel" });
 	
 	bundler.require("./src/js/events/tGallery",		{ expose: "tpp-test-gallery" });
 	

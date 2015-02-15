@@ -5,8 +5,8 @@ var Event = require("tpp-event");
 var inherits = require("inherits");
 var extend = require("extend");
 
-var CharacterSprite = require("../model/spritemodel.js").CharacterSprite;
-var SpriteGlowMaterial = require("../model/spritemodel.js").SpriteGlowMaterial;
+var CharacterSprite = require("tpp-spritemodel").CharacterSprite;
+var SpriteGlowMaterial = require("tpp-spritemodel").SpriteGlowMaterial;
 var getSpriteFormat = require("tpp-actor-animations").getSpriteFormat;
 
 var GLOBAL_SCALEUP = 1.65;
@@ -41,6 +41,8 @@ extend(Actor.prototype, {
 	//////////////// Property Setters /////////////////
 	scale: 1,
 	scale_shadow: 1,
+	offset_sprite_x: 0, 
+	offset_sprite_y: 0.3,
 	
 	setScale : function(scale) {
 		this.scale = scale;
@@ -55,7 +57,7 @@ extend(Actor.prototype, {
 	
 	setShadowScale : function(scale) {
 		this.scale_shadow = scale;
-		scale *= GLOBAL_SCALEUP;
+		// scale *= GLOBAL_SCALEUP;
 		this._avatar_shadowcaster.scale.set(
 			this.scale * scale,
 			this.scale * scale,
@@ -170,7 +172,7 @@ extend(Actor.prototype, {
 		var sprite = self.avatar_sprite = new CharacterSprite({
 			map: texture,
 			color: 0xFFFFFF,
-			offset: new THREE.Vector3(0, 0.3, 0.22),
+			offset: new THREE.Vector3(this.offset_sprite_x, this.offset_sprite_y, 0),//0.22),
 			gc: gc,
 		});
 		//self.setScale(self.scale);
@@ -220,8 +222,10 @@ extend(Actor.prototype, {
 			texture.repeat.set(
 				self.avatar_format.width / img.naturalWidth, 
 				self.avatar_format.height / img.naturalHeight);
-
 			texture.needsUpdate = true;
+			
+			self.avatar_sprite.width = self.avatar_format.width;
+			self.avatar_sprite.height = self.avatar_format.height;
 			
 			// self.showAnimationFrame("d0");
 			self.playAnimation("stand");
@@ -333,6 +337,29 @@ extend(Actor.prototype, {
 		// state.queue = null;
 		// state.stopFrame = null;
 		this.emit("anim-end", state.animName);
+	},
+	
+	showEmote: function(emote, timeout) {
+		var e = this.__currEmote;
+		if (!e) 
+			e = this.__currEmote = UI.getEmoteBubble();
+		
+		e.setType(emote);
+		e.height = this.avatar_sprite.height;
+		if (timeout) {
+			e.setTimeout(timeout);
+		}
+		
+		this.avatar_sprite.add(e);
+		e.show();
+	},
+	
+	hideEmote: function() {
+		var e = this.__currEmote;
+		e.hide(function(){
+			e.release();
+		});
+		this.__currEmote = null;
 	},
 	
 	_tick_doAnimation: function(delta) {

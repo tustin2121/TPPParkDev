@@ -1,16 +1,16 @@
-// FaithfulForce.leader/base.js
+// VillainousWattson.member/base.js
 // 
 
 //$ PackConfig
 { "sprites" : [ "base.png" ] }
 //$!
 module.exports = {
-	id: "FaithfulForce.leader",
+	id: "VillainousWattson.member",
 	sprite: "base.png",
 	sprite_format: "pt_vertcol-32",
 	
-	name: "FaithfulForce",
-	infodex: "meta.community.faithfulforce",
+	name: "Villainous Wattson",
+	infodex: "meta.community.villainouswattson",
 	
 	sprite_creator: "Carlotta4th",
 };
