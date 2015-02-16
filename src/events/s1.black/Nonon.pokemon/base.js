@@ -1,16 +1,16 @@
-// Marc.pokemon/base.js
+// Nonon.pokemon/base.js
 // 
 
 //$ PackConfig
 { "sprites" : [ "base.png" ] }
 //$!
 module.exports = {
-	id: "Marc.pokemon",
+	id: "Nonon.pokemon",
 	sprite: "base.png",
 	sprite_format: "hg_pokecol-32",
 	
-	name: "Karl Marc",
-	infodex: "game.firered.pokemon.marc",
+	name: "Nonon",
+	infodex: "game.black.pokemon.nonon",
 	
 	sprite_creator: "Carlotta4th",
 };

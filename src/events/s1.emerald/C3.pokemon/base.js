@@ -1,16 +1,16 @@
-// Marc.pokemon/base.js
+// C3.pokemon/base.js
 // 
 
 //$ PackConfig
-{ "sprites" : [ "base.png" ] }
+{ "sprites" : [ "base.png", "escape.png" ] }
 //$!
 module.exports = {
-	id: "Marc.pokemon",
+	id: "C3.pokemon",
 	sprite: "base.png",
 	sprite_format: "hg_pokecol-32",
 	
-	name: "Karl Marc",
-	infodex: "game.firered.pokemon.marc",
+	name: "C3",
+	infodex: "game.emerald.pokemon.c3",
 	
 	sprite_creator: "Carlotta4th",
 };

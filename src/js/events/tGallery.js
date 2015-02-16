@@ -14,7 +14,7 @@ function ActorGala(base, ext) {
 		onEvents: {
 			interacted: function() {
 				var self = this;
-				$("#statusbar").html("This is "+this.name+"! ("+this.id+")");
+				$("#statusbar").html("This is "+this.name+"! ("+this.id+")<br/>This sprite was created by "+this.sprite_creator+"!");
 				var dlog = self.dialog || [
 					""+this.name+" waves at you in greeting before continuing to meander about the Gallery."
 				];

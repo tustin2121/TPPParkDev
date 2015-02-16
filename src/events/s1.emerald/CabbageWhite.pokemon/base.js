@@ -1,16 +1,16 @@
-// Marc.pokemon/base.js
+// CabbageWhite.pokemon/base.js
 // 
 
 //$ PackConfig
 { "sprites" : [ "base.png" ] }
 //$!
 module.exports = {
-	id: "Marc.pokemon",
+	id: "CabbageWhite.pokemon",
 	sprite: "base.png",
 	sprite_format: "hg_pokecol-32",
 	
-	name: "Karl Marc",
-	infodex: "game.firered.pokemon.marc",
+	name: "Cabbage the White",
+	infodex: "game.emerald.pokemon.cabbagewhite",
 	
 	sprite_creator: "Carlotta4th",
 };

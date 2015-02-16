@@ -14,10 +14,12 @@ module.exports = {
 		"base.png": "kenya_base",
 		"swim.png": "kenya_swim"
 	},
-	scale: 2,
+	scale_shadow: 2.0, 
 	
 	name: "Kenya",
 	infodex: "game.heartgold.pokemon.kenya",
+	
+	sprite_creator: "Carlotta4th",
 	
 	getSpriteFormat : function(format) {
 		if (format == "kenya_base") {

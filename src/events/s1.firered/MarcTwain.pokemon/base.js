@@ -1,16 +1,16 @@
-// Marc.pokemon/base.js
+// MarcTwain.pokemon/base.js
 // 
 
 //$ PackConfig
 { "sprites" : [ "base.png" ] }
 //$!
 module.exports = {
-	id: "Marc.pokemon",
+	id: "MarcTwain.pokemon",
 	sprite: "base.png",
 	sprite_format: "hg_pokecol-32",
 	
-	name: "Karl Marc",
-	infodex: "game.firered.pokemon.marc",
+	name: "Marc Twain",
+	infodex: "game.firered.pokemon.marctwain",
 	
 	sprite_creator: "Carlotta4th",
 };

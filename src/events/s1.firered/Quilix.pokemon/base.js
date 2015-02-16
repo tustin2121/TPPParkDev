@@ -1,16 +1,16 @@
-// Marc.pokemon/base.js
+// Quilix.pokemon/base.js
 // 
 
 //$ PackConfig
 { "sprites" : [ "base.png" ] }
 //$!
 module.exports = {
-	id: "Marc.pokemon",
+	id: "Quilix.pokemon",
 	sprite: "base.png",
 	sprite_format: "hg_pokecol-32",
 	
-	name: "Karl Marc",
-	infodex: "game.firered.pokemon.marc",
+	name: "Quilix",
+	infodex: "game.firered.pokemon.quilix",
 	
 	sprite_creator: "Carlotta4th",
 };

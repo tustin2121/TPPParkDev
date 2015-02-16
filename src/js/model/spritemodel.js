@@ -367,9 +367,15 @@ extend(BubbleSprite.prototype, {
 	
 	setType : function(type) {
 		this.type = this.__types[type];
-		while (!$.isArray(this.type)) {
+		while (this.type && !$.isArray(this.type)) {
 			this.type = this.__types[this.type];
 		}
+		if (!this.type) {
+			this.type = this.__types["blank"];
+			this.timeout = 1;
+		}
+		this._alpha = 0;
+		this._frameno = 0;
 		this._tick(0);
 	},
 	
