@@ -91,15 +91,16 @@ function initGameLoop(ticksPerSec) {
 		if (wholeTick <= 0) return;
 		wholeTick *= _rate;
 		
+		var delta = wholeTick * 0.01;
 		if (currentMap && currentMap.logicLoop)
-			currentMap.logicLoop(wholeTick * 0.01);
+			currentMap.logicLoop(delta);
 		if (UI && UI.logicLoop)
-			UI.logicLoop(wholeTick * 0.01);
+			UI.logicLoop(delta);
 		
 		if (controller && controller._tick)
-			controller._tick();
+			controller._tick(delta);
 		if (SoundManager && SoundManager._tick)
-			SoundManager._tick();
+			SoundManager._tick(delta);
 		
 		accum -= wholeTick;
 	}

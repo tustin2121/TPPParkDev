@@ -7,6 +7,9 @@ var EventEmitter = require("events").EventEmitter;
 
 var audioContext;
 
+var MAX_MUSIC = 8; //Max number of music tracks cached in memory
+var MAX_SOUNDS = 16; //Max number of sounds cached in memory
+
 /**
  */
 function SoundManager() {
@@ -54,17 +57,72 @@ extend(SoundManager.prototype, {
 		
 	},
 	
+	////////////////////////// Loading //////////////////////////////
 	
-	
-	
+	/** Loads sound from the server, used as part of the startup process. */
 	preloadSound : function(id) {
 		if (!this.sounds[id]) {
 			this.sounds[id] = this.createAudio(id, {
 				url : BASEURL+"/snd/" + id + this.ext,
 			});
+			this.sounds[id].mustKeep = true;
 		}
 		return this.sounds[id];
 	},
+	
+	/** Loads music from the server, used as part of the startup process. */
+	registerPreloadedMusic: function(id, info) {
+		if (!this.music[id]) {
+			this.music[id] = createAudio_Tag(id, info); //force using this kind
+			this.music[id].mustKeep = true;
+		}
+		return this.music[id];
+	},
+	
+	/** Loads sound from data extracted from the map zip file. */
+	loadSound: function(id, info) {
+		if (!this.sounds[id]) {
+			this.sounds[id] = this.createAudio(id, info);
+		}
+		return this.sounds[id];
+	},
+	
+	/** Loads music from data extracted from the map zip file. */
+	loadMusic: function(id, info) {
+		if (!this.music[id]) {
+			this._ensureRoomForMusic();
+			this.music[id] = this.createAudio(id, info);
+		}
+		return this.music[id];
+	},
+	
+	
+	isMusicLoaded: function(id) {
+		return !!this.music[id];
+	},
+	isSoundLoaded: function(id) {
+		return !!this.sounds[id];
+	},
+	
+	_ensureRoomForMusic: function() {
+		if (Object.keys(this.music).length+1 <= MAX_MUSIC) return;
+		
+		var oldestDate = new Date().getTime();
+		var oldestId = null;
+		for (var id in this.music) {
+			var m = this.music[id]
+			if (m.mustKeep) continue;
+			if (m.loadDate < oldestDate) {
+				oldestDate = m.loadDate;
+				oldestId = id;
+			}
+		}
+		
+		this.music[oldestId].unload();
+		delete this.music[oldestId];
+	},
+	
+	/////////////////////////////// Playing ///////////////////////////////
 	
 	playSound : function(id) {
 		if (this.muted_sound) return;
@@ -75,32 +133,25 @@ extend(SoundManager.prototype, {
 		this.sounds[id].play();
 	},
 	
-	
-	registerPreloadedMusic: function(id, info) {
-		if (!this.music[id]) {
-			this.music[id] = createAudio_Tag(id, info); //force using this kind
-		}
-		return this.music[id];
-	},
-	
-	loadMusic: function(id, info) {
-		if (!this.music[id]) {
-			this.music[id] = this.createAudio(id, info);
-		}
-		return this.music[id];
-	},
-	
-	unloadMusic: function(id) {
-		//TODO
-	},
-	
 	playMusic: function(id){
 		var m = this.music[id];
 		if (!m) return;
-		m.playing = true;
-		if (this.muted_music) return;
-		m.playing_real = true;
-		m.play();
+		if (m.playing) return; //already playing
+		
+		var startDelay = 0;
+		for (var id in this.music) {
+			if (this.music[id].playing) {
+				this.stopMusic(id);
+				startDelay = 1000;
+			}
+		}
+		
+		setTimeout(function(){
+			m.playing = true;
+			if (this.muted_music) return;
+			m.playing_real = true;
+			m.play();
+		}, startDelay);
 	},
 	
 	pauseMusic: function(id){
@@ -127,15 +178,16 @@ extend(SoundManager.prototype, {
 	stopMusic: function(id){
 		var m = this.music[id];
 		if (!m) return;
-		m.playing = false;
-		m.pause();
-		m.currentTime = 0;
+		// m.playing = m.playing_real = false;
+		//m.pause();
+		//m.currentTime = 0;
+		m.fadeout = true;
 	},
 	
 	
-	_tick: function() {
+	_tick: function(delta) {
 		for (var id in this.music) {
-			this.music[id].loopTick();
+			this.music[id].loopTick(delta);
 		}
 	},
 });
@@ -186,6 +238,35 @@ Object.defineProperties(SoundManager.prototype, {
 });
 
 
+///////////////////////////// Sound Objects ///////////////////////////////
+
+function SoundObject(opts) {
+	extend(this, opts);
+	this.loadDate = new Date().getTime();
+}
+extend(SoundObject.prototype, {
+	playing: false, //sound is playing, theoretically (might be muted)
+	playing_real: false, //sound is actually playing and not muted
+	
+	loopStart: 0,
+	loopEnd: 0,
+	
+	loadDate: 0, //milisecond datestamp of when this was loaded, for cache control
+	mustKeep: false, //if we should skip this object when determining sounds to unload
+	
+	fadeout: false,
+	
+	play: function(){},
+	pause: function(){},
+	setVolume: function(vol){},
+	setMuted: function(muted){},
+	loopTick: function(delta){},
+	
+	unload: function(){},
+});
+
+
+
 //////////////////////////// Audio Tag Implementation ////////////////////////////
 
 function createAudio_Tag(id, info) {
@@ -203,10 +284,9 @@ function createAudio_Tag(id, info) {
 		throw new Error("Called createAudio without any info!");
 	}
 	
-	var sobj = {
+	var sobj = new SoundObject({
 		__tag: snd,
-		playing: false, //sound is playing, theoretically (might be muted)
-		playing_real: false, //sound is actually playing and not muted
+		__bloburl: info.url,
 		
 		loopStart: info.loopStart || 0,
 		loopEnd: info.loopEnd || 0,
@@ -235,14 +315,21 @@ function createAudio_Tag(id, info) {
 			}
 		},
 		
-		loopTick: function() {
+		loopTick: function(delta) {
 			if (!this.loopEnd || !this.playing_real) return;
 			
 			if (this.__tag.currentTime >= this.loopEnd) {
 				this.__tag.currentTime -= (this.loopEnd - this.loopStart);
 			}
 		},
-	};
+		unload: function() {
+			if (this.__bloburl)
+				URL.revokeObjectURL(this.__bloburl);
+			
+			$(this.tag).remove();
+			delete this.tag;
+		},
+	});
 	snd.on("ended", function(){
 		sobj.playing = false;
 		sobj.playing_real = false;
@@ -254,22 +341,17 @@ function createAudio_Tag(id, info) {
 	return sobj;
 }
 
-
-
-
 ////////////////////////// Web Audio API Implementation //////////////////////////
 
 function createAudio_WebAPI(id, info) {
-	var sobj = {
+	var sobj = new SoundObject({
 		__audioBuffer: null,
 		__tag: null,
 		__gainCtrl: null,
 		__muteCtrl: null,
+		__bloburl: null,
 		
 		__currSrc: null,
-		
-		playing: false,
-		playing_real: false,
 		
 		loopStart: info.loopStart || 0,
 		loopEnd: info.loopEnd || 0,
@@ -305,8 +387,8 @@ function createAudio_WebAPI(id, info) {
 		},
 		
 		pause: function() {
-			sobj.__currSrc.stop();
-			sobj.__currSrc = null;
+			this.__currSrc.stop();
+			this.__currSrc = null;
 		},
 		
 		setVolume: function(vol) {
@@ -314,15 +396,36 @@ function createAudio_WebAPI(id, info) {
 		},
 		
 		setMuted: function(muted) {
+			if (this.fadeout) return; //ignore during fadeout
 			this.__muteCtrl.gain.value = (muted)? 0 : 1;
 		},
 		
-		loopTick: function() {
-			// if (!this.loopEnd || !this.playing_real) return;
+		loopTick: function(delta) {
+			if (this.fadeout) {
+				if (this.__muteCtrl.gain.value > 0.001) {
+					this.__muteCtrl.gain.value -= delta * 0.05;
+					// console.log(this.__muteCtrl.gain.value);
+				} else {
+					this.__currSrc.stop();
+					this.__currSrc = null;
+					this.fadeout = false;
+					this.playing = this.playing_real = false;
+					this.__muteCtrl.gain.value = 1;
+				}
+			}
+		},
+		
+		unload: function(){
+			if (this.__bloburl)
+				URL.revokeObjectURL(this.__bloburl);
 			
-			//TODO
-		}
-	};
+			delete this.__bloburl;
+			delete this.__audioBuffer;
+			delete this.__tag;
+			delete this.__gainCtrl;
+			delete this.__muteCtrl;
+		},
+	});
 	
 	
 	if (info.tag) {
@@ -364,7 +467,11 @@ function createAudio_WebAPI(id, info) {
 		});
 		xhr.on("error", function(e){
 			console.error("ERROR LOADING AUDIO!!", e);
-		})
+		});
+		
+		if (info.url.indexOf("blob") > -1) {
+			this.__bloburl = info.url;
+		}
 		
 		xhr.send();
 	} else {
