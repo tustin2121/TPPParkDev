@@ -9,26 +9,29 @@ module.exports = {
 	start : function(opts) {
 		// Set the canvas's attributes, because those 
 		// ACTUALLY determine how big the rendering area is.
-		var canvas = $("#gamescreen");
-		canvas.attr("width", parseInt(canvas.css("width")));
-		canvas.attr("height", parseInt(canvas.css("height")));
+		if (!opts._disableTree) {
+			var canvas = $("#gamescreen");
+			canvas.attr("width", parseInt(canvas.css("width")));
+			canvas.attr("height", parseInt(canvas.css("height")));
+			
+			opts = extend({
+				clearColor : 0x000000,
+				ticksPerSecond : 30,
+			}, opts);
+			
+			window.threeRenderer = new THREE.WebGLRenderer({
+				antialias : true,
+				canvas : document.getElementById("gamescreen") 
+			});
+			threeRenderer.setClearColorHex( opts.clearColor );
+			threeRenderer.autoClear = false;
+			
+			threeRenderer.shadowMapEnabled = true;
+			threeRenderer.shadowMapType = THREE.PCFShadowMap;
+			
+			_renderHandle = raf(renderLoop);
+		}
 		
-		opts = extend({
-			clearColor : 0x000000,
-			ticksPerSecond : 30,
-		}, opts);
-		
-		window.threeRenderer = new THREE.WebGLRenderer({
-			antialias : true,
-			canvas : document.getElementById("gamescreen") 
-		});
-		threeRenderer.setClearColorHex( opts.clearColor );
-		threeRenderer.autoClear = false;
-		
-		threeRenderer.shadowMapEnabled = true;
-		threeRenderer.shadowMapType = THREE.PCFShadowMap;
-		
-		_renderHandle = raf(renderLoop);
 		initGameLoop(30);
 		
 	},

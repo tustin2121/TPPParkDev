@@ -26,7 +26,7 @@ $(function(){
 	
 	renderLoop.start({
 		clearColor : 0xFF0000,
-		ticksPerSecond : 30,
+		ticksPerSecond : 20,
 	});
 	
 	var datalist = $("<datalist id='compiledMaps'>");

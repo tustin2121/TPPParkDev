@@ -5,28 +5,17 @@
 	<script src="{{ baseurl }}/js/jquery-2.1.1.min.js"></script>
 	<script src="{{ baseurl }}/js/jquery.cookie.js"></script>
 	<script src="{{ baseurl }}/js/jquery.base64.js"></script>
-	<link href="{{ baseurl }}/js/three.min.js" rel="subresource"></link>
 	
-	<script src="{{ baseurl }}/js/zip/zip.js"></script>
-	<script src="{{ baseurl }}/js/zip/zip-fs.js"></script>
-	<script src="{{ baseurl }}/js/zip/zip-ext.js"></script>
-	<script src="{{ baseurl }}/js/zip/inflate.js"></script>
-	<script>zip.workerScriptsPath = "{{ baseurl }}/js/zip/";</script>
 	<script src="{{ baseurl }}/js/preload.js"></script>
 	
-	<link href="OrbitControls.js" rel="subresource"></link><!-- TEMP -->
-	
-	<link href="{{ baseurl }}/js/eventlib.js" rel="subresource"></link>
-	<link href="{{ baseurl }}/js/game.js" rel="subresource"></link>
+	<link href="chatot.js" rel="subresource"></link>
 	
 	<script> 
 	//Async Loader! http://www.html5rocks.com/en/tutorials/speed/script-loading/
 	var num = 0;
 	[
-		"{{ baseurl }}/js/three.min.js",
-		"OrbitControls.js",
 		"{{ baseurl }}/js/eventlib.js",
-		"game.js"
+		"chatot.js"
 	].forEach(function(src) {
 		var script = document.createElement('script');
 		script.src = src;
@@ -49,11 +38,11 @@
 	<table id="overtable"><tr>
 		<td>
 			<div class="canvas-wrap">
-				<div id="canvas-ui">
+				<!-- <div id="canvas-ui">
 					<canvas id="gamescreen"></canvas>
 				</div>
 				<div id="statusbar">Click off the chat message box to resume direct control of the game.</div>
-				<div id="padding"></div>
+				<div id="padding"></div> -->
 			</div>
 		</td>
 		<td id="right-sidebar">
