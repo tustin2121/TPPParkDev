@@ -73,6 +73,7 @@ const findGlobalEvents = require("./event-compiler.js").findGlobalEvents;
 const checkSyntax = require("./syntax-check.js");
 const uniqueCheckGlobalEvents = require("./event-compiler.js").uniqueCheckGlobalEvents;
 const createEventLibraryBundle = require("./event-compiler.js").createEventLibraryBundle;
+
 const ByLineReader = require("./transform-streams").ByLineReader;
 const ProcessorTransform = require("./transform-streams").ProcessorTransform;
 const PrependTransform = require("./transform-streams").PrependTransform;

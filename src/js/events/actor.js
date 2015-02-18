@@ -330,6 +330,13 @@ extend(Actor.prototype, {
 		state.stopNextTransition = opts.stopNextTransition || false;
 	},
 	
+	resumeAnimation: function() {
+		var state = this._initAnimationState();
+		
+		if (state.currAnim)
+			state.currAnim.resume();
+	},
+	
 	stopAnimation : function() {
 		var state = this._initAnimationState();
 		
@@ -550,6 +557,7 @@ extend(Actor.prototype, {
 	_tick_doBehavior : function(delta) {
 		var behav = this.behaviorStack.top;
 		if (!behav || !behav._tick) return;
+		if (!behav.owner) behav.owner = this;
 		behav._tick(this, delta);
 	},
 	

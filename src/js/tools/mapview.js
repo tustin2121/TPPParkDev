@@ -76,6 +76,7 @@ $(function(){
 		
 		// showWalkableTiles();
 		showMovementGrid();
+		showHeightGrid();
 	}; 
 	
 });
@@ -155,6 +156,61 @@ function showWalkableTiles() {
 	}
 } */
 
+var markerColors = [ 0x888888, 0x008800, 0x000088, 0x880000, 0x008888, 0x880088, 0x888800 ];
+
+
+var _node_heightGrid;
+function showHeightGrid() {
+	if (!_node_heightGrid) {
+		_node_heightGrid = new THREE.Object3D();
+		_node_heightGrid.name = "DEBUG Height Grid";
+		
+		createInfoParent();
+		
+		var map = currentMap;
+		var mdata = currentMap.metadata;
+		
+		for (var li = 1; li <= 7; li++) {
+			if (!mdata.layers[li-1]) continue;
+			
+			var geom = new THREE.Geometry();
+			
+			function __drawMark(x, y) {
+				var v1 = map.get3DTileLocation(x, y, li);
+				var v2 = new THREE.Vector3();
+				var vts = geom.vertices;
+				
+				var a = new THREE.Vector3(v1.x + 0.15 + (li*0.02), v1.y, v1.z + 0.15 + (li*0.02));
+				var b = new THREE.Vector3(v1.x - 0.15 + (li*0.02), v1.y, v1.z + 0.15 + (li*0.02));
+				var c = new THREE.Vector3(v1.x - 0.15 + (li*0.02), v1.y, v1.z - 0.15 + (li*0.02));
+				var d = new THREE.Vector3(v1.x + 0.15 + (li*0.02), v1.y, v1.z - 0.15 + (li*0.02));
+				
+				geom.vertices.push(a, b, b, c, c, d, d, a);
+			}
+			
+			for (var y = 0; y < mdata.height; y++) {
+				for (var x = 0; x < mdata.width; x++) {
+					__drawMark(x, y);
+				}
+			}
+			
+			
+			var mat = new THREE.LineBasicMaterial({
+				color: markerColors[li],
+				opacity: 0.4,
+				linewidth: 1,
+			});
+			var line = new THREE.Line(geom, mat, THREE.LinePieces);
+			_node_heightGrid.add(line);
+		}
+		
+		_node_heightGrid.position.y = 0.01;
+		
+		_infoParent.add(_node_heightGrid);
+	}
+}
+
+
 var _node_movementGrid;
 function showMovementGrid() {
 	if (!_node_movementGrid) {
@@ -162,9 +218,6 @@ function showMovementGrid() {
 		_node_movementGrid.name = "DEBUG Movement Grid";
 		
 		createInfoParent();
-		
-		//CONST
-		var markerColors = [ 0x888888, 0x008800, 0x000088, 0x880000, 0x008888, 0x880088, 0x888800 ];
 		
 		var map = currentMap;
 		var mdata = currentMap.metadata;

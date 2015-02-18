@@ -18,6 +18,7 @@ function Behavior(opts) {
 extend(Behavior.prototype, {
 	faceOnInteract: true,
 	talkBehav: null,
+	owner: null,
 	
 	tick : null,
 	bump : null,
@@ -56,6 +57,7 @@ inherits(Talking, Behavior);
 extend(Talking.prototype, {
 	dialog: null,
 	dialog_type: "dialog",
+	animation: null,
 	owner: null,
 	__ui_fired: false,
 	
@@ -68,9 +70,17 @@ extend(Talking.prototype, {
 				owner: this.owner,
 				complete: function() {
 					me.behaviorStack.pop();
+					if (this.animation) {
+						me.playAnimation("stand", { stopNextTransition: true, });
+						me.resumeAnimation();
+					}
 					self.__ui_fired = false;
 				},
 			});
+			if (this.animation) {
+				me.playAnimation(this.animation);
+			}
+			me.playAnimation()
 			this.__ui_fired = true;
 		}
 	},
