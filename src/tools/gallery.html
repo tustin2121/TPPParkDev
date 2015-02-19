@@ -42,9 +42,10 @@
 	$(function(){ 
 		$("#preloadScreen progress").attr("max", num); 
 		
-		$("#mutebutton").on("click", function(){
+		$("#mutebutton input").on("click", function(){
 			if (!SoundManager) return;
-			SoundManager.toggleMusic("m_gallery");
+			SoundManager.muted_music = $("#mutebutton input")[0].checked;
+			SoundManager.muted_sound = $("#mutebutton input")[0].checked;
 		});
 	});
 	
@@ -74,7 +75,7 @@
 			</td>
 		</tr>
 	</table>
-	<button id="mutebutton">Mute</button>
+	<div id="mutebutton">Mute <input type="checkbox" /></div>
 	
 </body>
 </html>

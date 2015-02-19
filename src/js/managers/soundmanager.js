@@ -198,8 +198,8 @@ Object.defineProperties(SoundManager.prototype, {
 		get: function() { return this.__vol_music; },
 		set: function(vol) {
 			this.__vol_music = Math.clamp(vol);
-			for (var i = 0; i < this.music.length; i++) {
-				this.music[i].setVolume(this.__vol_music);
+			for (var id in this.music) {
+				this.music[id].setVolume(this.__vol_music);
 			}
 		},
 	},
@@ -208,8 +208,8 @@ Object.defineProperties(SoundManager.prototype, {
 		get: function() { return this.__vol_sound; },
 		set: function(vol) {
 			this.__vol_sound = Math.clamp(vol);
-			for (var i = 0; i < this.sounds.length; i++) {
-				this.sounds[i].setVolume(this.__vol_sound);
+			for (var id in this.sounds) {
+				this.sounds[id].setVolume(this.__vol_sound);
 			}
 		},
 	},
@@ -218,8 +218,8 @@ Object.defineProperties(SoundManager.prototype, {
 		get: function() { return this.__muted_music; },
 		set: function(val) {
 			this.__muted_music = val;
-			for (var i = 0; i < this.music.length; i++) {
-				this.music[i].setVolume(this.__vol_music);
+			for (var id in this.music) {
+				this.music[id].setMuted(val);
 			}
 		},
 	},
@@ -228,6 +228,9 @@ Object.defineProperties(SoundManager.prototype, {
 		get: function() { return this.__muted_sound; },
 		set: function(val) {
 			this.__muted_sound = val;
+			for (var id in this.sounds) {
+				this.sounds[id].setMuted(val);
+			}
 		},
 	},
 	

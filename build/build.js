@@ -123,6 +123,9 @@ function build(){
 	bundle("tools/gallery", { 
 		dest:BUILD_OUT+"tools/gallery.js", appcache:false, 
 	});
+	bundle("tools/ledgesim", { 
+		dest:BUILD_OUT+"tools/ledgesim.js", appcache:false, 
+	});
 	
 	//Rewrite the app cache manifest
 	writeCache();
@@ -297,6 +300,7 @@ function copyDevTools() {
 		copyDirectory("lib/tools/", BUILD_OUT+"tools/");
 		copyFileWithJekyllPrepend("src/tools/mapview.html", BUILD_OUT+"tools/mapview.html");
 		copyFileWithJekyllPrepend("src/tools/gallery.html", BUILD_OUT+"tools/gallery.html");
+		copyFileWithJekyllPrepend("src/tools/ledgesim.html", BUILD_OUT+"tools/ledgesim.html");
 		
 	});
 	var l = sync.await();

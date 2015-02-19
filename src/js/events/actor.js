@@ -498,10 +498,10 @@ extend(Actor.prototype, {
 		animopts.speed = opts.speed || 1;
 		
 		if ((walkmask & 0x2) === 0x2) {
-			state.midpointOffset.setY(0.6);
+			state.midpointOffset.setY( ((state.srcLoc3.y - state.destLoc3.y) / 2) + 0.6);
 			state.jumping = true;
 			//enforce a jumping speed of based on height. The below should be 1 with a default step of 0.5
-			state.speed = 1 / ((state.srcLoc3.y - state.destLoc3.y) * 2); 
+			state.speed = 1;//((state.srcLoc3.y - state.destLoc3.y)) * 0.5 + 0.75; 
 			SoundManager.playSound("walk_jump");
 			animopts.speed = 1.5;
 		}

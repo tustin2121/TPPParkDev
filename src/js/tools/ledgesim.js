@@ -13,6 +13,8 @@ require("../globals");
 //On Ready
 $(function(){
 	
+	gameState.playerSprite = "red[hg_vertmix-32].png";
+	
 	MapManager.transitionTo("xInfiniteLedge", 0);
 	
 	renderLoop.start({
