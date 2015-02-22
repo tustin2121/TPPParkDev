@@ -151,14 +151,18 @@ extend(DoritoDungeon.prototype, {
 			mSetup.camera.gen4.call(this, {
 				"type" : "gen4",
 				"cameras": {
-					0: {},
+					0: {
+						far: 300,
+					},
 				}
 			})
 		);
 		
 		this.queueForMapStart(function() {
 			SoundManager.playMusic("m_tornworld");
-			UI.skrim.speed = 0.2; //This will override the speed of the fadein done by the map manager.
+			UI.skrim._nextOpts = {
+				speed : 0.2, //This will override the speed of the fadein done by the map manager.
+			}; 
 			// UI.fadeOut(0.2);
 		});
 		

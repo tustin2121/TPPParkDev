@@ -481,7 +481,8 @@ extend(Actor.prototype, {
 		if ((walkmask & 0x8) == 0x8) {
 			// Transition now to another layer
 			var t = currentMap.getLayerTransition(x, y, this.location.z);
-			console.log("Layer Transition: ", t);
+			// console.log("Layer Transition: ", t);
+			this.emit("change-layer", this.location.z, t.layer);
 			x = t.x; y = t.y; layer = t.layer;
 		}
 		

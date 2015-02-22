@@ -726,6 +726,7 @@ extend(Skrim.prototype, {
 	animating : false,
 	callback : null,
 	speed: 1,
+	_nextOpts: null,
 	
 	_createAnimProp: function(prop, def) {
 		this[prop] = {
@@ -738,6 +739,9 @@ extend(Skrim.prototype, {
 	
 	fadeTo : function(opts, callback) {
 		var self = this;
+		
+		opts = extend(opts, this._nextOpts);
+		this._nextOpts = null;
 		
 		if (opts["color"] !== undefined) {
 			var hex = Math.floor(opts["color"]);

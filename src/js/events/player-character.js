@@ -13,6 +13,7 @@ function PlayerChar(){
 	
 	this.on("tick", this.controlCharacter);
 	this.on("cant-move", this.animateBump);
+	this.on("change-layer", this.changedLayer);
 }
 inherits(PlayerChar, Actor);
 extend(PlayerChar.prototype, {
@@ -31,6 +32,8 @@ extend(PlayerChar.prototype, {
 	
 	warpTo : function(warpdef) {
 		var self = this;
+		currentMap.eventMap.remove(this.location.x, this.location.y, this);
+		
 		this.location.set(warpdef.loc[0], warpdef.loc[1], warpdef.layer);
 		
 		if (warpdef.anim)
@@ -137,6 +140,9 @@ extend(PlayerChar.prototype, {
 		this.playAnimation("bump", { stopNextTransition: true });
 	},
 	
+	changedLayer : function(fromLayer, toLayer) {
+		
+	},
 	
 	////////////////////////////////////////////////////////////////////////
 	isNPC : function(){ return false; },

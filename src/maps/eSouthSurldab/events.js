@@ -65,7 +65,7 @@ add(new Warp({ //03
 
 add(new Warp({ //04
 	id: "EXIT_northRight",
-	locations: [56, 61, 3, 2],
+	locations: [72, 2, 3, 2],
 	exit_to: { map: "eNorthSurldab", warp: 0x02 },
 }));
 

@@ -878,7 +878,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "width":100,
          "x":0,
          "y":0

@@ -222,6 +222,8 @@ var __EVENT_TYPES__ = [
 	"cant-move", //(srcX, srcY, destX, destY, reasonEvent)
 		//emitted when this event is denied movement to the requested tile
 		// It is passed the event blocking it, or null if it is due to the collision map
+	"change-layer", //(fromLayer, toLayer)
+		//emitted when this event changes layer
 	"anim-end", //(animationName)
 		//emitted when this event's animation ends
 	"created", 

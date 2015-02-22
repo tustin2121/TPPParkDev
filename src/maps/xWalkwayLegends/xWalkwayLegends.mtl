@@ -1,5 +1,5 @@
 # Blender MTL File: 'xWalkwayLegends.blend'
-# Material Count: 18
+# Material Count: 60
 
 newmtl Blackness
 Ns 96.078431
@@ -11,7 +11,401 @@ d 1.000000
 illum 2
 Ke 0.000000
 
+newmtl Body
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd statue\helix\Body1_0.png
+
+newmtl BodyA
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd statue\fonz\BodyA1_0.png
+
+newmtl BodyA00
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd statue\atv\BodyA1_0.png
+
+newmtl BodyA00.001
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd statue\zapdos\BodyA1_0.png
+
+newmtl BodyA00.002
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd statue\birdjesus\BodyA1_0.png
+
+newmtl BodyA01
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd statue\atv\BodyA1_0.png
+
+newmtl BodyA01.001
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd statue\zapdos\BodyA1_0.png
+
+newmtl BodyA01.002
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd statue\birdjesus\BodyA1_0.png
+
+newmtl BodyA02
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd statue\atv\BodyA1_0.png
+
+newmtl BodyA02.001
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd statue\zapdos\BodyA1_0.png
+
+newmtl BodyA03
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd statue\zapdos\BodyA1_0.png
+
+newmtl BodyAKurumiru
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd statue\atv\BodyA1_0.png
+
+newmtl BodyANon
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd statue\atv\BodyA1_0.png
+
+newmtl BodyATattu00
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd statue\lapras\BodyA1_0.png
+
+newmtl BodyATattu01
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd statue\lapras\BodyA1_0.png
+
+newmtl BodyAVco
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd statue\zapdos\BodyA1_0.png
+
+newmtl BodyAVco.001
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd statue\fonz\BodyA1_0.png
+
+newmtl BodyAVco.002
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd statue\birdjesus\BodyA1_0.png
+
+newmtl BodyB
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd statue\zapdos\BodyB1_0.png
+
+newmtl BodyB.001
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.010000 0.010000 0.010000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd statue\lapras\BodyB1_0.png
+
+newmtl BodyB00
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd statue\fonz\BodyB1_0.png
+
+newmtl BodyB00.001
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd statue\birdjesus\BodyB1_0.png
+
+newmtl BodyB01
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd statue\fonz\BodyB1_0.png
+
+newmtl BodyB01.001
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd statue\birdjesus\BodyB1_0.png
+
+newmtl BodyBKurumiruVco
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd statue\atv\BodyB1_0.png
+
+newmtl BodyBVco
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd statue\zapdos\BodyB1_0.png
+
+newmtl BodyBVco.001
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd statue\lapras\BodyB1_0.png
+
+newmtl BodyBVco.002
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd statue\fonz\BodyB1_0.png
+
+newmtl BodyOmstar_Shell
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd statue\helix\Body1_0.png
+
+newmtl BodySpc
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd statue\helix\Body1_0.png
+
+newmtl Eye
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd statue\zapdos\Eye1_0.png
+
+newmtl Eye.001
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd statue\lapras\Eye1_0.png
+
+newmtl Eye.002
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd statue\fonz\Eye1_0.png
+
+newmtl Eye.003
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd statue\helix\Eye1_0.png
+
+newmtl Eye.004
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd statue\birdjesus\Eye1_0.png
+
 newmtl None
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\Walkway of Legends\intwall_2.png
+
+newmtl None_NONE
 Ns 0
 Ka 0.000000 0.000000 0.000000
 Kd 0.8 0.8 0.8
@@ -55,15 +449,6 @@ d 1
 illum 2
 map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\Walkway of Legends\int_floor.png
 
-newmtl None_intwall_2.png
-Ns 0
-Ka 0.000000 0.000000 0.000000
-Kd 0.8 0.8 0.8
-Ks 0.8 0.8 0.8
-d 1
-illum 2
-map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\Walkway of Legends\intwall_2.png
-
 newmtl None_metal_steps.png
 Ns 0
 Ka 0.000000 0.000000 0.000000
@@ -100,80 +485,159 @@ d 1
 illum 2
 map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\Walkway of Legends\wood_planks.png
 
-newmtl Peir
+newmtl PeirBlockDecor
 Ns 96.078431
 Ka 0.000000 0.000000 0.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
+Kd 0.800000 0.800000 0.800000
+Ks 0.010000 0.010000 0.010000
+Ni 1.000000
+d 0.999000
+illum 2
+Ke 0.000000
+map_Kd textures\bay_decal.png
+
+newmtl PeirBlocks
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.010000 0.010000 0.010000
 Ni 1.000000
 d 1.000000
 illum 2
 Ke 0.000000
-map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\Walkway of Legends\decorativepath.png
+map_Kd textures\bay_block.png
 
-newmtl Peir_NONE
+newmtl PeirBricks
 Ns 96.078431
 Ka 0.000000 0.000000 0.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
+Kd 0.800000 0.800000 0.800000
+Ks 0.010000 0.010000 0.010000
 Ni 1.000000
 d 1.000000
 illum 2
 Ke 0.000000
+map_Kd textures\bay_road.png
 
-newmtl Peir_concrete_light.png
+newmtl PeirConcrete
 Ns 96.078431
 Ka 0.000000 0.000000 0.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
+Kd 0.800000 0.800000 0.800000
+Ks 0.010000 0.010000 0.010000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd textures\woodpost.png
+
+newmtl PeirConcrete_NONE
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.010000 0.010000 0.010000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd C:\\Users\\Tim\\github-projects\\TPPParkDev\\_work-files\\Maps\\Walkway of Legends\\concrete_light.png
+
+newmtl PeirConcrete_concrete_light.png
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.010000 0.010000 0.010000
 Ni 1.000000
 d 1.000000
 illum 2
 Ke 0.000000
 map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\Walkway of Legends\concrete_light.png
 
-newmtl Peir_stone_stairs.png
+newmtl PeirConcrete_stone_stairs.png
 Ns 96.078431
 Ka 0.000000 0.000000 0.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
+Kd 0.800000 0.800000 0.800000
+Ks 0.010000 0.010000 0.010000
 Ni 1.000000
 d 1.000000
 illum 2
 Ke 0.000000
 map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\Walkway of Legends\stone_stairs.png
 
-newmtl h.002
+newmtl StatueBase
 Ns 96.078431
 Ka 0.000000 0.000000 0.000000
-Kd 0.778000 0.778000 0.778000
+Kd 0.800000 0.800000 0.800000
+Ks 0.010000 0.010000 0.010000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd statue\statue_base.png
+
+newmtl glass
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.502000 0.502000 0.502000
 Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd textures\glass.png
+
+newmtl lambert2
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.501952 0.501952 0.501952
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon White\Buildings\Gateway\lambert2.png
+map_d C:\\Users\\Tim\\Dropbox\\Apps\\Emulator\\Pokemon White\\Buildings\\Gateway\\lambert2.png
+
+newmtl lambert3
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.501952 0.501952 0.501952
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon White\Buildings\Gateway\lambert3.png
+map_d C:\\Users\\Tim\\Dropbox\\Apps\\Emulator\\Pokemon White\\Buildings\\Gateway\\lambert3.png
+
+newmtl lambert5
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.501952 0.501952 0.501952
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon White\Buildings\Gateway\lambert5.png
+map_d C:\\Users\\Tim\\Dropbox\\Apps\\Emulator\\Pokemon White\\Buildings\\Gateway\\lambert5.png
+
+newmtl seafoam
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.972500 0.972500 0.972500
+Ks 0.010000 0.010000 0.010000
 Ni 1.000000
 d 1.000000
 illum 2
 Ke 0.000000
 map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\Walkway of Legends\seafoam.png
-map_d C:\\Users\\Tim\\Dropbox\\Apps\\Emulator\\Pokemon White\\Buildings\\Ships\\ship03\\h.png
-
-newmtl mado
-Ns 96.078431
-Ka 0.000000 0.000000 0.000000
-Kd 0.401600 0.401600 0.401600
-Ks 0.500000 0.500000 0.500000
-Ni 1.000000
-d 1.000000
-illum 2
-Ke 0.000000
-map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon White\Buildings\Ships\ship03\mado.png
-map_d C:\\Users\\Tim\\Dropbox\\Apps\\Emulator\\Pokemon White\\Buildings\\Ships\\ship03\\mado.png
 
 newmtl shiptex
 Ns 96.078431
 Ka 0.000000 0.000000 0.000000
-Kd 0.778000 0.778000 0.778000
-Ks 0.500000 0.500000 0.500000
+Kd 0.972500 0.972500 0.972500
+Ks 0.041667 0.041667 0.041667
 Ni 1.000000
 d 1.000000
 illum 2
 Ke 0.000000
-map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\Walkway of Legends\ship_tex.png
+map_Kd textures\shiptex.png

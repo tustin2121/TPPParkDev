@@ -59,7 +59,10 @@ module.exports = {
 			var camlist = camdef["cameras"];
 			if (!camlist) throw new Error("No cameras defined!");
 			for (var cname in camlist) {
-				var c = new THREE.PerspectiveCamera(55, scrWidth / scrHeight, 0.1, 150);
+				var c = new THREE.PerspectiveCamera(camlist[cname].fov || 55, 
+													scrWidth / scrHeight, 
+													camlist[cname].near || 0.1, 
+													camlist[cname].far || 150);
 				c.name = "Camera ["+cname+"]";
 				c.my_camera = c;
 				
@@ -72,7 +75,8 @@ module.exports = {
 				
 				var cp = camlist[cname].position || [0, 5.45, 5.3];
 				c.position.set(cp[0], cp[1], cp[2]);
-				c.lookAt(new THREE.Vector3(0, 0.8, 0));
+				var cl = camlist[cname].lookat || [0, 0.8, 0];
+				c.lookAt(new THREE.Vector3(cl[0], cl[1], cl[2]));
 				
 				var cb = camlist[cname].behavior || "followPlayer";
 				var cb = mSetup.camBehaviors[cb].call(this, camlist[cname], c, croot);
