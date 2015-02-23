@@ -52,7 +52,7 @@ if (!Array.prototype.top) {
 
 
 // Modifications to THREE.js
-{
+if (window.THREE) {
 	// Vector3.set(), modified to accept another Vector3
 	THREE.Vector3.prototype.set = function(x, y, z) {
 		if (x instanceof THREE.Vector3) {
@@ -82,7 +82,6 @@ if (!Array.prototype.top) {
 		this.x = x; this.y = y;
 		return this;
 	};
-	
 }
 
 

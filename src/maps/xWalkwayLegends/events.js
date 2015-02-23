@@ -69,7 +69,7 @@ $(function(){
 add(new Warp({
 	id: "EXIT_Surldab",
 	locations: [5, 10, 5, 1],
-	exit_to: { map: "eSouthSurldab", warp: 0x00, }
+	exit_to: { map: "eSouthSurldab", warp: 0x05, }
 }));
 
 add(new Warp({

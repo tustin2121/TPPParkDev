@@ -1,38 +1,15 @@
 <html>
 <head>
 	<script>window.BASEURL = "{{ baseurl }}";</script>
-	<link rel="stylesheet" type="text/css" href="css/game.css">
+	<link rel="stylesheet" type="text/css" href="{{ baseurl }}/css/game.css">
 	<script src="{{ baseurl }}/js/jquery-2.1.1.min.js"></script>
 	<script src="{{ baseurl }}/js/jquery.cookie.js"></script>
 	<script src="{{ baseurl }}/js/jquery.base64.js"></script>
 	
 	<script src="{{ baseurl }}/js/preload.js"></script>
 	
-	<link href="chatot.js" rel="subresource"></link>
-	
-	<script> 
-	//Async Loader! http://www.html5rocks.com/en/tutorials/speed/script-loading/
-	var num = 0;
-	[
-		"{{ baseurl }}/js/eventlib.js",
-		"chatot.js"
-	].forEach(function(src) {
-		var script = document.createElement('script');
-		script.src = src;
-		script.async = false;
-		document.head.appendChild(script);
-		
-		num++;
-		script.addEventListener("load", function(){ 
-			$("#preloadScreen progress")[0].value++;
-		});
-	});
-	
-	$(function(){ 
-		$("#preloadScreen progress").attr("max", num); 
-	});
-	
-	</script>
+	<script src="{{ baseurl }}/js/eventlib.js"></script>
+	<script src="chatot.js"></script>
 </head>
 <body>
 	<table id="overtable"><tr>

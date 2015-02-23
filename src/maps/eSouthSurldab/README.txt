@@ -6,12 +6,12 @@ and its probably one of the biggest maps in the park!
 
 
 # Warp Points
-00 = from Walkway of Legends [xWalkwayLegends]
+00 = save warp point
 01 = from Stadium Path
 02 = from Gator Plains
 03 = from North Surldab (West Entrance)
 04 = from North Surldab (East Entrance)
-05 = 
+05 = from Walkway of Legends [xWalkwayLegends]
 06 = 
 07 = 
 08 = 

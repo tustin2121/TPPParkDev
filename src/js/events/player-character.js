@@ -6,6 +6,8 @@ var controller = require("tpp-controller");
 var inherits = require("inherits");
 var extend = require("extend");
 
+var EVENT_PLANE_NORMAL = new THREE.Vector3(0, 1, 0);
+
 /**
  */
 function PlayerChar(){
@@ -106,6 +108,7 @@ extend(PlayerChar.prototype, {
 	},
 	
 	controlTimeout: 0.0,
+	controlLastOrientation: { or: null, x:0, y:0 },
 	controlCharacter : function(delta) {
 		var y = ((controller.isDown("Up", "game"))? -1:0) + ((controller.isDown("Down", "game"))? 1:0);
 		var x = ((controller.isDown("Left", "game"))? -1:0) + ((controller.isDown("Right", "game"))? 1:0);
@@ -118,7 +121,28 @@ extend(PlayerChar.prototype, {
 		
 		var run = controller.isDown("Run", "game");
 		
+		var clo = this.controlLastOrientation;
+		if (clo.x != x || clo.y != y) {
+			clo.or = null;
+			clo.x = x; clo.y = y;
+		}
+		
 		if ((y || x) && !(x && y)) { //one, but not both
+			
+			clo.or = clo.or || getCamDir();
+			
+			switch (clo.or) {
+				case "n": break; //do nothing
+				case "s": x = -x; y = -y; break;
+				case "w": 
+					var t = x; x = -y; y = t;
+					break;
+				case "e": 
+					var t = x; x = y; y = -t;
+					break;
+			}
+			
+			
 			if (this.controlTimeout < 1) {
 				this.controlTimeout += CONFIG.timeout.walkControl * delta;
 				
@@ -136,6 +160,27 @@ extend(PlayerChar.prototype, {
 			//This makes it so you can tap a direction to face, instead of just always walking in said direction
 			if (this.controlTimeout > 0)
 				this.controlTimeout -= CONFIG.timeout.walkControl * delta;
+		}
+		
+		return;
+		
+		function getCamDir() {
+			if (!currentMap || !currentMap.camera) return "n";
+			
+			var dirvector = new THREE.Vector3(0, 0, 1);
+			dirvector.applyQuaternion( currentMap.camera.quaternion );
+			dirvector.projectOnPlane(EVENT_PLANE_NORMAL).normalize();
+			
+			var x = dirvector.x, y = dirvector.z;
+			// console.log("DIRFACING:", x, y);
+			if (Math.abs(x) > Math.abs(y)) { //Direction vector is pointing along x axis
+				if (x > 0) return "e";
+				else return "w";
+			} else { //Direction vector is pointing along y axis
+				if (y > 0) return "n";
+				else return "s";
+			}
+			return "n";
 		}
 		
 	},

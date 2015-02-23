@@ -7,6 +7,18 @@
 	"camera" : {
 		"type" : "gen4",
 		"cameras": {
+			"toNorth" : {
+				"position": [0, 5, 5]
+			},
+			"toSouth" : {
+				"position": [0, 5, -5]
+			},
+			"toWest" : {
+				"position": [5, 5, 0]
+			},
+			"toEast" : {
+				"position": [-5, 5, 0]
+			},
 			"0": {}
 		}
 	}

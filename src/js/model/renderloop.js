@@ -9,7 +9,7 @@ module.exports = {
 	start : function(opts) {
 		// Set the canvas's attributes, because those 
 		// ACTUALLY determine how big the rendering area is.
-		if (!opts._disableTree) {
+		if (!opts._disableThree) {
 			var canvas = $("#gamescreen");
 			canvas.attr("width", parseInt(canvas.css("width")));
 			canvas.attr("height", parseInt(canvas.css("height")));
@@ -51,7 +51,7 @@ var _renderHandle;
 function renderLoop() {
 	threeRenderer.clear();
 	
-	if (currentMap && currentMap.scene && currentMap.camera) {
+	if (window.currentMap && currentMap.scene && currentMap.camera) {
 		//Render with the map's active camera on its active scene
 		threeRenderer.render(currentMap.scene, currentMap.camera);
 	}
@@ -95,14 +95,14 @@ function initGameLoop(ticksPerSec) {
 		wholeTick *= _rate;
 		
 		var delta = wholeTick * 0.01;
-		if (currentMap && currentMap.logicLoop)
+		if (window.currentMap && currentMap.logicLoop)
 			currentMap.logicLoop(delta);
-		if (UI && UI.logicLoop)
+		if (window.UI && UI.logicLoop)
 			UI.logicLoop(delta);
 		
-		if (controller && controller._tick)
+		if (window.controller && controller._tick)
 			controller._tick(delta);
-		if (SoundManager && SoundManager._tick)
+		if (window.SoundManager && SoundManager._tick)
 			SoundManager._tick(delta);
 		
 		accum -= wholeTick;

@@ -51,6 +51,7 @@ global.EVENT_DIRS = [
 	"src/events/s1.conquest/",
 	"src/events/s1.crossgen/",
 	"src/events/s2.intermission/",
+	"src/events/s2.anired/",
 ];
 
 global.nextTick = function() {
@@ -113,19 +114,7 @@ function build(){
 	});
 	
 	//Bundle the dev tools
-	copyDevTools();
-	bundle("tools/mapview", { 
-		dest:BUILD_OUT+"tools/mapview.js", appcache:false, 
-		globals: {
-			COMPILED_MAPS : function() { return "['"+compiledMaps.join("', '")+"']"; },
-		},
-	});
-	bundle("tools/gallery", { 
-		dest:BUILD_OUT+"tools/gallery.js", appcache:false, 
-	});
-	bundle("tools/ledgesim", { 
-		dest:BUILD_OUT+"tools/ledgesim.js", appcache:false, 
-	});
+	buildDevTools();
 	
 	//Rewrite the app cache manifest
 	writeCache();
@@ -294,19 +283,6 @@ function copyConfigFiles() {
 	console.log("[Copy ] Copied", l.length, "config files.");
 }
 
-function copyDevTools() {
-	//These copies can happen in parallel
-	sync.parallel(function(){
-		copyDirectory("lib/tools/", BUILD_OUT+"tools/");
-		copyFileWithJekyllPrepend("src/tools/mapview.html", BUILD_OUT+"tools/mapview.html");
-		copyFileWithJekyllPrepend("src/tools/gallery.html", BUILD_OUT+"tools/gallery.html");
-		copyFileWithJekyllPrepend("src/tools/ledgesim.html", BUILD_OUT+"tools/ledgesim.html");
-		
-	});
-	var l = sync.await();
-	console.log("[Copy ] Copied", l.length, "dev tools files.");
-}
-
 function copyFile(src, dest, noDefer) {
 	var dir = path.dirname(dest);
 	if (!fs.existsSync(dir)) {
@@ -368,6 +344,42 @@ function copyDirectory(src, dest, noDefer) {
 	}
 }
 
+
+function buildDevTools() {
+	//These copies can happen in parallel
+	sync.parallel(function(){
+		copyDirectory("lib/tools/", BUILD_OUT+"tools/");
+		copyFileWithJekyllPrepend("src/tools/mapview.html", BUILD_OUT+"tools/mapview.html");
+		copyFileWithJekyllPrepend("src/tools/gallery.html", BUILD_OUT+"tools/gallery.html");
+		copyFileWithJekyllPrepend("src/tools/ledgesim.html", BUILD_OUT+"tools/ledgesim.html");
+		copyFileWithJekyllPrepend("src/tools/chatot.html", BUILD_OUT+"tools/chatot.html");
+		
+	});
+	var l = sync.await();
+	console.log("[Copy ] Copied", l.length, "dev tools files.");
+	
+	///////////////////////////
+	
+	bundle("tools/mapview", { 
+		dest:BUILD_OUT+"tools/mapview.js", appcache:false, 
+		globals: {
+			COMPILED_MAPS : function() { return "['"+compiledMaps.join("', '")+"']"; },
+		},
+	});
+	
+	bundle("tools/gallery", { 
+		dest:BUILD_OUT+"tools/gallery.js", appcache:false, 
+	});
+	
+	bundle("tools/ledgesim", { 
+		dest:BUILD_OUT+"tools/ledgesim.js", appcache:false, 
+	});
+	
+	bundle("tools/chatot", { 
+		dest:BUILD_OUT+"tools/chatot.js", appcache:false, 
+	});
+}
+
 ////////////////////////////////////////////////////////////
 
 function enumeratePlayerCharacters() {
@@ -395,7 +407,7 @@ function findMaps() {
 		mkdirp(BUILD_OUT+"maps");
 	}
 	
-	var total = 0, success = 0;
+	var total = 0, success = 0, error = 0, skipped = 0;
 	for (var pi = 0; pi < MAP_DIRS.length; pi++) {
 		if (!fs.existsSync(MAP_DIRS[pi])) continue;
 		
@@ -409,12 +421,14 @@ function findMaps() {
 				var res = compileMap(file, MAP_DIRS[pi]+file);
 				if (res) {
 					console.log("[cMaps] Skipping compilation of", '"'+file+'":', res);
+					skipped++;
 				} else {
 					success++;
 					compiledMaps.push(file);
 				}
 			} catch (e) {
 				console.log("[cMaps] ERROR while compiling", '"'+file+'"', "\n"+e+"\n"+e.stack);
+				error++;
 				nextTick();
 				// if (typeof e == "string")
 				// 	throw new Error(e);
@@ -423,7 +437,7 @@ function findMaps() {
 			}
 		}
 	}
-	console.log("\n[cMaps] Compiled", success, "out of", total, "maps successfully.");
+	console.log("\n[cMaps] Compiled", success, "out of", total, "maps successfully.", "("+error+" errored, "+skipped+" skipped)");
 }
 
 function syntaxCheckAllFiles() {
