@@ -799,9 +799,15 @@ extend(Map.prototype, {
 		// state.isStarted = true;
 	},
 	
+	////////////////////////////////////////////////////////////////////////////
 	
-	
-	
+	changeCamera: function(camlbl) {
+		var cam = this.cameras[camlbl];
+		if (!cam) {
+			console.log("Attempt to change to camera", camlbl, "failed! No such camera!");
+		}
+		this.camera = cam;
+	},
 	
 	
 	////////////////////////////////////////////////////////////////////////////

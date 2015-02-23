@@ -1,5 +1,5 @@
 # Blender MTL File: 'xWalkwayLegends.blend'
-# Material Count: 60
+# Material Count: 66
 
 newmtl Blackness
 Ns 96.078431
@@ -10,6 +10,28 @@ Ni 1.000000
 d 1.000000
 illum 2
 Ke 0.000000
+
+newmtl BlueRoof
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.010000 0.010000 0.010000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd textures\roof.png
+
+newmtl BlueSiding
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.010000 0.010000 0.010000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd textures\blue_siding.png
 
 newmtl Body
 Ns 0.000000
@@ -341,6 +363,72 @@ illum 2
 Ke 0.000000
 map_Kd statue\helix\Body1_0.png
 
+newmtl ConcreteSlab
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.010000 0.010000 0.010000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd textures\concrete_slab.png
+
+newmtl DarkGradient
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.010000 0.010000 0.010000
+Ni 1.000000
+d 0.999000
+illum 2
+Ke 0.000000
+map_Kd textures\door_darkness.png
+
+newmtl DockPlanks
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.010000 0.010000 0.010000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd textures\wood_planks.png
+
+newmtl DockPlanks_ladder.png
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.010000 0.010000 0.010000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd textures\ladder.png
+
+newmtl DockSide
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.010000 0.010000 0.010000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd textures\dock_edge.png
+
+newmtl DoorGlow
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.010000 0.010000 0.010000
+Ni 1.000000
+d 0.999000
+illum 2
+Ke 1.000000
+map_Kd textures\door_glow.png
+
 newmtl Eye
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
@@ -396,94 +484,82 @@ illum 2
 Ke 0.000000
 map_Kd statue\birdjesus\Eye1_0.png
 
-newmtl None
-Ns 0
+newmtl Gangplank
+Ns 96.078431
 Ka 0.000000 0.000000 0.000000
-Kd 0.8 0.8 0.8
-Ks 0.8 0.8 0.8
-d 1
+Kd 0.800000 0.800000 0.800000
+Ks 0.062500 0.062500 0.062500
+Ni 1.000000
+d 1.000000
 illum 2
-map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\Walkway of Legends\intwall_2.png
+Ke 0.000000
+map_Kd textures\metal_steps.png
 
-newmtl None_NONE
-Ns 0
+newmtl InnerWall_NoTrans
+Ns 96.078431
 Ka 0.000000 0.000000 0.000000
-Kd 0.8 0.8 0.8
-Ks 0.8 0.8 0.8
-d 1
+Kd 0.800000 0.800000 0.800000
+Ks 0.010000 0.010000 0.010000
+Ni 1.000000
+d 1.000000
 illum 2
+Ke 0.000000
+map_Kd textures\window_siding.png
 
-newmtl None_concrete_slab.png
-Ns 0
+newmtl InsideFloor
+Ns 96.078431
 Ka 0.000000 0.000000 0.000000
-Kd 0.8 0.8 0.8
-Ks 0.8 0.8 0.8
-d 1
+Kd 0.800000 0.800000 0.800000
+Ks 0.090000 0.090000 0.090000
+Ni 1.000000
+d 1.000000
 illum 2
-map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\Walkway of Legends\concrete_slab.png
+Ke 0.000000
+map_Kd textures\int_floor.png
 
-newmtl None_dock_edge.png
-Ns 0
+newmtl Lockers
+Ns 96.078431
 Ka 0.000000 0.000000 0.000000
-Kd 0.8 0.8 0.8
-Ks 0.8 0.8 0.8
-d 1
+Kd 0.800000 0.800000 0.800000
+Ks 0.010000 0.010000 0.010000
+Ni 1.000000
+d 1.000000
 illum 2
-map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\Walkway of Legends\dock_edge.png
+Ke 0.000000
+map_Kd textures\lockerdoor.png
 
-newmtl None_door_glow.png
-Ns 0
+newmtl LogoPanel
+Ns 96.078431
 Ka 0.000000 0.000000 0.000000
-Kd 0.8 0.8 0.8
-Ks 0.8 0.8 0.8
-d 1
+Kd 0.800000 0.800000 0.800000
+Ks 0.010000 0.010000 0.010000
+Ni 1.000000
+d 0.999000
 illum 2
-map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\Walkway of Legends\door_glow.png
+Ke 0.000000
+map_Kd textures\fulllogo.png
 
-newmtl None_int_floor.png
-Ns 0
+newmtl LogoPanel_concrete_slab.png
+Ns 96.078431
 Ka 0.000000 0.000000 0.000000
-Kd 0.8 0.8 0.8
-Ks 0.8 0.8 0.8
-d 1
+Kd 0.800000 0.800000 0.800000
+Ks 0.010000 0.010000 0.010000
+Ni 1.000000
+d 0.999000
 illum 2
-map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\Walkway of Legends\int_floor.png
+Ke 0.000000
+map_Kd textures\concrete_slab.png
 
-newmtl None_metal_steps.png
-Ns 0
+newmtl OverWater
+Ns 96.078431
 Ka 0.000000 0.000000 0.000000
-Kd 0.8 0.8 0.8
-Ks 0.8 0.8 0.8
-d 1
+Kd 0.800000 0.800000 0.800000
+Ks 0.100000 0.100000 0.100000
+Ni 1.000000
+d 0.500000
 illum 2
-map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\Walkway of Legends\metal_steps.png
-
-newmtl None_sea.png
-Ns 0
-Ka 0.000000 0.000000 0.000000
-Kd 0.8 0.8 0.8
-Ks 0.8 0.8 0.8
-d 1
-illum 2
-map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\Walkway of Legends\sea.png
-
-newmtl None_stone_stairs.png
-Ns 0
-Ka 0.000000 0.000000 0.000000
-Kd 0.8 0.8 0.8
-Ks 0.8 0.8 0.8
-d 1
-illum 2
-map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\Walkway of Legends\stone_stairs.png
-
-newmtl None_wood_planks.png
-Ns 0
-Ka 0.000000 0.000000 0.000000
-Kd 0.8 0.8 0.8
-Ks 0.8 0.8 0.8
-d 1
-illum 2
-map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\Walkway of Legends\wood_planks.png
+Ke 0.000000
+map_Kd textures\sea.png
 
 newmtl PeirBlockDecor
 Ns 96.078431
@@ -529,17 +605,6 @@ illum 2
 Ke 0.000000
 map_Kd textures\woodpost.png
 
-newmtl PeirConcrete_NONE
-Ns 96.078431
-Ka 0.000000 0.000000 0.000000
-Kd 0.800000 0.800000 0.800000
-Ks 0.010000 0.010000 0.010000
-Ni 1.000000
-d 1.000000
-illum 2
-Ke 0.000000
-map_Kd C:\\Users\\Tim\\github-projects\\TPPParkDev\\_work-files\\Maps\\Walkway of Legends\\concrete_light.png
-
 newmtl PeirConcrete_concrete_light.png
 Ns 96.078431
 Ka 0.000000 0.000000 0.000000
@@ -549,9 +614,9 @@ Ni 1.000000
 d 1.000000
 illum 2
 Ke 0.000000
-map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\Walkway of Legends\concrete_light.png
+map_Kd textures\concrete_light.png
 
-newmtl PeirConcrete_stone_stairs.png
+newmtl Stairs
 Ns 96.078431
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
@@ -560,7 +625,7 @@ Ni 1.000000
 d 1.000000
 illum 2
 Ke 0.000000
-map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\Walkway of Legends\stone_stairs.png
+map_Kd textures\stone_stairs.png
 
 newmtl StatueBase
 Ns 96.078431
@@ -573,52 +638,70 @@ illum 2
 Ke 0.000000
 map_Kd statue\statue_base.png
 
+newmtl Tetrapod
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.900000 0.900000 0.900000
+Ks 0.010554 0.010554 0.010554
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd textures\tetrapod.png
+
+newmtl UnderWater
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.100000 0.100000 0.100000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd textures\sea.png
+
+newmtl VendingMachine
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.627440 0.627440 0.627440
+Ks 0.010417 0.010417 0.010417
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 0.000000
+map_Kd textures\vending_machine.png
+
+newmtl WhiteOutside
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.010000 0.010000 0.010000
+Ni 1.000000
+d 1.000000
+illum 2
+Ke 1.000000
+
+newmtl WindowSiding
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.010000 0.010000 0.010000
+Ni 1.000000
+d 0.999000
+illum 2
+Ke 0.000000
+map_Kd textures\window_siding.png
+
 newmtl glass
 Ns 96.078431
 Ka 0.000000 0.000000 0.000000
-Kd 0.502000 0.502000 0.502000
+Kd 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
+Ke 1.000000
 map_Kd textures\glass.png
-
-newmtl lambert2
-Ns 92.156863
-Ka 0.000000 0.000000 0.000000
-Kd 0.501952 0.501952 0.501952
-Ks 0.500000 0.500000 0.500000
-Ni 1.000000
-d 1.000000
-illum 2
-Ke 0.000000
-map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon White\Buildings\Gateway\lambert2.png
-map_d C:\\Users\\Tim\\Dropbox\\Apps\\Emulator\\Pokemon White\\Buildings\\Gateway\\lambert2.png
-
-newmtl lambert3
-Ns 92.156863
-Ka 0.000000 0.000000 0.000000
-Kd 0.501952 0.501952 0.501952
-Ks 0.500000 0.500000 0.500000
-Ni 1.000000
-d 1.000000
-illum 2
-Ke 0.000000
-map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon White\Buildings\Gateway\lambert3.png
-map_d C:\\Users\\Tim\\Dropbox\\Apps\\Emulator\\Pokemon White\\Buildings\\Gateway\\lambert3.png
-
-newmtl lambert5
-Ns 92.156863
-Ka 0.000000 0.000000 0.000000
-Kd 0.501952 0.501952 0.501952
-Ks 0.500000 0.500000 0.500000
-Ni 1.000000
-d 1.000000
-illum 2
-Ke 0.000000
-map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon White\Buildings\Gateway\lambert5.png
-map_d C:\\Users\\Tim\\Dropbox\\Apps\\Emulator\\Pokemon White\\Buildings\\Gateway\\lambert5.png
 
 newmtl seafoam
 Ns 96.078431
@@ -626,10 +709,10 @@ Ka 0.000000 0.000000 0.000000
 Kd 0.972500 0.972500 0.972500
 Ks 0.010000 0.010000 0.010000
 Ni 1.000000
-d 1.000000
+d 0.999000
 illum 2
 Ke 0.000000
-map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\Walkway of Legends\seafoam.png
+map_Kd textures\seafoam.png
 
 newmtl shiptex
 Ns 96.078431
@@ -637,7 +720,7 @@ Ka 0.000000 0.000000 0.000000
 Kd 0.972500 0.972500 0.972500
 Ks 0.041667 0.041667 0.041667
 Ni 1.000000
-d 1.000000
+d 0.999000
 illum 2
 Ke 0.000000
 map_Kd textures\shiptex.png

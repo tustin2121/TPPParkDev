@@ -40,6 +40,10 @@ extend(PlayerChar.prototype, {
 			controller.pushInputContext("cutscene");
 		//TODO warpdef.anim
 		
+		if (warpdef.camera) { 
+			currentMap.changeCamera(warpdef.camera); 
+		}
+		
 		setTimeout(function(){
 			switch(Number(warpdef.anim)) { //Warp animation
 				case 1: self.avatar_node.position.z += 1; break; // Walk up
@@ -97,6 +101,7 @@ extend(PlayerChar.prototype, {
 				controller.popInputContext("cutscene");
 			});
 			//self.avatar_node.position.set( currentMap.get3DTileLocation(self.location) );
+			
 		});
 	},
 	

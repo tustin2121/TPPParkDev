@@ -56,6 +56,8 @@ function createEventLibraryBundle(outfile) {
 	bundler.require("./src/js/events/trigger",		{ expose: "tpp-trigger" });
 	bundler.require("./src/js/events/warp",			{ expose: "tpp-warp" });
 	bundler.require("./src/js/events/actor",		{ expose: "tpp-actor" });
+	bundler.require("./src/js/events/sign",			{ expose: "tpp-sign" });
+	bundler.require("./src/js/events/camera-trigger",{expose: "tpp-cameratrigger" });
 	
 	bundler.require("./src/js/events/player-character",	{ expose: "tpp-pc" });
 	bundler.require("./src/js/events/actor_animations",	{ expose: "tpp-actor-animations" });

@@ -4,6 +4,10 @@
 //var $ = require("jquery");
 //var zip = zip.js
 
+var inherits = require("inherits");
+var extend = require("extend");
+var ndarray = require("ndarray");
+
 require("../polyfill.js");
 var Map = require("../map");
 var renderLoop = require("../model/renderloop");
@@ -35,6 +39,7 @@ $(function(){
 	}
 	$("#idin").after(datalist);
 	
+	DEBUG.updateFns = [];
 	
 	DEBUG.runOnMapReady = function(){
 		var scrWidth = $("#gamescreen").width();
@@ -42,16 +47,24 @@ $(function(){
 		
 		createInfoParent();
 		
+		var camNode = new THREE.Object3D();
+		camNode.name = "DEBUG Camera Helpers";
+		camNode.visible = false;
+		_infoParent.add(camNode);
+		
 		currentMap.__origCamera = currentMap.camera;
 		currentMap.__debugCamera = new THREE.PerspectiveCamera(75, scrWidth / scrHeight, 1, 1000);
 		// currentMap.camera = currentMap.__debugCamera;
 		currentMap.__debugCamera.position.z = 10;
 		
 		DEBUG.switchDebugCamera = function() {
-			if (currentMap.camera == currentMap.__origCamera) {
-				currentMap.camera = currentMap.__debugCamera;
-			} else {
+			if (currentMap.camera == currentMap.__debugCamera) {
 				currentMap.camera = currentMap.__origCamera;
+				camNode.visible = false;
+			} else {
+				currentMap.__origCamera = currentMap.camera;
+				currentMap.camera = currentMap.__debugCamera;
+				camNode.visible = true;
 			}
 		}
 		$(document).on("keyup", function(e){ 
@@ -62,15 +75,22 @@ $(function(){
 		
 		var controls = new THREE.OrbitControls(currentMap.__debugCamera);
 		controls.damping = 0.2;
+		DEBUG.updateFns.push(controls);
 		
-		var helper = new THREE.CameraHelper(currentMap.__origCamera);
-		_infoParent.add(helper);
+		for (var cam in currentMap.cameras) {
+			var helper = new THREE.CameraHelper(currentMap.cameras[cam]);
+			camNode.add(helper);
+			DEBUG.updateFns.push(helper);
+		}
 		
 		var map = currentMap;
 		var oldlogic = map.logicLoop;
 		map.logicLoop = function(delta){
-			controls.update();
-			helper.update();
+			for (var i = 0; i < DEBUG.updateFns.length; i++) {
+				if (!DEBUG.updateFns[i]) continue;
+				if (!DEBUG.updateFns[i].update) continue;
+				DEBUG.updateFns[i].update();
+			}
 			oldlogic.call(map, delta);
 		};
 		
@@ -114,7 +134,8 @@ function createInfoParent() {
 		
 		DEBUG.hideInfoLayer = function() {
 			_infoParent.visible = !_infoParent.visible;
-		}
+		};
+		DEBUG._infoParent = _infoParent;
 	}
 }
 /*
@@ -162,6 +183,11 @@ var markerColors = [ 0x888888, 0x008800, 0x000088, 0x880000, 0x008888, 0x880088,
 var _node_heightGrid;
 function showHeightGrid() {
 	if (!_node_heightGrid) {
+		//Shortcut Aliases
+		var V3 = THREE.Vector3;
+		var V2 = THREE.Vector2;
+		var F3 = THREE.Face3;
+		
 		_node_heightGrid = new THREE.Object3D();
 		_node_heightGrid.name = "DEBUG Height Grid";
 		
@@ -170,6 +196,22 @@ function showHeightGrid() {
 		var map = currentMap;
 		var mdata = currentMap.metadata;
 		
+		var tex = THREE.ImageUtils.loadTexture( BASEURL+"/img/ui/debug_counters.png" );
+		tex.repeat.set(16/128, 16/32);
+		tex.magFilter = THREE.NearestFilter;
+		tex.minFilter = THREE.NearestFilter;
+		
+		var offsets = [];
+		for (var y = 0; y < mdata.height; y++) {
+			for (var x = 0; x < mdata.width; x++) {
+				//One for each vertex
+				offsets.push(new V2(), new V2(), new V2(), new V2());
+			}
+		}
+		offsets = ndarray(offsets, [mdata.width, mdata.height, 4], [4, mdata.width*4, 1]);
+		DEBUG.offsets = offsets;
+		var updateAttrs = [];
+		
 		for (var li = 1; li <= 7; li++) {
 			if (!mdata.layers[li-1]) continue;
 			
@@ -177,15 +219,21 @@ function showHeightGrid() {
 			
 			function __drawMark(x, y) {
 				var v1 = map.get3DTileLocation(x, y, li);
-				var v2 = new THREE.Vector3();
+				var v2 = new V3();
 				var vts = geom.vertices;
 				
-				var a = new THREE.Vector3(v1.x + 0.15 + (li*0.02), v1.y, v1.z + 0.15 + (li*0.02));
-				var b = new THREE.Vector3(v1.x - 0.15 + (li*0.02), v1.y, v1.z + 0.15 + (li*0.02));
-				var c = new THREE.Vector3(v1.x - 0.15 + (li*0.02), v1.y, v1.z - 0.15 + (li*0.02));
-				var d = new THREE.Vector3(v1.x + 0.15 + (li*0.02), v1.y, v1.z - 0.15 + (li*0.02));
+				var a = new V3(v1.x + 0.15 + (li*0.02), v1.y, v1.z + 0.15 + (li*0.02));
+				var b = new V3(v1.x - 0.15 + (li*0.02), v1.y, v1.z + 0.15 + (li*0.02));
+				var c = new V3(v1.x - 0.15 + (li*0.02), v1.y, v1.z - 0.15 + (li*0.02));
+				var d = new V3(v1.x + 0.15 + (li*0.02), v1.y, v1.z - 0.15 + (li*0.02));
 				
-				geom.vertices.push(a, b, b, c, c, d, d, a);
+				// geom.vertices.push(a, b, b, c, c, d, d, a);
+				var idx = geom.vertices.length;
+				geom.vertices.push(a, b, c, d);
+				geom.faces.push(new F3(idx + 0, idx + 3, idx + 2)); 
+				geom.faces.push(new F3(idx + 2, idx + 1, idx + 0)); 
+				geom.faceVertexUvs[0].push([ new V2(1, 0), new V2(1, 1), new V2(0, 1) ]);
+				geom.faceVertexUvs[0].push([ new V2(0, 1), new V2(0, 0), new V2(1, 0) ]);
 			}
 			
 			for (var y = 0; y < mdata.height; y++) {
@@ -194,19 +242,41 @@ function showHeightGrid() {
 				}
 			}
 			
-			
-			var mat = new THREE.LineBasicMaterial({
-				color: markerColors[li],
-				opacity: 0.4,
-				linewidth: 1,
+			var mat = new EventCounterMaterial({
+				map: tex,
+				offsets: offsets.data,
 			});
-			var line = new THREE.Line(geom, mat, THREE.LinePieces);
-			_node_heightGrid.add(line);
+			updateAttrs.push(mat.attributes.offsets);
+			
+			var mesh = new THREE.Mesh(geom, mat);
+			_node_heightGrid.add(mesh);
 		}
 		
 		_node_heightGrid.position.y = 0.01;
 		
 		_infoParent.add(_node_heightGrid);
+		
+		DEBUG.updateFns.push({
+			update: function() {
+				
+				for (var y = 0; y < mdata.height; y++) {
+					for (var x = 0; x < mdata.width; x++) {
+						var e = map.eventMap.get(x, y);
+						var num = Math.min((!e) ? 0 : e.length, 15);
+						
+						var offx = (Math.floor(num % 8) * 16) / 128;
+						var offy = (Math.floor(num / 8) * 16) / 32;
+						
+						for (var i = 0; i < 4; i++) {
+							offsets.get(x, y, i).set(offx, offy);
+						}
+					}
+				}
+				for (var i = 0; i < updateAttrs.length; i++) {
+					updateAttrs[i].needsUpdate = true;
+				}
+			}
+		});
 	}
 }
 
@@ -290,3 +360,81 @@ function showMovementGrid() {
 	}
 	_node_movementGrid.visible = true;
 }
+
+
+/////////////////////////////////////////////////////////////////////////////////
+
+
+function EventCounterMaterial(texture, opts) {
+	if ($.isPlainObject(texture) && opts === undefined) {
+		opts = texture; texture = null;
+	}
+	
+	this.map = texture || opts.texture || opts.map || new THREE.Texture();
+	this.offsets = opts.offsets || [];
+	this.repeat = opts.repeat || this.map.repeat;
+	
+	var params = this._createMatParams(opts);
+	THREE.ShaderMaterial.call(this, params);
+	this.type = "EventCounterMaterial";
+	
+	this.transparent = (opts.transparent !== undefined)? opts.transparent : true;
+	this.alphaTest = 0.05;
+}
+inherits(EventCounterMaterial, THREE.ShaderMaterial);
+extend(EventCounterMaterial.prototype, {
+	map : null,
+	
+	_createMatParams : function() {
+		var params = {
+			attributes: {
+				offsets:	{ type: 'v2', value: this.offsets },
+			},
+			
+			uniforms : {
+				repeat:     { type: 'v2', value: this.repeat },
+				map:		{ type: "t", value: this.map },
+			},
+		};
+		
+		params.vertexShader = this._vertShader;
+		params.fragmentShader = this._fragShader;
+		return params;
+	},
+	
+	_vertShader: [
+		"uniform float size;",
+		"uniform float scale;",
+		"uniform vec2 repeat;",
+	
+		"attribute vec2 offsets;",
+		
+		'varying vec2 vUV;',
+		
+		"void main() {",
+			'vUV = offsets + uv * repeat;',
+			"vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );",
+
+			"gl_Position = projectionMatrix * mvPosition;",
+		"}",
+	].join("\n"),
+	
+	_fragShader: [
+		"uniform sampler2D map;",
+		
+		'varying vec2 vUV;',
+		
+		"void main() {",
+			"vec4 tex = texture2D( map, vUV );",
+			
+			'#ifdef ALPHATEST',
+				'if ( tex.a < ALPHATEST ) discard;',
+			'#endif',
+			
+			"gl_FragColor = tex;",
+		"}",
+	].join("\n"),
+	
+});
+
+

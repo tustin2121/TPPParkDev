@@ -2,25 +2,30 @@
 	"areaname" : "The Walkway of Legends",
 	"domain" : "interior",
 	"layers" : [
-		{ "layer" : 1, "3d" : [1, 0, 0, -3.5,   0, 1, 0, 0,   0, 0, 1, -10.5,   0, 0, 0, 1] },
-		{ "layer" : 2, "3d" : [1, 0, 0, -39.5,   0, 1, 0, 2.5,   0, 0, 1, 26.5,   0, 0, 0, 1] }
+		{ "layer" : 1, "3d" : [1, 0, 0,  -3.5,  0, 1, 0,   0,   0, 0, 1,-10.5,   0, 0, 0, 1] },
+		{ "layer" : 2, "3d" : [1, 0, 0, -39.5,  0, 1, 0, 2.5,   0, 0, 1, 26.5,   0, 0, 0, 1] }
 	],
 	"warps" : [
-		{  },
-		{  },
-		{ "layer": 2 },
-		{ "layer": 2 },
-		{ "layer": 2 }
+		{ "layer": 1, "camera": "0" },
+		{ "layer": 1, "camera": "0" },
+		{ "layer": 2, "camera": "1" },
+		{ "layer": 2, "camera": "1" },
+		{ "layer": 2, "camera": "1" }
 	],
 	"heightstep" : 0.25,
 	"camera" : {
 		"type" : "gen4",
 		"cameras": {
 			"0": {
-				"lookat" : [0, 1.5, 0]
+				"lookat" : [0, 2.7, 0],
+				"position": [0, 5, 5.3]
 			},
 			"1": {
-				"position": [0, 6.45, 6.3]
+				"position": [0, 8.45, 8.3]
+			},
+			"side": {
+				"lookat" : [0, 0.5, 1],
+				"position": [2.5, 2.7, 5.7]
 			}
 		}
 	},
