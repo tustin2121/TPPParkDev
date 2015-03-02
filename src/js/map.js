@@ -623,6 +623,8 @@ extend(Map.prototype, {
 					lst[i].emit("entering-tile", dir);
 				}
 			}
+			
+			if (srcX == destX && srcY == destY) return; //skip "leaving" if we're warping in
 			// dir.set(srcX-destX, 0, destY-srcY).negate();
 			lst = self.eventMap.get(srcX, srcY);
 			if (lst) {
@@ -647,6 +649,8 @@ extend(Map.prototype, {
 					lst[i].emit("entered-tile", dir);
 				}
 			}
+			
+			if (srcX == destX && srcY == destY) return; //skip "left" if we're warping in
 			// dir.set(srcX-destX, 0, destY-srcY).negate();
 			lst = self.eventMap.get(srcX, srcY);
 			if (lst) {

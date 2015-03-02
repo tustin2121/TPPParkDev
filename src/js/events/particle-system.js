@@ -11,9 +11,12 @@ function ParticleSystemEvent(base, opts) {
 }
 inherits(ParticleSystemEvent, Event);
 extend(ParticleSystemEvent.prototype, {
+	running: true,
+	
 	particlesPerSecond: 100,
 	particleDeathAge: 1.0,
 	particleSys: null,
+	blendStyle: THREE.NormalBlending,
 	
 	boundingSize: null,
 	sprite: null,
@@ -35,9 +38,10 @@ extend(ParticleSystemEvent.prototype, {
 	getAvatar : function(map, gc){
 		var self = this;
 		this.particleSys = new ParticleEngine();
+		this.particleSys.parentEvent = this;
 		this.particleSys.particlesPerSecond = this.particlesPerSecond;
 		this.particleSys.particleDeathAge = this.particleDeathAge;
-		this.particleSys.newParticle = this.newParticle;
+		this.particleSys.blendStyle = this.blendStyle;
 		this.particleSys.particleTexture.image = DEF_TEXTURE_IMG;
 		
 		gc.collect(this.particleSys.particleTexture);
@@ -88,6 +92,16 @@ extend(ParticleSystemEvent.prototype, {
 	
 	onEvents: {
 		tick: function(delta) {
+			// Discard this tick update entirely if the delta is more than a certain amount
+			// Chances are, the browser has limited our tick callbacks, and more than 
+			// this threshold will simply cause the particle system to go haywire anyway
+			if (delta > 1) return;
+			
+			if (!this.running) {
+				//Even if we're not running this, run it until the system is mature
+				if (this.particleSys.emitterAge > this.particleSys.particleDeathAge)
+					return;
+			}
 			this.particleSys.update(delta * 0.1);
 		},
 	}
@@ -131,8 +145,8 @@ var particleFragmentShader = [
 		
 		"float c = cos(vAngle);",
 		"float s = sin(vAngle);",
-		"vec2 rotatedUV = vec2(c * (gl_PointCoord.x - 0.5) + s * (gl_PointCoord.y - 0.5) + 0.5,", 
-		                      "c * (gl_PointCoord.y - 0.5) - s * (gl_PointCoord.x - 0.5) + 0.5);",  // rotate UV coordinates to rotate texture
+		"vec2 rotatedUV = vec2(c * (      gl_PointCoord.x - 0.5) + s * (1.0 - gl_PointCoord.y - 0.5) + 0.5,", 
+		                      "c * (1.0 - gl_PointCoord.y - 0.5) - s * (      gl_PointCoord.x - 0.5) + 0.5);",  // rotate UV coordinates to rotate texture
 	    	"vec4 rotatedTexture = texture2D( texture,  rotatedUV );",
 		"gl_FragColor = gl_FragColor * rotatedTexture;",    // sets an otherwise white particle texture to desired color
 	"}"
@@ -157,6 +171,10 @@ Tween.prototype.lerp = function(t) {
 		return this.values[i-1].clone().lerp( this.values[i], p );
 	else // its a float
 		return this.values[i-1] + p * (this.values[i] - this.values[i-1]);
+}
+ParticleSystemEvent.Tween = Tween;
+ParticleSystemEvent.makeTween = function(time, val) {
+	return new Tween(time, val);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -184,8 +202,13 @@ extend(Particle.prototype, {
 	opacityTween: new Tween(),
 	
 	update : function(dt) {
-		this.position.add( this.velocity.clone().multiplyScalar(dt) );
-		this.velocity.add( this.acceleration.clone().multiplyScalar(dt) );
+		this.position.x += this.velocity.x * dt;
+		this.position.y += this.velocity.y * dt;
+		this.position.z += this.velocity.z * dt;
+		
+		this.velocity.x += this.acceleration.x * dt;
+		this.velocity.y += this.acceleration.y * dt;
+		this.velocity.z += this.acceleration.z * dt;
 		
 		// convert from degrees to radians: 0.01745329251 = Math.PI/180
 		this.angle         += this.angleVelocity     * 0.01745329251 * dt;
@@ -196,16 +219,29 @@ extend(Particle.prototype, {
 		// if the tween for a given attribute is nonempty,
 		//  then use it to update the attribute's value
 
-		if ( this.sizeTween.times.length > 0 )
+		if (this.sizeTween.times.length > 0)
 			this.size = this.sizeTween.lerp( this.age );
 					
-		if ( this.colorTween.times.length > 0 )
-		{
+		if (this.colorTween && this.colorTween.times.length > 0) {
 			var colorHSL = this.colorTween.lerp( this.age );
-			this.color = new THREE.Color().setHSL( colorHSL.x, colorHSL.y, colorHSL.z );
+			this.color.setHSL( colorHSL.x, colorHSL.y, colorHSL.z );
+		}
+		else if (this.colorHTween || this.colorSTween || this.colorLTween) {
+			var hsl = this.color.getHSL();
+			if (this.colorHTween && this.colorHTween.times.length > 0) {
+				hsl.h = this.colorHTween.lerp( this.age );
+			}
+			if (this.colorSTween && this.colorSTween.times.length > 0) {
+				hsl.s = this.colorSTween.lerp( this.age );
+			}
+			if (this.colorLTween && this.colorLTween.times.length > 0) {
+				hsl.l = this.colorLTween.lerp( this.age );
+			}
+			this.color.setHSL( hsl.h, hsl.s, hsl.l );
 		}
 		
-		if ( this.opacityTween.times.length > 0 )
+		
+		if (this.opacityTween.times.length > 0)
 			this.opacity = this.opacityTween.lerp( this.age );
 	}
 });
@@ -241,6 +277,8 @@ function ParticleEngine() {
 }
 extend(ParticleEngine.prototype, {
 	blendStyle: THREE.NormalBlending,
+	
+	parentEvent: null,
 	
 	particleArray: null,
 	particlesPerSecond: 100,
@@ -284,12 +322,13 @@ extend(ParticleEngine.prototype, {
 		}
 		
 		this.particleMaterial.blending = this.blendStyle;
-		if ( this.blendStyle != THREE.NormalBlending) 
-			this.particleMaterial.depthTest = false;
+		// if ( this.blendStyle != THREE.NormalBlending) 
+		// 	this.particleMaterial.depthTest = false;
 		
 		this.particleMesh = new THREE.PointCloud( this.particleGeometry, this.particleMaterial );
 		this.particleMesh.sortParticles = true;
-		this.particleMesh.renderDepth = -80;
+		// if ( this.blendStyle == THREE.NormalBlending) 
+			this.particleMesh.renderDepth = -80;
 		// scene.add( this.particleMesh );
 	},
 	
@@ -310,7 +349,8 @@ extend(ParticleEngine.prototype, {
 
 				// check if particle should expire
 				// could also use: death by size<0 or alpha<0.
-				if ( this.particleArray[i].age > this.particleDeathAge ) 
+				if (this.particleArray[i].age > this.particleDeathAge
+					|| (this.parentEvent.killingFloor && this.particleArray[i].position.y < this.parentEvent.killingFloor)) 
 				{
 					this.particleArray[i].alive = 0.0;
 					if (this.emitterAlive && recycleIndices.length < numNewParticles)
@@ -335,7 +375,7 @@ extend(ParticleEngine.prototype, {
 		for (var j = 0; j < recycleIndices.length; j++)
 		{
 			var i = recycleIndices[j];
-			this.newParticle(this.particleArray[i], this.randomValue); //positions a new particle
+			this.parentEvent.newParticle(this.particleArray[i], this.randomValue); //positions a new particle
 			this.particleArray[i].age = 0;
 			this.particleArray[i].alive = 1.0; // activate right away
 			this.particleGeometry.vertices[i] = this.particleArray[i].position;

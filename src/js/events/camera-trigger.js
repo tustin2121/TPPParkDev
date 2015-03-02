@@ -15,9 +15,6 @@ var extend = require("extend");
  */
 function CameraTrigger(base, opts) {
 	Event.call(this, base, opts);
-	
-	this.on("entered-tile", this.onTriggerEnter);
-	this.on("leaving-tile", this.onTriggerLeave);
 }
 inherits(CameraTrigger, Trigger);
 extend(CameraTrigger.prototype, {
@@ -27,12 +24,12 @@ extend(CameraTrigger.prototype, {
 	sCameraId: undefined,
 	eCameraId: undefined,
 	
-	onTriggerEnter : function(dir) {
+	onEntered : function(dir) {
 		if (this.cameraId !== undefined) {
 			currentMap.changeCamera(this.cameraId);
 		}
 	},
-	onTriggerLeave : function(dir) {
+	onLeaving : function(dir) {
 		var d = this.divideFacing(dir);
 		if (this[d+"CameraId"] !== undefined) {
 			currentMap.changeCamera(this[d+"CameraId"]);

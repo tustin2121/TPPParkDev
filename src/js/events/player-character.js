@@ -102,6 +102,7 @@ extend(PlayerChar.prototype, {
 				console.log("Pop!");
 				controller.popInputContext("cutscene");
 			});
+			self.emit("moving", state.srcLocC.x, state.srcLocC.y, state.destLocC.x, state.destLocC.y);
 			//self.avatar_node.position.set( currentMap.get3DTileLocation(self.location) );
 			
 		});
