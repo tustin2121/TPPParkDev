@@ -14,7 +14,7 @@ module.exports = {
 	
 	sprite_creator: "Tustin2121",
 	
-	shouldAppear : function(mapid) {
+	// shouldAppear : function(mapid) {
 		
-	},
+	// },
 };

@@ -5,21 +5,20 @@
 		{ "layer" : 1, "3d" : [1, 0, 0, -10.5,   0, 1, 0, -6.5,   0, 0, 1, 0.5,   0, 0, 0, 1] }
 	],
 	"heightstep" : 0.5,
-	"camera" : {
-		"type" : "gen4",
-		"cameras": {
-			"0": {}
-		}
+	
+	"cameras" : {
+		"0": {}
 	},
 	"lighting" : {
 		"default": true,
-		"lights" : [],
-		"shadowmap": {
-			"width": 256, "height": 512,
-			"top": 20, "bottom": -20, "left": -10, "right": 10,
-			"near": 1, "far": 150
-		}
+		"lights" : []
 	},
+	"shadowmap": {
+		"width": 256, "height": 512,
+		"top": 20, "bottom": -20, "left": -10, "right": 10,
+		"near": 1, "far": 150
+	},
+	
 	"bgmusic" : [
 		{
 			"id": "m_spearpillar",

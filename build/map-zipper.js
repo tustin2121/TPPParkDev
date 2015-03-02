@@ -363,8 +363,7 @@ function compressMapJson(id, file) {
 		
 		//Check domain and cameras
 		if (!cmap.domain) throw "No domain set!";
-		if (!cmap.camera) throw "No camera definition!";
-		if (!cmap.camera.type) throw "No type defined for camera!";
+		// if (!cmap.cameras) throw "No camera definitions!";
 	}
 }
 
@@ -467,6 +466,7 @@ function processMapModel(id, file) {
 	//////////////////////////////////////////////////////////////////////////////
 	// Step 3: Process and Write the MTL file
 	mtl_out = fs.createWriteStream(BUILD_TEMP+id+"/map.mtl", { encoding: "utf8" });
+	mtl_out.on("finish", sync.defer());
 	
 	for (var matname in materials) {
 		var mat = materials[matname];
@@ -482,6 +482,8 @@ function processMapModel(id, file) {
 		mtl_out.write("\n");
 	}
 	mtl_out.end();
+	sync.await(); //pause until the writing is finished
+	
 	console.log("[cObjs] Wrote", BUILD_TEMP+id+"/map.obj", "and .mtl file; used", numMatsUsed, "materials out of", numMatsDefined);
 	
 	
@@ -651,17 +653,25 @@ function packageLocalAssets(srcdir, base, config) {
 }
 
 function zipWorkingDirectory(id) {
+	// sleep(500);
+	
 	var outstr = fs.createWriteStream(BUILD_OUT+"maps/"+id+EXT_MAPBUNDLE);
 	var arch = archiver("zip");
 	
 	outstr.on("finish", sync.defer());
+	outstr.on("error", function(e){
+		throw e;
+	});
+	
 	arch.pipe(outstr);
-	arch.bulk([
-		{ expand: true, cwd: BUILD_TEMP+id, src: ["**"], flatten: false, },
-		//{ expand: true, cwd: 'source', src: ["**"], dest: 'source' },
-	]);
+	arch.directory(BUILD_TEMP+id, false);
+	// arch.bulk([
+	// 	{ expand: true, cwd: BUILD_TEMP+id, src: ["**"], flatten: false, },
+	// 	//{ expand: true, cwd: 'source', src: ["**"], dest: 'source' },
+	// ]);
 	arch.finalize();
 	
 	sync.await();
+	// sleep(500); //Sleep is rquired to make it so the freaking file zips properly... >.<
 	console.log("[cMaps] Zipped file:", "maps/"+id+".zip", "["+arch.pointer()+" bytes]");
 }

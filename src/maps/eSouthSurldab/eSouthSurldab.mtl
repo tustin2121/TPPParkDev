@@ -1,5 +1,5 @@
 # Blender MTL File: 'SurldabSouth.blend'
-# Material Count: 45
+# Material Count: 48
 
 newmtl BldT2_Face
 Ns 92.156863
@@ -30,6 +30,26 @@ Ni 1.000000
 d 1.000000
 illum 2
 map_Kd textures\blue_blocks.png
+
+newmtl BlueBlocks_cliff01.png
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.010000 0.010000 0.010000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd textures\cliff01.png
+
+newmtl BlueBlocks_grass.png
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.010000 0.010000 0.010000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd textures\grass.png
 
 newmtl BlueThreshold
 Ns 96.078431
@@ -82,6 +102,16 @@ illum 2
 Ke 1.500000
 map_Kd textures\bld_casino_kolight.png
 
+newmtl Chainlink_Fence
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.010000 0.010000 0.010000
+Ni 1.000000
+d 0.999000
+illum 2
+map_Kd textures\chainlink_fence.png
+
 newmtl CobbleSquare
 Ns 96.078431
 Ka 0.000000 0.000000 0.000000
@@ -101,16 +131,6 @@ Ni 1.000000
 d 1.000000
 illum 2
 map_Kd textures\concrete.png
-
-newmtl Concrete_chainlink_fence.png
-Ns 92.156863
-Ka 0.000000 0.000000 0.000000
-Kd 0.512000 0.512000 0.512000
-Ks 0.005000 0.005000 0.005000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd textures\chainlink_fence.png
 
 newmtl CornerLights
 Ns 92.156863
@@ -274,7 +294,6 @@ Kd 0.8 0.8 0.8
 Ks 0.8 0.8 0.8
 d 1
 illum 2
-map_Kd textures\flowers2.png
 
 newmtl None_flowers.png.001
 Ns 0
@@ -284,6 +303,15 @@ Ks 0.8 0.8 0.8
 d 1
 illum 2
 map_Kd textures\flowers.png
+
+newmtl None_flowers2.png.001
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd textures\flowers2.png
 
 newmtl None_hedge.png.001
 Ns 0

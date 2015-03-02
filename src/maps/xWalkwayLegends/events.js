@@ -3,10 +3,11 @@
 var Event = require("tpp-event");
 var Sign = require("tpp-sign");
 var Warp = require("tpp-warp");
+var AnimEvent = require("tpp-animevent");
 var CameraTrigger = require("tpp-cameratrigger");
 
-var seawater = [];
-var shipfoam;
+// var seawater = [];
+// var shipfoam;
 
 $(function(){
 	var ch = currentMap.mapmodel.children;
@@ -35,6 +36,29 @@ $(function(){
 			
 		}
 		
+		if (ch[i].name == "Tetrapods") {
+			// For each model in the statue group, apply the following things
+			for (var j = 0; j < ch[i].children.length; j++) {
+				var mesh = ch[i].children[j];
+				if (!(mesh instanceof THREE.Mesh)) continue;
+				
+				mesh.geometry.mergeVertices();
+				mesh.geometry.computeFaceNormals();
+				mesh.geometry.computeVertexNormals();
+				
+				mesh.geometry.normalsNeedUpdate = true;
+				
+				mesh.material.shininess = 0.01;
+				
+				// mesh.material.map.magFilter = THREE.LinearFilter;
+				// mesh.material.map.minFilter = THREE.LinearFilter;
+				mesh.material.map.needsUpdate = true;
+				
+				mesh.shading = THREE.SmoothShading;
+			}
+			
+		}
+		
 		if (ch[i].name == "InsideDoorGlow") {
 			for (var j = 0; j < ch[i].children.length; j++) {
 				var mesh = ch[i].children[j];
@@ -44,22 +68,22 @@ $(function(){
 			}
 		}
 		
-		if (ch[i].name == "Sea") {
-			for (var j = 0; j < ch[i].children.length; j++) {
-				var mesh = ch[i].children[j];
-				if (!(mesh instanceof THREE.Mesh)) continue;
+		// if (ch[i].name == "Sea") {
+		// 	for (var j = 0; j < ch[i].children.length; j++) {
+		// 		var mesh = ch[i].children[j];
+		// 		if (!(mesh instanceof THREE.Mesh)) continue;
 				
-				seawater.push(mesh.material.map);
-			}
-		}
-		if (ch[i].name == "Ship.Foam") {
-			for (var j = 0; j < ch[i].children.length; j++) {
-				var mesh = ch[i].children[j];
-				if (!(mesh instanceof THREE.Mesh)) continue;
+		// 		seawater.push(mesh.material.map);
+		// 	}
+		// }
+		// if (ch[i].name == "Ship.Foam") {
+		// 	for (var j = 0; j < ch[i].children.length; j++) {
+		// 		var mesh = ch[i].children[j];
+		// 		if (!(mesh instanceof THREE.Mesh)) continue;
 				
-				shipfoam = mesh.material.map;
-			}
-		}
+		// 		shipfoam = mesh.material.map;
+		// 	}
+		// }
 	}
 	
 });
@@ -143,20 +167,22 @@ add(new Sign({
 
 ////////////////////////////// Effects //////////////////////////////////
 
-add(new Event({
-	id: "SeawaterDrift",
-	locations: [0, 0],
-	onEvents: {
-		tick: function(delta) {
-			for (var i = 0; i < seawater.length; i++) {
-				var off = seawater[i].offset.x;
-				off += delta * 0.02;
-				seawater[i].offset.set(off, off * 1.2);
-				seawater[i].needsUpdate = true;
-			}
+// add(new Event({
+// 	id: "SeawaterDrift",
+// 	locations: [0, 0],
+// 	onEvents: {
+// 		tick: function(delta) {
+// 			for (var i = 0; i < seawater.length; i++) {
+// 				var off = seawater[i].offset.x;
+// 				off += delta * 0.02;
+// 				seawater[i].offset.set(off, off * 1.2);
+// 				seawater[i].needsUpdate = true;
+// 			}
 			
-			shipfoam.offset.x += delta * 0.02;
-			shipfoam.needsUpdate = true;
-		}
-	}
-}));
+// 			shipfoam.offset.x += delta * 0.02;
+// 			shipfoam.needsUpdate = true;
+// 		}
+// 	}
+// }));
+
+add(new AnimEvent.Water());

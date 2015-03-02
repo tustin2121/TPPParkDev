@@ -10,7 +10,7 @@ var PlayerChar = require("tpp-pc");
 
 var ObjLoader = require("./model/obj-loader");
 
-var mSetup = require("./model/map-setup");
+var setupMapRigging = require("./model/map-setup");
 
 
 // These would be CONSTs if we weren't in the browser
@@ -190,6 +190,7 @@ extend(Map.prototype, {
 		}
 		
 		this.markLoading("MAP_mapdata");
+		var _texsLoaded = false;
 		
 		this.fileSys.importBlob(this.file, function success(){
 			//load up the map!
@@ -234,7 +235,13 @@ extend(Map.prototype, {
 		function __modelLoaded() {
 			if (!self.objdata || !self.mtldata) return; //don't begin parsing until they're both loaded
 			
+			self.onAssetTypeLoaded("MAPTEX", function(){
+				_texsLoaded = true;
+				__loadDone();
+			});
+			
 			function loadTexture(filename, callback) {
+				console.log("loadTex! ", filename);
 				var file = self.fileSys.root.getChildByName(filename);
 				if (!file) {
 					console.error("ERROR LOADING TEXTURE: No such file in map bundle! "+filename);
@@ -242,6 +249,7 @@ extend(Map.prototype, {
 					return;
 				}
 				file.getBlob("image/png", function(data) {
+					console.log("loadTex! FINISH ", filename);
 					var url = URL.createObjectURL(data);
 					self.gc.collectURL(url);
 					callback(url);
@@ -265,7 +273,7 @@ extend(Map.prototype, {
 		
 		function __loadDone() {
 			// console.log("__loadDone", !!self.mapmodel, !!self.tiledata);
-			if (!self.mapmodel || !self.tiledata) return; //don't call on _init before both are loaded
+			if (!self.mapmodel || !self.tiledata || !_texsLoaded) return; //don't call on _init before both are loaded
 			
 			self._init();
 			self.markLoadFinished("MAP_mapdata");
@@ -344,7 +352,7 @@ extend(Map.prototype, {
 		this.scene.add(this.mapmodel);
 		
 		this.cameraLogics = [];
-		mSetup.setupRigging.call(this);
+		setupMapRigging(this);
 		// Map Model is now ready
 		
 		if (this.metadata.clearColor)
@@ -734,6 +742,10 @@ extend(Map.prototype, {
 				loadProgress : 0,
 				loadingAssets : {},
 				
+				typesLoading: {},
+				typesLoaded: {},
+				typesFinalized: {},
+				
 				isStarted : false,
 				startQueue : [],
 				
@@ -743,7 +755,7 @@ extend(Map.prototype, {
 		return this._mapRunState;
 	},
 	
-	markLoading : function(assetId) {
+	markLoading : function(assetId, assetType) {
 		var state = this._initMapRunState();
 		state.loadTotal++;
 		if (assetId) {
@@ -751,8 +763,13 @@ extend(Map.prototype, {
 				state.loadingAssets[assetId] = 0;
 			state.loadingAssets[assetId]++;
 		}
+		if (assetType) {
+			if (!state.typesLoading[assetType])
+				state.typesLoading[assetType] = 0;
+			state.typesLoading[assetType]++;
+		}
 	},
-	markLoadFinished : function(assetId) {
+	markLoadFinished : function(assetId, assetType) {
 		var state = this._initMapRunState();
 		state.loadProgress++;
 		if (assetId) {
@@ -760,12 +777,32 @@ extend(Map.prototype, {
 				state.loadingAssets[assetId] = 0;
 			state.loadingAssets[assetId]--;
 		}
+		if (assetType) {
+			if (!state.typesLoaded[assetType])
+				state.typesLoaded[assetType] = 0;
+			state.typesLoaded[assetType]++;
+			
+			if (state.typesLoading[assetType] == state.typesLoaded[assetType]
+				&& state.typesFinalized[assetType]) 
+			{
+				state.typesFinalized[assetType]();
+			}
+		}
 		
 		//TODO begin map start
 		if (state.loadProgress >= state.loadTotal) {
 			console.warn("START MAP");
 			this._executeMapStartCallbacks();
 		}
+	},
+	setAssetTypeMax: function(assetType, num) {
+		state.typesLoading[assetType] = num;
+	},
+	onAssetTypeLoaded: function(assetType, fn) {
+		var state = this._initMapRunState();
+		if (typeof fn !== "function")
+			throw new Error("onAssetTypeLoaded must supply a function!");
+		state.typesFinalized[assetType] = fn;
 	},
 	
 	queueForMapStart : function(callback) {

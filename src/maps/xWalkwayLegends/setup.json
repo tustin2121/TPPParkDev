@@ -13,29 +13,26 @@
 		{ "layer": 2, "camera": "1" }
 	],
 	"heightstep" : 0.25,
-	"camera" : {
-		"type" : "gen4",
-		"cameras": {
-			"0": {
-				"lookat" : [0, 2.7, 0],
-				"position": [0, 5, 5.3]
-			},
-			"1": {
-				"position": [0, 8.45, 8.3]
-			},
-			"side": {
-				"lookat" : [0, 0.5, 1],
-				"position": [2.5, 2.7, 5.7]
-			}
+	"cameras" : {
+		"0": {
+			"lookat" : [0, 2.7, 0],
+			"position": [0, 5, 5.3]
+		},
+		"1": {
+			"position": [0, 8.45, 8.3]
+		},
+		"side": {
+			"lookat" : [0, 0.5, 1],
+			"position": [2.5, 2.7, 5.7]
 		}
 	},
 	"lighting" : {
-		"default": true,
-		"shadowmap": {
-			"width": 512, "height": 512,
-			"top": 10, "bottom": -25, "left": -20, "right": 20,
-			"near": 70, "far": 80
-		}
+		"default": true
+	},
+	"shadowmap": {
+		"width": 512, "height": 512,
+		"top": 10, "bottom": -25, "left": -20, "right": 20,
+		"near": 70, "far": 80
 	},
 	
 	"bgmusic" : [

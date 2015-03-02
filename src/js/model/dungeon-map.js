@@ -9,7 +9,7 @@ var extend = require("extend");
 
 var Map = require("../map.js");
 var PlayerChar = require("tpp-pc");
-var mSetup = require("./map-setup");
+var setupMapRigging = require("./map-setup");
 
 
 function DoritoDungeon() {
@@ -36,6 +36,9 @@ extend(DoritoDungeon.prototype, {
 				{ "loc" : [25, 25], "anim" : 0 },
 			],
 			
+			"cameras": {
+				0: { far: 300, },
+			}
 			// clearColor: 0x000000,
 		};
 		
@@ -144,19 +147,15 @@ extend(DoritoDungeon.prototype, {
 		this.scene.add(this.mapmodel);
 		
 		this.cameraLogics = [];
-		// mSetup.setupRigging.call(this);
+		setupMapRigging(this);
 		//NOTE: No lights
 		
-		this.scene.add(
-			mSetup.camera.gen4.call(this, {
-				"type" : "gen4",
-				"cameras": {
-					0: {
-						far: 300,
-					},
-				}
-			})
-		);
+		// this.scene.add(
+		// 	// mSetup.camera.gen4.call(this, {
+		// 	// 	"type" : "gen4",
+				
+		// 	// })
+		// );
 		
 		this.queueForMapStart(function() {
 			SoundManager.playMusic("m_tornworld");

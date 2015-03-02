@@ -1,5 +1,5 @@
-# Blender MTL File: 'xWalkwayLegends.blend'
-# Material Count: 66
+# Blender MTL File: 'xWalkwayLegends2.blend'
+# Material Count: 70
 
 newmtl Blackness
 Ns 96.078431
@@ -9,7 +9,6 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 
 newmtl BlueRoof
 Ns 96.078431
@@ -19,7 +18,6 @@ Ks 0.010000 0.010000 0.010000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd textures\roof.png
 
 newmtl BlueSiding
@@ -30,7 +28,6 @@ Ks 0.010000 0.010000 0.010000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd textures\blue_siding.png
 
 newmtl Body
@@ -41,7 +38,6 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd statue\helix\Body1_0.png
 
 newmtl BodyA
@@ -52,7 +48,6 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd statue\fonz\BodyA1_0.png
 
 newmtl BodyA00
@@ -63,7 +58,6 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd statue\atv\BodyA1_0.png
 
 newmtl BodyA00.001
@@ -74,7 +68,6 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd statue\zapdos\BodyA1_0.png
 
 newmtl BodyA00.002
@@ -85,7 +78,6 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd statue\birdjesus\BodyA1_0.png
 
 newmtl BodyA01
@@ -96,7 +88,6 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd statue\atv\BodyA1_0.png
 
 newmtl BodyA01.001
@@ -107,7 +98,6 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd statue\zapdos\BodyA1_0.png
 
 newmtl BodyA01.002
@@ -118,7 +108,6 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd statue\birdjesus\BodyA1_0.png
 
 newmtl BodyA02
@@ -129,7 +118,6 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd statue\atv\BodyA1_0.png
 
 newmtl BodyA02.001
@@ -140,7 +128,6 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd statue\zapdos\BodyA1_0.png
 
 newmtl BodyA03
@@ -151,7 +138,6 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd statue\zapdos\BodyA1_0.png
 
 newmtl BodyAKurumiru
@@ -162,7 +148,6 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd statue\atv\BodyA1_0.png
 
 newmtl BodyANon
@@ -173,7 +158,6 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd statue\atv\BodyA1_0.png
 
 newmtl BodyATattu00
@@ -184,7 +168,6 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd statue\lapras\BodyA1_0.png
 
 newmtl BodyATattu01
@@ -195,7 +178,6 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd statue\lapras\BodyA1_0.png
 
 newmtl BodyAVco
@@ -206,7 +188,6 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd statue\zapdos\BodyA1_0.png
 
 newmtl BodyAVco.001
@@ -217,7 +198,6 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd statue\fonz\BodyA1_0.png
 
 newmtl BodyAVco.002
@@ -228,7 +208,6 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd statue\birdjesus\BodyA1_0.png
 
 newmtl BodyB
@@ -239,7 +218,6 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd statue\zapdos\BodyB1_0.png
 
 newmtl BodyB.001
@@ -250,7 +228,6 @@ Ks 0.010000 0.010000 0.010000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd statue\lapras\BodyB1_0.png
 
 newmtl BodyB00
@@ -261,7 +238,6 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd statue\fonz\BodyB1_0.png
 
 newmtl BodyB00.001
@@ -272,7 +248,6 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd statue\birdjesus\BodyB1_0.png
 
 newmtl BodyB01
@@ -283,7 +258,6 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd statue\fonz\BodyB1_0.png
 
 newmtl BodyB01.001
@@ -294,7 +268,6 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd statue\birdjesus\BodyB1_0.png
 
 newmtl BodyBKurumiruVco
@@ -305,7 +278,6 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd statue\atv\BodyB1_0.png
 
 newmtl BodyBVco
@@ -316,7 +288,6 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd statue\zapdos\BodyB1_0.png
 
 newmtl BodyBVco.001
@@ -327,7 +298,6 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd statue\lapras\BodyB1_0.png
 
 newmtl BodyBVco.002
@@ -338,7 +308,6 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd statue\fonz\BodyB1_0.png
 
 newmtl BodyOmstar_Shell
@@ -349,7 +318,6 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd statue\helix\Body1_0.png
 
 newmtl BodySpc
@@ -360,7 +328,6 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd statue\helix\Body1_0.png
 
 newmtl ConcreteSlab
@@ -371,18 +338,16 @@ Ks 0.010000 0.010000 0.010000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd textures\concrete_slab.png
 
 newmtl DarkGradient
 Ns 96.078431
 Ka 0.000000 0.000000 0.000000
-Kd 0.800000 0.800000 0.800000
+Kd 0.000000 0.000000 0.000000
 Ks 0.010000 0.010000 0.010000
 Ni 1.000000
 d 0.999000
 illum 2
-Ke 0.000000
 map_Kd textures\door_darkness.png
 
 newmtl DockPlanks
@@ -393,19 +358,7 @@ Ks 0.010000 0.010000 0.010000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd textures\wood_planks.png
-
-newmtl DockPlanks_ladder.png
-Ns 96.078431
-Ka 0.000000 0.000000 0.000000
-Kd 0.800000 0.800000 0.800000
-Ks 0.010000 0.010000 0.010000
-Ni 1.000000
-d 1.000000
-illum 2
-Ke 0.000000
-map_Kd textures\ladder.png
 
 newmtl DockSide
 Ns 96.078431
@@ -415,7 +368,6 @@ Ks 0.010000 0.010000 0.010000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd textures\dock_edge.png
 
 newmtl DoorGlow
@@ -437,7 +389,6 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd statue\zapdos\Eye1_0.png
 
 newmtl Eye.001
@@ -448,7 +399,6 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd statue\lapras\Eye1_0.png
 
 newmtl Eye.002
@@ -459,7 +409,6 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd statue\fonz\Eye1_0.png
 
 newmtl Eye.003
@@ -470,7 +419,6 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd statue\helix\Eye1_0.png
 
 newmtl Eye.004
@@ -481,7 +429,6 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd statue\birdjesus\Eye1_0.png
 
 newmtl Gangplank
@@ -492,7 +439,6 @@ Ks 0.062500 0.062500 0.062500
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd textures\metal_steps.png
 
 newmtl InnerWall_NoTrans
@@ -503,7 +449,16 @@ Ks 0.010000 0.010000 0.010000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
+map_Kd textures\window_siding.png
+
+newmtl InnerWall_Trans
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.010000 0.010000 0.010000
+Ni 1.000000
+d 0.999000
+illum 2
 map_Kd textures\window_siding.png
 
 newmtl InsideFloor
@@ -514,8 +469,17 @@ Ks 0.090000 0.090000 0.090000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd textures\int_floor.png
+
+newmtl Ladder
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.010000 0.010000 0.010000
+Ni 1.000000
+d 0.999000
+illum 2
+map_Kd textures\ladder.png
 
 newmtl Lockers
 Ns 96.078431
@@ -525,7 +489,6 @@ Ks 0.010000 0.010000 0.010000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd textures\lockerdoor.png
 
 newmtl LogoPanel
@@ -536,19 +499,7 @@ Ks 0.010000 0.010000 0.010000
 Ni 1.000000
 d 0.999000
 illum 2
-Ke 0.000000
 map_Kd textures\fulllogo.png
-
-newmtl LogoPanel_concrete_slab.png
-Ns 96.078431
-Ka 0.000000 0.000000 0.000000
-Kd 0.800000 0.800000 0.800000
-Ks 0.010000 0.010000 0.010000
-Ni 1.000000
-d 0.999000
-illum 2
-Ke 0.000000
-map_Kd textures\concrete_slab.png
 
 newmtl OverWater
 Ns 96.078431
@@ -558,7 +509,6 @@ Ks 0.100000 0.100000 0.100000
 Ni 1.000000
 d 0.500000
 illum 2
-Ke 0.000000
 map_Kd textures\sea.png
 
 newmtl PeirBlockDecor
@@ -569,7 +519,6 @@ Ks 0.010000 0.010000 0.010000
 Ni 1.000000
 d 0.999000
 illum 2
-Ke 0.000000
 map_Kd textures\bay_decal.png
 
 newmtl PeirBlocks
@@ -580,7 +529,6 @@ Ks 0.010000 0.010000 0.010000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd textures\bay_block.png
 
 newmtl PeirBricks
@@ -591,7 +539,6 @@ Ks 0.010000 0.010000 0.010000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd textures\bay_road.png
 
 newmtl PeirConcrete
@@ -602,10 +549,9 @@ Ks 0.010000 0.010000 0.010000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
-map_Kd textures\woodpost.png
+map_Kd textures\concrete_light.png
 
-newmtl PeirConcrete_concrete_light.png
+newmtl PeirConcrete_woodpost.png
 Ns 96.078431
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
@@ -613,8 +559,17 @@ Ks 0.010000 0.010000 0.010000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
-map_Kd textures\concrete_light.png
+map_Kd textures\woodpost.png
+
+newmtl SeatCusion
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.627440 0.627440 0.627440
+Ks 0.000100 0.000100 0.000100
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd textures\chair.png
 
 newmtl Stairs
 Ns 96.078431
@@ -624,7 +579,6 @@ Ks 0.010000 0.010000 0.010000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd textures\stone_stairs.png
 
 newmtl StatueBase
@@ -635,7 +589,6 @@ Ks 0.010000 0.010000 0.010000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd statue\statue_base.png
 
 newmtl Tetrapod
@@ -646,8 +599,17 @@ Ks 0.010554 0.010554 0.010554
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd textures\tetrapod.png
+
+newmtl TreePlant
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.627440 0.627440 0.627440
+Ks 0.005000 0.005000 0.005000
+Ni 1.000000
+d 0.999000
+illum 2
+map_Kd textures\plant.png
 
 newmtl UnderWater
 Ns 96.078431
@@ -657,18 +619,16 @@ Ks 0.100000 0.100000 0.100000
 Ni 1.000000
 d 1.000000
 illum 2
-Ke 0.000000
 map_Kd textures\sea.png
 
 newmtl VendingMachine
 Ns 92.156863
 Ka 0.000000 0.000000 0.000000
 Kd 0.627440 0.627440 0.627440
-Ks 0.010417 0.010417 0.010417
+Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
-illum 2
-Ke 0.000000
+illum 1
 map_Kd textures\vending_machine.png
 
 newmtl WhiteOutside
@@ -689,14 +649,13 @@ Ks 0.010000 0.010000 0.010000
 Ni 1.000000
 d 0.999000
 illum 2
-Ke 0.000000
 map_Kd textures\window_siding.png
 
 newmtl glass
 Ns 96.078431
 Ka 0.000000 0.000000 0.000000
-Kd 1.000000 1.000000 1.000000
-Ks 0.500000 0.500000 0.500000
+Kd 0.000000 0.000000 0.000000
+Ks 0.200000 0.200000 0.200000
 Ni 1.000000
 d 1.000000
 illum 2
@@ -711,8 +670,27 @@ Ks 0.010000 0.010000 0.010000
 Ni 1.000000
 d 0.999000
 illum 2
-Ke 0.000000
 map_Kd textures\seafoam.png
+
+newmtl shadow
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.501952 0.501952 0.501952
+Ks 0.005000 0.005000 0.005000
+Ni 1.000000
+d 0.999000
+illum 2
+map_Kd textures\shadow.png
+
+newmtl shadow_shadow.png
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.501952 0.501952 0.501952
+Ks 0.005000 0.005000 0.005000
+Ni 1.000000
+d 0.999000
+illum 2
+map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\_Objects\Chair\shadow.png
 
 newmtl shiptex
 Ns 96.078431
@@ -722,5 +700,4 @@ Ks 0.041667 0.041667 0.041667
 Ni 1.000000
 d 0.999000
 illum 2
-Ke 0.000000
 map_Kd textures\shiptex.png

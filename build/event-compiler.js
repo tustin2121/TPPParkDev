@@ -52,18 +52,21 @@ function createEventLibraryBundle(outfile) {
 	bundler.require("extend",		{ expose: "extend" });
 	bundler.require("inherits",		{ expose: "inherits" });
 	
-	bundler.require("./src/js/events/event",		{ expose: "tpp-event" });
-	bundler.require("./src/js/events/trigger",		{ expose: "tpp-trigger" });
-	bundler.require("./src/js/events/warp",			{ expose: "tpp-warp" });
-	bundler.require("./src/js/events/actor",		{ expose: "tpp-actor" });
-	bundler.require("./src/js/events/sign",			{ expose: "tpp-sign" });
-	bundler.require("./src/js/events/camera-trigger",{expose: "tpp-cameratrigger" });
+	bundler.require("./src/js/events/event",			{ expose: "tpp-event" });
+	bundler.require("./src/js/events/trigger",			{ expose: "tpp-trigger" });
+	bundler.require("./src/js/events/warp",				{ expose: "tpp-warp" });
+	bundler.require("./src/js/events/actor",			{ expose: "tpp-actor" });
+	bundler.require("./src/js/events/sign",				{ expose: "tpp-sign" });
+	bundler.require("./src/js/events/animevent",		{ expose: "tpp-animevent" });
+	bundler.require("./src/js/events/camera-trigger",	{ expose: "tpp-cameratrigger" });
+	bundler.require("./src/js/events/particle-system",	{ expose: "tpp-particle" });
 	
 	bundler.require("./src/js/events/player-character",	{ expose: "tpp-pc" });
 	bundler.require("./src/js/events/actor_animations",	{ expose: "tpp-actor-animations" });
 	bundler.require("./src/js/events/behavior",			{ expose: "tpp-behavior" });
 	bundler.require("./src/js/managers/controller",		{ expose: "tpp-controller" });
 	bundler.require("./src/js/model/spritemodel",		{ expose: "tpp-spritemodel" });
+	bundler.require("./src/js/model/model-mods",		{ expose: "tpp-model-mods" });
 	
 	bundler.require("./src/js/events/tGallery",		{ expose: "tpp-test-gallery" });
 	
@@ -218,7 +221,7 @@ function tryWrapCatch(src, msg) {
 	return "try {\n"+
 		src +
 	"\n} catch (e) {\n" +
-	'\tconsole.error("'+msg+'", e);' +
+	'\tconsole.error("'+msg+'", e, e.stack);\n' +
 	"}";
 }
 

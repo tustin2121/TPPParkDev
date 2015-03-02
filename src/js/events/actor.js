@@ -23,7 +23,7 @@ function Actor(base, opts) {
 	this.on("interacted", this._doBehavior_interact);
 	this.on("bumped", this._doBehavior_bump);
 	this.on("cant-move", this._actorBump);
-	this.facing = new THREE.Vector3(0, 0, 1);
+	this.facing = this.facing || new THREE.Vector3(0, 0, 1);
 	
 	this._initBehaviorStack();
 	
@@ -36,6 +36,7 @@ extend(Actor.prototype, {
 	sprite: null,
 	sprite_format: null,
 	
+	isLocal: false,
 	shadow : true,
 	
 	//////////////// Property Setters /////////////////
@@ -187,7 +188,7 @@ extend(Actor.prototype, {
 	
 	_avatar_loadSprite : function(map, texture) {
 		var self = this;
-		map.loadSprite(self.id, self.sprite, function(err, url){
+		map.loadSprite((this.isLocal)? "_local":self.id, self.sprite, function(err, url){
 			if (err) {
 				console.error("ERROR LOADING SPRITE: ", err);
 				return;

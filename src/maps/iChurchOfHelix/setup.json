@@ -9,19 +9,17 @@
 		{ "loc" : [0, 0], "anim" : 0 }
 	],
 	"heightstep" : 0.25,
-	"camera" : {
-		"type" : "gen4",
-		"cameras": {
-			"0": {}
-		}
+	
+	"cameras": {
+		"0": {}
 	},
 	"lighting" : {
 		"default": true,
-		"lights" : [],
-		"shadowmap": {
-			"width": 512, "height": 512,
-			"top": 10, "bottom": -10, "left": -10, "right": 10,
-			"near": 1, "far": 150
-		}
+		"lights" : []
+	},
+	"shadowmap": {
+		"width": 512, "height": 512,
+		"top": 10, "bottom": -10, "left": -10, "right": 10,
+		"near": 1, "far": 150
 	}
 }

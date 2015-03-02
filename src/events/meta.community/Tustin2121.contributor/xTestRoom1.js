@@ -13,5 +13,7 @@ add(new Actor(base, {
 		},
 	},
 	
+	shouldAppear : function(mapid) { return true; },
+	
 	behaviorStack: [new MeanderBehav()],
 }));

@@ -68,11 +68,12 @@ extend(MtlLoader.prototype, {
 				}
 			}
 			// Once we've parsed out all the materials, load them into a "creator"
-			
+			console.log("Parsed Materials:", Object.keys(materialsInfo).length, materialsInfo.length, materialsInfo);
 			var matCreator = new MaterialCreator(this.loadTexture, this.gc);
 			matCreator.setMaterials(materialsInfo);
 			return matCreator;
 		} catch (e) {
+			console.error("MTL", e);
 			this.emit("error", e);
 		}
 	},
@@ -122,8 +123,12 @@ MaterialCreator.prototype = {
 	},
 	
 	preload : function() {
+		try {
 		for (var mn in this.materialsInfo) {
 			this.create(mn);
+		}
+		} catch (e) {
+			console.error(e);
 		}
 	},
 	
@@ -143,6 +148,7 @@ MaterialCreator.prototype = {
 	
 	create : function (matName) {
 		if (this.materials[matName] === undefined) {
+			console.log("Creating Material: ", matName);
 			this.createMaterial_(matName);
 		}
 		return this.materials[matName];
@@ -235,12 +241,15 @@ MaterialCreator.prototype = {
 			params[ 'color' ] = params[ 'diffuse' ];
 		}
 		
+		console.log("MATName", matName);
 		this.materials[ matName ] = new THREE.MeshPhongMaterial( params );
 		scope.gc.collect( this.materials[matName] );
 		return this.materials[ matName ];
 		
 		
 		function __textureMap(args) {
+			console.log("TEX MAP", args.map);
+			
 			if (args.timeApplicable) {
 				var now = moment();
 				if (moment.isBefore(args.timeApplicable[0]) || moment.isAfter(args.timeApplicable[1])) {
@@ -260,14 +269,14 @@ MaterialCreator.prototype = {
 			scope.gc.collect(texture);
 			
 			console.log("CREATE IMG: ", args.src);
-			currentMap.markLoading("MTL_"+args.src);
+			currentMap.markLoading("MTL_"+args.src, "MAPTEX");
 			scope.loadTexture(args.src, function(url){
 				// Even though the images are in memory, apparently they still aren't "loaded"
 				// at the point when they are assigned to the src attribute.
 				console.log("FINISH CREATE IMG: ", args.src);
 				image.on("load", function(){
 					texture.needsUpdate = true;
-					currentMap.markLoadFinished("MTL_"+args.src);
+					currentMap.markLoadFinished("MTL_"+args.src, "MAPTEX");
 				});
 				image.src = url;
 				// image = ensurePowerOfTwo_( image );

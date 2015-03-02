@@ -13,23 +13,24 @@ var Actor = require("tpp-actor");
 var Trigger = require("tpp-trigger");
 var Warp = require("tpp-warp");
 var Event = require("tpp-event");
+var AnimEvent = require("tpp-animevent");
+
+var fountainRunning = !!DEBUG._fountainRuns;
 
 ////////////////////////// Model Modifications ///////////////////////////
 $(function() {
-	var ch = currentMap.mapmodel.children;
-	for (var i = 0; i < ch.length; i++) {
-		// 
-		if (ch[i].name.indexOf("Tree") == 0) {
-			var tree = ch[i];
-			for (var j = 0; j < tree.children.length; j++) {
-				var m = tree.children[i].material;
-				m.side = THREE.DoubleSide;
-				m.alphaTest = 0.1;
-				m.transparent = true;
-			}
-		}
+	var ModelMods = require("tpp-model-mods");
+	
+	ModelMods.trees.prefix = "Tree";
+	ModelMods.renderDepthFix.name = ["BasketballCourt"];
+	
+	if (fountainRunning) {
+		ModelMods.hide.prefix = "FountainStill";
+	} else {
+		ModelMods.hide.prefix = "FountainFlow";
 	}
 	
+	ModelMods.modify();
 });
 
 ///////////////////////////// Construction ///////////////////////////////
@@ -139,8 +140,19 @@ add(new Warp({ //19
 
 //////////////////////////// Geometry Items ///////////////////////////////
 
-add(new Event({
-	id: "MartSignSpin",
+if (fountainRunning) {
+	add(new AnimEvent.Water({
+		speed: -0.05,
+		named_regex: /^FountainFlow/i,
+	}));
+} else {
+	add(new AnimEvent.SineRipple({
+		named_regex: /^FountainStill/i,
+	}));
+}
+
+add(new AnimEvent({
+	id: "ANIM_MartSignSpin",
 	location: [38, 40],
 	getAvatar : function(map) {
 		var node = map.mapmodel.getObjectByName("PokeMartSign");
@@ -165,10 +177,8 @@ add(new Event({
 		
 		return null;
 	},
-	onEvents : {
-		tick : function(delta) {
-			this.sign_node.rotateY(delta * 0.05);
-		},
+	onTick : function(delta) {
+		this.sign_node.rotateY(delta * 0.05);
 	},
 }))
 

@@ -11,7 +11,7 @@
     "toolbar": true
   },
   "devDependencies": {
-    "archiver": "^0.13.0",
+    "archiver": "^0.14.0",
     "browserify": "^7.0.0",
     "esprima": "^1.2.2",
     "exorcist": "^0.1.6",

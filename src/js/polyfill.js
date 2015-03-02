@@ -15,6 +15,23 @@ if (!String.prototype.startsWith) {
 	});
 }
 
+if (!String.prototype.endsWith) {
+	Object.defineProperty(String.prototype, 'endsWith', {
+		enumerable: false,
+		configurable: false,
+		writable: false,
+		value: function(searchString, position) {
+			var subjectString = this.toString();
+			if (position === undefined || position > subjectString.length) {
+				position = subjectString.length;
+			}
+			position -= searchString.length;
+			var lastIndex = subjectString.indexOf(searchString, position);
+			return lastIndex !== -1 && lastIndex === position;
+		}
+	});
+}
+
 // EventTarget.on() and EventTarget.emit()
 // Adding this to allow dom elements and objects to simply have "on" and "emit" used like node.js objects can
 if (!EventTarget.prototype.on) {

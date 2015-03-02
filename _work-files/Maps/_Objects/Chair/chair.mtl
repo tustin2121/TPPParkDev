@@ -1,0 +1,24 @@
+# Blender MTL File: 'None'
+# Material Count: 2
+
+newmtl in40_kage
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd in40_kage.png
+map_d in40_kage.png
+
+newmtl pasted__in40_isu
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.627440 0.627440 0.627440
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd pasted__in40_isu.png
+map_d pasted__in40_isu.png
