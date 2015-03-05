@@ -609,10 +609,6 @@ extend(Map.prototype, {
 			//Started moving to a new tile
 			self.eventMap.put(destX, destY, this);
 			self.eventMap.remove(srcX, srcY, this);
-			if (self.eventMap.get(srcX, srcY).length > 0) {
-				//Trying to find the Bug of the Phantom Sprites!
-				console.warn("EVENT HAS MOVED FROM NON-EMPTY LOCATION!", evt.name);
-			}
 			
 			var dir = new THREE.Vector3(srcX-destX, 0, destY-srcY);
 			var lst = self.eventMap.get(destX, destY);

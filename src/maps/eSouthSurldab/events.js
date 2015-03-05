@@ -15,9 +15,10 @@ var Trigger = require("tpp-trigger");
 var Warp = require("tpp-warp");
 var Event = require("tpp-event");
 // var CameraTrigger = require("tpp-cameratrigger");
+var ParticleEvent = require("tpp-particle");
 var AnimEvent = require("tpp-animevent");
 
-var fountainRunning = !!DEBUG._fountainRuns;
+var fountainRunning = !DEBUG._fountainRuns;
 
 ////////////////////////// Model Modifications ///////////////////////////
 $(function() {
@@ -141,7 +142,7 @@ add(new Warp({ //19
 
 
 //////////////////////////// Central Plaza ///////////////////////////////
-var centralPlazaCamera = "0";
+var centralPlazaCamera = "central";
 var fountainEffect;
 
 if (fountainRunning) {
@@ -152,7 +153,7 @@ if (fountainRunning) {
 	
 	add(fountainEffect = new ParticleEvent({
 		id: "PARTICLE_Fountain",
-		location: [47, 42],
+		location: [57, 42],
 		boundingSize: 5,
 		killingFloor: -0.6,
 		
@@ -181,8 +182,8 @@ if (fountainRunning) {
 				
 				case 1: {
 					var NUM_STREAMS = 16;
-					var RADIUS_ADJ = 3.5;
-					var VEL_ADJ = 0.6;
+					var RADIUS_ADJ = 5.1;
+					var VEL_ADJ = 0.55;
 					this._ring = (this._ring+1) % NUM_STREAMS;
 					
 					var x = Math.sin((2*Math.PI) * (this._ring/NUM_STREAMS)) * RADIUS_ADJ;

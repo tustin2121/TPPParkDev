@@ -92,11 +92,14 @@ module.exports = {
 			if (m.side != THREE.DoubleSide) {
 				//Need to gate because the color set at the end is destructive
 				m.side = THREE.DoubleSide;
-				m.alphaTest = 0.1;
+				m.alphaTest = 0.2;
 				m.transparent = true;
 				m.emissive.set(m.color);
 				m.color.set(0);
+				m.needsUpdate = true;
 			}
+			
+			tree.children[j].renderDepth = (10+j) * -1;
 		}
 	}),
 	
