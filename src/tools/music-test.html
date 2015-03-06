@@ -1,0 +1,43 @@
+<html>
+<head>
+	<script>window.BASEURL = "{{ baseurl }}";</script>
+	<link rel="stylesheet" type="text/css" href="{{ baseurl }}/css/game.css">
+	<script src="{{ baseurl }}/js/jquery-2.1.1.min.js"></script>
+	<script src="{{ baseurl }}/js/jquery.cookie.js"></script>
+	<script src="{{ baseurl }}/js/jquery.base64.js"></script>
+	
+	<script src="{{ baseurl }}/js/preload.js"></script>
+	
+	<script src="{{ baseurl }}/js/eventlib.js"></script>
+	<script src="music-test.js"></script>
+	
+	<style>
+html { color: #ffffff; }
+
+#audiotable {
+	margin: 10px auto;
+	width: 600px;
+}
+.songRow {
+	width: 100%;
+	height: 60px;
+}
+.addAudio {
+	
+}
+	</style>
+</head>
+<body>
+	<table id="audiotable">
+		<tr class="songRow addAudio">
+			<td colspan="3">
+				Add Song: 
+				<input id="idin" type="text" list="knownSongs" />
+				<button id="loadbtn">Load</button>
+			</td>
+		</tr>
+	</table>
+	<div id="soundctrl"></div>
+	
+</body>
+</html>

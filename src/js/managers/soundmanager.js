@@ -66,6 +66,7 @@ extend(SoundManager.prototype, {
 				url : BASEURL+"/snd/" + id + this.ext,
 			});
 			this.sounds[id].mustKeep = true;
+			this.emit("load_sound", id);
 		}
 		return this.sounds[id];
 	},
@@ -75,6 +76,7 @@ extend(SoundManager.prototype, {
 		if (!this.music[id]) {
 			this.music[id] = createAudio_Tag(id, info); //force using this kind
 			this.music[id].mustKeep = true;
+			this.emit("load_music", id);
 		}
 		return this.music[id];
 	},
@@ -83,6 +85,7 @@ extend(SoundManager.prototype, {
 	loadSound: function(id, info) {
 		if (!this.sounds[id]) {
 			this.sounds[id] = this.createAudio(id, info);
+			this.emit("load_sound", id);
 		}
 		return this.sounds[id];
 	},
@@ -92,6 +95,7 @@ extend(SoundManager.prototype, {
 		if (!this.music[id]) {
 			this._ensureRoomForMusic();
 			this.music[id] = this.createAudio(id, info);
+			this.emit("load_music", id);
 		}
 		return this.music[id];
 	},
@@ -120,6 +124,7 @@ extend(SoundManager.prototype, {
 		
 		this.music[oldestId].unload();
 		delete this.music[oldestId];
+		this.emit("unloaded-music", oldestId);
 	},
 	
 	/////////////////////////////// Playing ///////////////////////////////
@@ -353,6 +358,7 @@ function createAudio_WebAPI(id, info) {
 		__gainCtrl: null,
 		__muteCtrl: null,
 		__bloburl: null,
+		__debugAnalyser: null,
 		
 		__currSrc: null,
 		
@@ -385,6 +391,7 @@ function createAudio_WebAPI(id, info) {
 			
 			src.connect(this.__gainCtrl);
 			src.start();
+			this._playing = true;
 			
 			this.__currSrc = src;
 		},
@@ -482,15 +489,22 @@ function createAudio_WebAPI(id, info) {
 	}
 	
 	sobj.__gainCtrl = audioContext.createGain();
-	
 	//TODO look into 3d sound fun: https://developer.mozilla.org/en-US/docs/Web/API/AudioContext.createPanner
-	
 	sobj.__muteCtrl = audioContext.createGain();
-	
 	
 	sobj.__gainCtrl.connect(sobj.__muteCtrl);
 	//TODO
-	sobj.__muteCtrl.connect(audioContext.destination);
+	
+	if (DEBUG.soundAnalyzer) {
+		var da = sobj.__debugAnalyser = audioContext.createAnalyser();
+		da.fftSize = 1024;//2048;
+		this.emit("DEBUG-AnalyserCreated", id, da);
+		
+		sobj.__muteCtrl.connect(da);
+		da.connect(audioContext.destination);
+	} else {
+		sobj.__muteCtrl.connect(audioContext.destination);
+	}
 	
 	return sobj;
 }
