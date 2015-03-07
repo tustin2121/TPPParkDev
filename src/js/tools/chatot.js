@@ -21,7 +21,7 @@ window.THREE = {
 var renderLoop = require("../model/renderloop");
 
 // require("../globals");
-window.Chat = require("../chat/chat-core.js");
+// window.Chat = require("../chat/chat-core.js");
 window.gameState = require("../gamestate");
 
 // On Ready

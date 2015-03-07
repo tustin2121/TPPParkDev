@@ -650,6 +650,24 @@ function packageLocalAssets(srcdir, base, config) {
 			);
 		}
 	}
+	if (config.music) {
+		for (var i = 0; i < config.music.length; i++) {
+			var sprite = config.music[i];
+			copyFile(
+				"res/music/"+sprite, 
+				base+"/bgmusic/"+path.basename(sprite)
+			);
+		}
+	}
+	if (config.sound) {
+		for (var i = 0; i < config.sound.length; i++) {
+			var sprite = config.sound[i];
+			copyFile(
+				"res/snd/"+sprite, 
+				base+"/snd/"+path.basename(sprite)
+			);
+		}
+	}
 }
 
 function zipWorkingDirectory(id) {

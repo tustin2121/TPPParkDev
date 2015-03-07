@@ -28,6 +28,11 @@ $(function(){
 		$("#loadbtn").blur();
 	});
 	
+	$("#hidebtn").on("click", function(){
+		_infoParent.visible = !_infoParent.visible;
+		$("#hidebtn").text(_infoParent.visible? "Hide Info" : "Show Info");
+	});
+	
 	renderLoop.start({
 		clearColor : 0xFF0000,
 		ticksPerSecond : 20,

@@ -353,10 +353,17 @@ function buildDevTools() {
 		copyFileWithJekyllPrepend("src/tools/gallery.html", BUILD_OUT+"tools/gallery.html");
 		copyFileWithJekyllPrepend("src/tools/ledgesim.html", BUILD_OUT+"tools/ledgesim.html");
 		copyFileWithJekyllPrepend("src/tools/chatot.html", BUILD_OUT+"tools/chatot.html");
-		
+		copyFileWithJekyllPrepend("src/tools/music-test.html", BUILD_OUT+"tools/music-test.html");
 	});
 	var l = sync.await();
 	console.log("[Copy ] Copied", l.length, "dev tools files.");
+	
+	//These copies can happen in parallel
+	sync.parallel(function(){
+		copyDirectory("res/music/", BUILD_OUT+"tools/music/");
+	});
+	var l = sync.await();
+	console.log("[Copy ] Copied", l.length, "music test files.");
 	
 	///////////////////////////
 	
@@ -377,6 +384,10 @@ function buildDevTools() {
 	
 	bundle("tools/chatot", { 
 		dest:BUILD_OUT+"tools/chatot.js", appcache:false, 
+	});
+	
+	bundle("tools/music-test", { 
+		dest:BUILD_OUT+"tools/music-test.js", appcache:false, 
 	});
 }
 
