@@ -149,4 +149,7 @@ var KNOWN_SONGS = {
 	"m_gallery": 		{ "loopStart": 0.773, "loopEnd": 89.554 },
 	"m_welcome_pt":		{ "loopStart": 2.450, "loopEnd": 66.500 },
 	"m_researchlab":	{ "loopStart": 2.450, "loopEnd": 66.500 },
+	"m_gamecorner":		{ "loopStart": 18.61, "loopEnd": 79.010 },
+	"m_casino_win":		{ "loopStart": 3.160, "loopEnd": 15.167 },
+	"m_casino_win2":	{ "loopStart": 1.516, "loopEnd": 12.185 },
 };
