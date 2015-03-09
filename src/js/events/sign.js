@@ -30,7 +30,7 @@ extend(Sign.prototype, {
 			if (f.x != this.facing.x || f.y != this.facing.y)
 				return; //don't show box if not looking at the sign
 		}
-		UI.showTextBox(this.frame_type, this.text);
+		UI.showTextBox(this.frame_type, this.text, { owner: this });
 	},
 	
 	/** If the sign is provided by the map geometry, the map provides the collision as well. */

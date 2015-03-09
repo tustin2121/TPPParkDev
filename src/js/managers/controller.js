@@ -94,7 +94,10 @@ extend(ControlManager.prototype, {
 			if (this.inputContext.top != ctx) return;
 		}
 		
-		return this.keys_down[key] == 1;
+		if( this.keys_down[key] == 1 ) {
+			this.keys_down[key]++; //so no other check may pass this test
+			return true;
+		}
 	},
 	
 	setKeyConfig : function() {
@@ -132,7 +135,11 @@ extend(ControlManager.prototype, {
 	
 	emitKey : function(action, down) {
 		if (this.keys_down[action] != down) {
-			this.keys_down[action] = down;
+			if (down) {
+				this.keys_down[action]++; 
+			} else {
+				this.keys_down[action] = 0;
+			}
 			this.emit("control-action", action, down);
 		}
 	},

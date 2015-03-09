@@ -490,21 +490,23 @@ function processMapModel(id, file) {
 	////////////////////////////////////////////////////////////////////////////////
 	// Step 4: Copy image files over to the output folder
 	
-	//TODO Check if images are Powers of Two!
-	console.warn("WARNING: TODO Check if Images are Powers of Two!!");
-	sync.parallel(function(){
-		for (var i = 0; i < textures.length; i++) {
-			var tex = textures[i];
-			
-			var read = fs.createReadStream(tex.path);
-			var write = fs.createWriteStream(BUILD_TEMP+id+"/"+tex.newname);
-			// console.log("[cObjs] Writing Texture file to", BUILD_TEMP+id+"/"+tex.newname);
-			write.on("finish", sync.defer());
-			read.pipe(write);
-		}
-	});
-	var copyres = sync.await(); //Pause here until the copying is complete
-	console.log("[cObjs] Copied", (copyres)?copyres.length:"???","files; used", numTextsUsed, "textues out of", numTextsDefined);
+	if (textures.length){ 
+		//TODO Check if images are Powers of Two!
+		console.warn("WARNING: TODO Check if Images are Powers of Two!!");
+		sync.parallel(function(){
+			for (var i = 0; i < textures.length; i++) {
+				var tex = textures[i];
+				
+				var read = fs.createReadStream(tex.path);
+				var write = fs.createWriteStream(BUILD_TEMP+id+"/"+tex.newname);
+				// console.log("[cObjs] Writing Texture file to", BUILD_TEMP+id+"/"+tex.newname);
+				write.on("finish", sync.defer());
+				read.pipe(write);
+			}
+		});
+		var copyres = sync.await(); //Pause here until the copying is complete
+		console.log("[cObjs] Copied", (copyres)?copyres.length:"???","files; used", numTextsUsed, "textues out of", numTextsDefined);
+	}
 	return;
 	
 	function markTexture(type, arg) {
@@ -534,7 +536,8 @@ function processMapModel(id, file) {
 			}
 			
 			if (!fs.existsSync(path)) {
-				throw "The Material Library references an image I cannot find! "+path;
+				console.log("[cObjs] ERROR: The Material Library references an image I cannot find! "+path);
+				return type +" "+ ((texDef.args)?texDef.args +" ":"") + "missing.png";
 			}
 		}
 		

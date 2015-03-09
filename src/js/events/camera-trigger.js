@@ -14,7 +14,7 @@ var extend = require("extend");
  * Triggers may take up more than one space.
  */
 function CameraTrigger(base, opts) {
-	Event.call(this, base, opts);
+	Trigger.call(this, base, opts);
 }
 inherits(CameraTrigger, Trigger);
 extend(CameraTrigger.prototype, {
