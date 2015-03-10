@@ -94,6 +94,7 @@ function setupShadowMaps(map, shadowMaps) {
 
 
 var camBehaviors = {
+	none: function(){},
 	followPlayer : function(cdef, cam, camRoot) {
 		return function(delta) {
 			camRoot.position.set(player.avatar_node.position);
@@ -131,9 +132,16 @@ function setupCameras(map, camlist) {
 			var cp = camlist[cname].position || [0, 5.45, 5.3];
 			c.position.set(cp[0], cp[1], cp[2]);
 			
-			var cl = camlist[cname].lookat || [0, 0.8, 0];
-			c.lookAt(new THREE.Vector3(cl[0], cl[1], cl[2]));
-			
+			if (camlist[cname].rotation) {
+				var cl = camlist[cname].rotation || [-45, 0, 0];
+				cl[0] *= Math.PI / 180;
+				cl[1] *= Math.PI / 180;
+				cl[2] *= Math.PI / 180;
+				c.rotation.set(cl[0], cl[1], cl[2]);
+			} else {
+				var cl = camlist[cname].lookat || [0, 0.8, 0];
+				c.lookAt(new THREE.Vector3(cl[0], cl[1], cl[2]));
+			}
 		}
 		
 		c.name = "Camera ["+cname+"]";

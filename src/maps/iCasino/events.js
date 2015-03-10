@@ -63,4 +63,13 @@ add(new CameraTrigger({
 
 /////////////////////////////// Reel Minigame /////////////////////////////////
 
-add(require("./event_slotmachine.js"));
+var reelgame;
+add(reelgame = require("./event_slotmachine.js"));
+
+add(new Event({
+	id: "Reels1",
+	locations: [13, 16],
+	onEvents: {
+		interacted: function() { reelgame.emit("interacted"); },
+	},
+}))

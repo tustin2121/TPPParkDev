@@ -16,6 +16,12 @@
 		"hallway": {
 			"position": [5, 3, 0]
 		},
+		"reels": {
+			"position": [0, 1, 68],
+			"rotation": [-4, 0, 0],
+			"fixedCamera": true,
+			"behavior": "none"
+		},
 		"0": {}
 	},
 	"lighting" : {
