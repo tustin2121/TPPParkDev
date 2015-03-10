@@ -144,8 +144,8 @@ extend(PlayerChar.prototype, {
 			}
 			
 			
-			if (this.controlTimeout < 1) {
-				this.controlTimeout += CONFIG.timeout.walkControl * delta;
+			if (this.controlTimeout < CONFIG.timeout.walkControl) {
+				this.controlTimeout += delta;
 				
 				if (!this._initPathingState().moving) {
 					this.faceDir(x, y);

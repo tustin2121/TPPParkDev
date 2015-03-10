@@ -707,7 +707,7 @@ function setupTypewriter(textbox, callback) {
 	function blinkCursor(delta) {
 		tick -= delta;
 		if (tick <= 0) {
-			tick = 5;
+			tick = 0.7;
 			textbox.model.morphTargetInfluences[M_HIDE] = !textbox.model.morphTargetInfluences[M_HIDE];
 		}
 	}
@@ -823,7 +823,7 @@ extend(Skrim.prototype, {
 		function _anim(prop) {
 			var updated = self[prop].alpha < 1;
 			
-			self[prop].alpha += delta * (0.1 * self.speed);
+			self[prop].alpha += delta * self.speed;
 			if (self[prop].alpha > 1) {
 				self[prop].alpha = 1;
 			}
@@ -878,9 +878,9 @@ extend(AjaxLoader.prototype, {
 	progress: 0,
 	progress_total: 100,
 	opacity: 0,
-	_opacity_speed: 0.2,
+	_opacity_speed: 2,
 	spin: 0,
-	_spin_speed: 90,
+	_spin_speed: 900,
 	_spin_falloff: 500,
 	
 	letterdefs : [

@@ -95,14 +95,14 @@ extend(ParticleSystemEvent.prototype, {
 			// Discard this tick update entirely if the delta is more than a certain amount
 			// Chances are, the browser has limited our tick callbacks, and more than 
 			// this threshold will simply cause the particle system to go haywire anyway
-			if (delta > 1) return;
+			if (delta > 0.1) return;
 			
 			if (!this.running) {
 				//Even if we're not running this, run it until the system is mature
 				if (this.particleSys.emitterAge > this.particleSys.particleDeathAge)
 					return;
 			}
-			this.particleSys.update(delta * 0.1);
+			this.particleSys.update(delta);
 		},
 	}
 });

@@ -71,7 +71,7 @@ add(new ParticleEvent({
 	boundingSize: 5,
 	killingFloor: -0.6,
 	
-	running: false,
+	running: true,
 	
 	sprite: "waterdroplets.png",
 	

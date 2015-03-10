@@ -310,7 +310,7 @@ add(new AnimEvent({
 		return null;
 	},
 	onTick : function(delta) {
-		this.sign_node.rotateY(delta * 0.05);
+		this.sign_node.rotateY(delta * 0.5);
 	},
 }))
 

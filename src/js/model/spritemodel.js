@@ -440,7 +440,7 @@ extend(BubbleSprite.prototype, {
 		}
 		
 		if (this._alpha <= 0) {
-			this._alpha = 5;
+			this._alpha = 0.5;
 			
 			this._frameno = (this._frameno + 1) % 2;
 			var fn = this._frameno * 2;

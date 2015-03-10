@@ -68,7 +68,7 @@ function renderLoop() {
 
 var paused = false;
 function initGameLoop(ticksPerSec) {
-	_rate = 1000 / ticksPerSec;
+	var _rate = 1000 / ticksPerSec;
 	
 	var accum = 0;
 	var now = 0;
@@ -92,9 +92,8 @@ function initGameLoop(ticksPerSec) {
 		if (accum < _rate) return;
 		wholeTick = ((accum / _rate)|0);
 		if (wholeTick <= 0) return;
-		wholeTick *= _rate;
 		
-		var delta = wholeTick * 0.01;
+		var delta = wholeTick / ticksPerSec;
 		if (window.currentMap && currentMap.logicLoop)
 			currentMap.logicLoop(delta);
 		if (window.UI && UI.logicLoop)
@@ -105,6 +104,7 @@ function initGameLoop(ticksPerSec) {
 		if (window.SoundManager && SoundManager._tick)
 			SoundManager._tick(delta);
 		
+		wholeTick *= _rate;
 		accum -= wholeTick;
 	}
 }

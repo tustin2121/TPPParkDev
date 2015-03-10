@@ -125,7 +125,7 @@ extend(LookAround.prototype, {
 			case 2: me.facing.set( 0,0, 1); break;
 			case 3: me.facing.set( 0,0,-1); break;
 		}
-		this.waitTime += (Math.random() * 30) + 5;
+		this.waitTime += (Math.random() * 3) + 3;
 	},
 });
 module.exports.LookAround = LookAround;
@@ -154,7 +154,7 @@ extend(Meander.prototype, {
 			case 6: me.moveDir("l"); break;
 			case 7: me.moveDir("r"); break;
 		}
-		this.waitTime += (Math.random() * 30) + 5;
+		this.waitTime += (Math.random() * 3) + 3;
 	},
 });
 module.exports.Meander = Meander;

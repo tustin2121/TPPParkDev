@@ -2,12 +2,12 @@
 
 window.CONFIG = {
 	speed : {
-		pathing: 0.25,
-		animation: 3,
-		bubblepop: 0.95,
+		pathing: 2.5,
+		animation: 30,
+		bubblepop: 9.5,
 	},
 	timeout : {
-		walkControl : 1,
+		walkControl : 0.1,
 	}
 };
 

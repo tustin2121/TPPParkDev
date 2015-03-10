@@ -326,6 +326,7 @@ function createAudio_Tag(id, info) {
 		loopTick: function(delta) {
 			if (!this.loopEnd || !this.playing_real) return;
 			
+			//TODO support this.fadeout
 			if (this.__tag.currentTime >= this.loopEnd) {
 				this.__tag.currentTime -= (this.loopEnd - this.loopStart);
 			}
@@ -413,7 +414,7 @@ function createAudio_WebAPI(id, info) {
 		loopTick: function(delta) {
 			if (this.fadeout) {
 				if (this.__muteCtrl.gain.value > 0.001) {
-					this.__muteCtrl.gain.value -= delta * 0.05;
+					this.__muteCtrl.gain.value -= delta * 0.5;
 					// console.log(this.__muteCtrl.gain.value);
 				} else {
 					this.__currSrc.stop();

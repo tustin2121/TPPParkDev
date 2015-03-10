@@ -37,7 +37,7 @@ function WaterAnimEvent(opts) {
 		tex_b : [], //water flow x and y
 		
 		name_regex: null, //only collect the named assets
-		speed: 0.02,
+		speed: 0.2,
 		yaugment: 1.2,
 		
 		getAvatar: function(map) {
@@ -104,7 +104,7 @@ function WaterRippleAnimEvent(opts) {
 		tex_r : [], //water ripple
 		
 		name_regex: null, //only collect the named assets
-		speed: 0.1,
+		speed: 1,
 		yaugment: 1.2,
 		amplitude: 0.03,
 		

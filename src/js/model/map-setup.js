@@ -43,12 +43,20 @@ function setupLighting(map, def) {
 	
 	var ORIGIN = new THREE.Vector3(0, 0, 0);
 	
-	light = new THREE.DirectionalLight(0xffffff, 0.9);
-	light.position.set(4, 4, 4);
-	light.lookAt(ORIGIN);
-	node.add(light);
+	// light = new THREE.DirectionalLight(0xffffff, 0.9);
+	// light.position.set(4, 4, 4);
+	// light.lookAt(ORIGIN);
+	// node.add(light);
 	
-	light = new THREE.DirectionalLight(0xffffff, 0.9);
+	// light = new THREE.DirectionalLight(0xffffff, 0.9);
+	// light.position.set(-4, 4, 4);
+	// light.lookAt(ORIGIN);
+	// node.add(light);
+	
+	// light = new THREE.AmbientLight(0x888888);
+	// node.add(light);
+	
+	light = new THREE.HemisphereLight(0xFFFFFF, 0x111111, 1.4);
 	light.position.set(-4, 4, 4);
 	light.lookAt(ORIGIN);
 	node.add(light);

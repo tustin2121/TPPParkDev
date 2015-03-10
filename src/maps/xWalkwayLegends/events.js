@@ -174,12 +174,12 @@ add(new Sign({
 // 		tick: function(delta) {
 // 			for (var i = 0; i < seawater.length; i++) {
 // 				var off = seawater[i].offset.x;
-// 				off += delta * 0.02;
+// 				off += delta * 0.2;
 // 				seawater[i].offset.set(off, off * 1.2);
 // 				seawater[i].needsUpdate = true;
 // 			}
 			
-// 			shipfoam.offset.x += delta * 0.02;
+// 			shipfoam.offset.x += delta * 0.2;
 // 			shipfoam.needsUpdate = true;
 // 		}
 // 	}

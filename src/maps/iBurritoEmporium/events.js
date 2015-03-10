@@ -151,7 +151,7 @@ add(new Warp({
 	exit_to: null,//{ map: "", warp: 0 },
 	
 	secretShelf: null,
-	_speed: 0.08,
+	_speed: 0.8,
 	_alpha: 0,
 	isOpen: false,
 	
