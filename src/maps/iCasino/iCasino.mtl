@@ -1,5 +1,5 @@
 # Blender MTL File: 'iCasino.blend'
-# Material Count: 9
+# Material Count: 13
 
 newmtl Blackness
 Ns 96.078431
@@ -9,6 +9,36 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 1
+
+newmtl ElevatorInt
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.010000 0.010000 0.010000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\_Objects\Elevator\elevatorTex.png
+
+newmtl ElevatorMetal
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.062889 0.062889 0.062889
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\_Objects\Elevator\elevatorTex.png
+
+newmtl Glass
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.135000 0.135000 0.135000
+Ni 1.000000
+d 0.350000
+illum 2
+map_Kd textures\glass.png
 
 newmtl None
 Ns 0
@@ -27,48 +57,51 @@ Ks 0.8 0.8 0.8
 d 1
 illum 2
 
-newmtl None_floor_green.png
-Ns 0
-Ka 0.000000 0.000000 0.000000
-Kd 0.8 0.8 0.8
-Ks 0.8 0.8 0.8
-d 1
-illum 2
-map_Kd textures\floor_green.png
-
-newmtl None_rug_orange_2.png
-Ns 0
-Ka 0.000000 0.000000 0.000000
-Kd 0.8 0.8 0.8
-Ks 0.8 0.8 0.8
-d 1
-illum 2
-map_Kd textures\rug_orange_2.png
-
-newmtl None_rug_red.png
-Ns 0
-Ka 0.000000 0.000000 0.000000
-Kd 0.8 0.8 0.8
-Ks 0.8 0.8 0.8
-d 1
-illum 2
-map_Kd textures\rug_red.png
-
 newmtl Reel
 Ns 96.078431
 Ka 0.000000 0.000000 0.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
+Kd 0.800000 0.800000 0.800000
+Ks 0.004854 0.004854 0.004854
 Ni 1.000000
 d 1.000000
 illum 2
 map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\_Objects\slotmachines\reel.png
 
+newmtl Rug_Green
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.010000 0.010000 0.010000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd textures\floor_green.png
+
+newmtl Rug_Orange
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.010000 0.010000 0.010000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd textures\rug_orange_2.png
+
+newmtl Rug_Red
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.010000 0.010000 0.010000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd textures\rug_red.png
+
 newmtl SlotMachine
 Ns 92.156863
 Ka 0.000000 0.000000 0.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.350000 0.350000 0.350000
+Kd 1.000000 1.000000 1.000000
+Ks 0.002140 0.002140 0.002140
 Ni 1.000000
 d 1.000000
 illum 2
@@ -77,10 +110,19 @@ map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\_Objects\slotmac
 newmtl SlotMachineScreen
 Ns 92.156863
 Ka 0.000000 0.000000 0.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.350000 0.350000 0.350000
+Kd 1.000000 1.000000 1.000000
+Ks 0.003500 0.003500 0.003500
 Ni 1.000000
 d 1.000000
 illum 2
 Ke 0.500000
 map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\_Objects\slotmachines\slotmachine_hd.png
+
+newmtl Wall
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.002668 0.002668 0.002668
+Ni 1.000000
+d 1.000000
+illum 2

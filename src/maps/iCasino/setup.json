@@ -14,11 +14,16 @@
 			"position": [6, 6, 0]
 		},
 		"hallway": {
-			"position": [5, 3, 0]
+			"position": [4, 2.6, 0],
+			"fov": 75,
+			"behavior": "followPlayerX",
+			"zaxis": -12.5,
+			"xmax": 10.5, "xmin": -10.5
 		},
 		"reels": {
 			"position": [0, 1, 68],
 			"rotation": [-4, 0, 0],
+			"far": 30,
 			"fixedCamera": true,
 			"behavior": "none"
 		},

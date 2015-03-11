@@ -107,8 +107,19 @@ var camBehaviors = {
 		return function(delta) {
 			camRoot.position.set(player.avatar_node.position);
 			//TODO negate moving up and down with jumping
-		}
+		};
 	},
+	followPlayerX: function(cdef, came, camRoot) {
+		var zaxis = cdef["zaxis"] || 0;
+		var xmax = cdef["xmax"] || 1000;
+		var xmin = cdef["xmin"] || -1000;
+		
+		return function(delta) {
+			camRoot.position.x = Math.max(xmin, Math.min(xmax, player.avatar_node.position.x));
+			camRoot.position.y = player.avatar_node.position.y;
+			camRoot.position.z = zaxis;
+		};
+	}
 };
 
 function setupCameras(map, camlist) {

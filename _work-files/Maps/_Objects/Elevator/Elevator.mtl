@@ -1,0 +1,22 @@
+# Blender MTL File: 'Elevator.blend'
+# Material Count: 2
+
+newmtl ElevatorInt
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.010000 0.010000 0.010000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd elevatorTex.png
+
+newmtl ElevatorMetal
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.062889 0.062889 0.062889
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd elevatorTex.png

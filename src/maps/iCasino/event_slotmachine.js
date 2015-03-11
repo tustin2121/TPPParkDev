@@ -8,7 +8,7 @@ var NUM_SYMBOLS = 6;
 var UV_X = 1;
 var UV_Y = 1/8;
 var SYMBOLS_PER_REEL = 30;
-DEBUG.SPINSPEED = 360/SYMBOLS_PER_REEL * 0.48 * (Math.PI / 180);
+DEBUG.SPINSPEED = 360/SYMBOLS_PER_REEL * 48 * (Math.PI / 180);
 var SLIP_LIMIT = 4;
 
 var STATE_OFF = 0;
@@ -37,20 +37,20 @@ function randomizeReels() {
 		var uvs = reels[r].geometry.faceVertexUvs[0];
 		var lastSym = -1;
 		for (var i = 0; i < SYMBOLS_PER_REEL; i++) {
-			// var symbol = Math.floor(Math.random() * NUM_SYMBOLS);
-			// if (symbol == lastSym) { //don't dup a symbol we just generated
-			// 	symbol = (symbol + 1) % NUM_SYMBOLS;
-			// }
-			// lastSym = symbol;
-			var symbol = Math.min(i, 7);
+			var symbol = Math.floor(Math.random() * NUM_SYMBOLS);
+			if (symbol == lastSym) { //don't dup a symbol we just generated
+				symbol = (symbol + 1) % NUM_SYMBOLS;
+			}
+			lastSym = symbol;
+			// var symbol = Math.min(i, 7);
 			reels[r].symbols[i] = symbol;
 			
-			uvs[i*2+0][0].set(UV_X * 1, UV_Y * (symbol+1));
-			uvs[i*2+0][1].set(UV_X * 0, UV_Y * (symbol+1));
-			uvs[i*2+0][2].set(UV_X * 1, UV_Y * (symbol+0));
-			uvs[i*2+1][0].set(UV_X * 0, UV_Y * (symbol+1));
-			uvs[i*2+1][1].set(UV_X * 0, UV_Y * (symbol+0));
-			uvs[i*2+1][2].set(UV_X * 1, UV_Y * (symbol+0));
+			uvs[i*2+0][0].set(UV_X * 0, UV_Y * (symbol+0));
+			uvs[i*2+0][1].set(UV_X * 1, UV_Y * (symbol+0));
+			uvs[i*2+0][2].set(UV_X * 0, UV_Y * (symbol+1));
+			uvs[i*2+1][0].set(UV_X * 1, UV_Y * (symbol+0));
+			uvs[i*2+1][1].set(UV_X * 1, UV_Y * (symbol+1));
+			uvs[i*2+1][2].set(UV_X * 0, UV_Y * (symbol+1));
 			
 		}
 		reels[r].geometry.uvsNeedUpdate = true;
@@ -85,7 +85,7 @@ function tick_insertCoin() {
 	}
 }
 
-function tick_spinReels() {
+function tick_spinReels(delta) {
 	if (Controller.isDown("Cancel", "casinoReels")) { endGame(); return; }
 	
 	var stopnum = 0;
@@ -93,16 +93,16 @@ function tick_spinReels() {
 		if (reels[i].stopped) { 
 			if (reels[i].rotation.x < reels[i].stoppingPosition) {
 				var distTo = reels[i].stoppingPosition - reels[i].rotation.x;
-				if (distTo < 0.001) {
+				if (distTo < 0.01) {
 					reels[i].rotation.x = reels[i].stoppingPosition;
 				} else {
-					reels[i].rotation.x += Math.min(distTo / 2, DEBUG.SPINSPEED);
+					reels[i].rotation.x += Math.min(distTo / 2, DEBUG.SPINSPEED * delta);
 				}
 			} else {
 				stopnum++;
 			}
 		} else {
-			reels[i].rotation.x += DEBUG.SPINSPEED;
+			reels[i].rotation.x += DEBUG.SPINSPEED * delta;
 		}
 	}
 	
@@ -128,7 +128,7 @@ function tick_spinReels() {
 		reel.stopped = true;
 		reel.rotation.x %= (2 * Math.PI);
 		
-		var realPos = reel.rotation.x + DEBUG.SPINSPEED; //where it'll be next loop
+		var realPos = reel.rotation.x + (DEBUG.SPINSPEED * 1); //where it'll be next second
 		var stopSym = rotationToIndex(realPos);
 		var stopPos = indexToRotation(stopSym);
 		reel.stoppingPosition = stopPos;
@@ -322,18 +322,18 @@ module.exports = new Event({
 			reels[i].stopped = true;
 		}
 		
-		randomizeReels();
+		// randomizeReels();
 		
 		return null;
 	},
 	
 	onEvents: {
 		interacted: beginGame,
-		tick: function() {
+		tick: function(delta) {
 			switch (gameState) {
-				case STATE_IDLE: tick_insertCoin(); break;
-				case STATE_SPINNING: tick_spinReels(); break;
-				case STATE_PAYOUT: tick_payout(); break;
+				case STATE_IDLE: tick_insertCoin(delta); break;
+				case STATE_SPINNING: tick_spinReels(delta); break;
+				case STATE_PAYOUT: tick_payout(delta); break;
 			}
 		},
 	},

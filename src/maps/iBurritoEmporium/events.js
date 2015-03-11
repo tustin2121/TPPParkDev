@@ -7,22 +7,15 @@ var Warp = require("tpp-warp");
 var inherits = require("inherits");
 var extend = require("extend");
 
-//////////////// Fixing Transparency Problems ////////////////
-
-(function(){
-	// Setup glass railings
-	var railing = currentMap.mapmodel.getChildByName("2ndRailing");
-	for (var i = 0; i < railing.children.length; i++) {
-		railing.children[i].renderDepth = -50;
-	}
+////////////////////////// Model Modifications ///////////////////////////
+$(function() {
+	var ModelMods = require("tpp-model-mods");
 	
-	// Setup the godrays
-	var rays = currentMap.mapmodel.getChildByName("Godrays");
-	for (var i = 0; i < rays.children.length; i++) {
-		rays.children[i].renderDepth = -100;
-		rays.children[i].material.blending = THREE.AdditiveBlending;
-		rays.children[i].material.depthWrite = false;
-	}
+	ModelMods.renderDepthFix.name = ["2ndRailing"]; //glass railing
+	ModelMods.godrays.name = ["Godrays"];
+	
+	ModelMods.modify();
+	
 	
 	// Hide rope gates by putting them under the floor
 	var ropeGate;
@@ -30,24 +23,7 @@ var extend = require("extend");
 		ropeGate = currentMap.mapmodel.getChildByName("2ndLineRope"+i);
 		ropeGate.position.y = -1.1;
 	}
-	
-	
-	
-	// var mat = new THREE.Matrix4().makeTranslation(0, -5/2, -5/2); //for some reason, this is doubled?!
-	
-	// for (var i = 0; i < railing.children.length; i++) {
-	// 	var geom = railing.children[i].geometry;
-	// 	geom.applyMatrix(mat);
-		
-	// 	geom.verticesNeedUpdate = true;
-	// 	geom.computeBoundingBox();
-	// 	geom.computeBoundingSphere();
-		
-	// 	railing.children[i].position.z = 5;
-	// 	railing.children[i].position.y = 5;
-	// }
-	
-})();
+});
 
 
 /////////////////////// Warps ///////////////////////////

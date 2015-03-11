@@ -438,6 +438,7 @@ function processMapModel(id, file) {
 			case "usemtl": // Rewrite the usemtl line reference the reworked file properly
 				var oldname = comps[1]; 
 				var mat = materials[oldname];
+				if (!mat) throw new Error("Invalid material name in obj file! "+oldname);
 				if (!mat.newname) {
 					var id = "_00"+(numMatsUsed++);
 					id = id.substr(id.length-2);
