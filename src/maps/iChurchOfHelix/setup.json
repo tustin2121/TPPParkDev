@@ -14,7 +14,7 @@
 		"0": {}
 	},
 	"lighting" : {
-		"default": true,
+		"type": "int",
 		"lights" : []
 	},
 	"shadowmap": {

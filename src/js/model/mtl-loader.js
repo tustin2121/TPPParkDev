@@ -242,7 +242,8 @@ MaterialCreator.prototype = {
 		}
 		
 		console.log("MATName", matName);
-		this.materials[ matName ] = new THREE.MeshPhongMaterial( params );
+		this.materials[ matName ] = new THREE.MeshPhongMaterial( params ); //per pixel lighting
+		// this.materials[ matName ] = new THREE.MeshLambertMaterial( params ); //per vertex lighting
 		scope.gc.collect( this.materials[matName] );
 		return this.materials[ matName ];
 		

@@ -5,7 +5,7 @@ var extend = require("extend");
 
 function setupMapRigging(map) {
 	{	// Setup Lighting Rigging
-		var lightdef = extend({ "default": true }, map.metadata.lighting);
+		var lightdef = extend({ "type": "int", "default": {} }, map.metadata.lighting);
 		
 		var rig = setupLighting(map, lightdef);
 		map.scene.add(rig);
@@ -38,28 +38,38 @@ function setupLighting(map, def) {
 	node.name = "Lighting Rig";
 	
 	var light;
-	
-	
-	
 	var ORIGIN = new THREE.Vector3(0, 0, 0);
 	
-	// light = new THREE.DirectionalLight(0xffffff, 0.9);
-	// light.position.set(4, 4, 4);
-	// light.lookAt(ORIGIN);
-	// node.add(light);
-	
-	// light = new THREE.DirectionalLight(0xffffff, 0.9);
-	// light.position.set(-4, 4, 4);
-	// light.lookAt(ORIGIN);
-	// node.add(light);
-	
-	// light = new THREE.AmbientLight(0x888888);
-	// node.add(light);
-	
-	light = new THREE.HemisphereLight(0xFFFFFF, 0x111111, 1.4);
-	light.position.set(-4, 4, 4);
-	light.lookAt(ORIGIN);
-	node.add(light);
+	if (def.type == "int") {
+		// Setup default interior lighting rig
+		var intensity = def["default"].intensity || 1.4;
+		var skyColor = def["default"].skyColor || 0xFFFFFF;
+		var groundColor = def["default"].groundColor || 0x111111;
+		
+		light = new THREE.HemisphereLight(skyColor, groundColor, intensity);
+		
+		var cp = def["default"].position || [-4, 4, 4];
+		light.position.set(cp[0], cp[1], cp[2]);
+		
+		light.lookAt(ORIGIN);
+		node.add(light);
+	}
+	else if (def.type == "ext") {
+		// Setup default exterior lighting rig, with sun movement
+		var intensity = def["default"].intensity || 1.4;
+		var skyColor = def["default"].skyColor || 0xFFFFFF;
+		var groundColor = def["default"].groundColor || 0x111111;
+		
+		light = new THREE.HemisphereLight(skyColor, groundColor, intensity);
+		
+		var cp = def["default"].position || [-4, 4, 4];
+		light.position.set(cp[0], cp[1], cp[2]);
+		
+		light.lookAt(ORIGIN);
+		node.add(light);
+		
+		//TODO setup sun movement
+	}
 	
 	return node;
 }

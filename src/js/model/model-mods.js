@@ -13,6 +13,7 @@ extend(Modification.prototype, {
 	prefix: null,
 	suffix: null,
 	regex: null,
+	all: false,
 	
 	fn: null,
 });
@@ -68,6 +69,9 @@ module.exports = {
 				else if (mods[m].regex && testRegex(mods[m].regex, ch[i].name)) {
 					mods[m].fn(ch[i]);
 				}
+				else if (mods[m].all) {
+					mods[m].fn(ch[i]);
+				}
 			}
 		}
 		
@@ -76,6 +80,7 @@ module.exports = {
 			mods[m].prefix = null;
 			mods[m].suffix = null;
 			mods[m].regex = null;
+			mods[m].all = false;
 		}
 	},
 	
@@ -110,10 +115,17 @@ module.exports = {
 	}),
 	
 	godrays: new Modification(function(rays){
-		for (var j = 0; j < rays.children.length; j++) {
+		for (var i = 0; i < rays.children.length; i++) {
 			rays.children[i].renderDepth = -100;
 			rays.children[i].material.blending = THREE.AdditiveBlending;
 			rays.children[i].material.depthWrite = false;
+		}
+	}),
+	
+	refreshMaterials: new Modification(function(obj){
+		for (var j = 0; j < obj.children.length; j++) {
+			var m = obj.children[j].material;
+			m.needsUpdate = true;
 		}
 	}),
 };

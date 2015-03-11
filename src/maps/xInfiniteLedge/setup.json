@@ -10,7 +10,7 @@
 		"0": {}
 	},
 	"lighting" : {
-		"default": true,
+		"type": "ext",
 		"lights" : []
 	},
 	"shadowmap": {

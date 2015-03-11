@@ -9,7 +9,7 @@
 		"0": {}
 	},
 	"lighting" : {
-		"default": true
+		"type": "int"
 	},
 	"shadowmap": {
 		"width": 512, "height": 512,

@@ -30,7 +30,10 @@
 		"0": {}
 	},
 	"lighting" : {
-		"default": true,
+		"type": "int",
+		"default": {
+			"intensity" : 0.5
+		},
 		"lights" : []
 	},
 	"shadowmap": {

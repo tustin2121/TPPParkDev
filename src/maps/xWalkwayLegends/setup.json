@@ -27,11 +27,11 @@
 		}
 	},
 	"lighting" : {
-		"default": true
+		"type": "ext"
 	},
 	"shadowmap": {
 		"width": 512, "height": 512,
-		"top": 10, "bottom": -25, "left": -20, "right": 20,
+		"top": 20, "bottom": -25, "left": -20, "right": 20,
 		"near": 70, "far": 80
 	},
 	

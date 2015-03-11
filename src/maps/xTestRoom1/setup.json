@@ -19,5 +19,9 @@
 			"position": [-5, 5, 0]
 		},
 		"0": {}
+	},
+	"lighting" : {
+		"type": "int",
+		"lights" : []
 	}
 }

@@ -51,6 +51,7 @@ extend(SoundManager.prototype, {
 			} else {
 				this.createAudio = createAudio_Tag;
 			}
+			this.__audioContext = audioContext;
 		} catch (e) {
 			this.createAudio = createAudio_Tag;
 		}
