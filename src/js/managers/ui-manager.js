@@ -310,8 +310,9 @@ function DialogBox(type) {
 extend(DialogBox.prototype, {
 	model : null,
 	element : null,
-	owner : null,
+	owner : null,	
 	html : [],
+	autoClose: true,
 	
 	advance : null,
 	complete: function(){},
@@ -325,9 +326,11 @@ extend(DialogBox.prototype, {
 		opts = extend({
 			owner: null,
 			isLast : false,
+			autoClose: true,
 		}, opts);
 		
 		this.owner = opts.owner;
+		this.autoClose = opts.autoClose;
 		
 		this._completionCallback = opts.complete;
 		
@@ -442,7 +445,8 @@ extend(DialogBox.prototype, {
 		} else {
 			console.log("end: ", txt);
 			controller.popInputContext("dlogWaiting");
-			this.hide();
+			if (this.autoClose)
+				this.hide();
 		}
 		
 	},

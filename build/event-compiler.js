@@ -218,11 +218,14 @@ function loadSpriteConfig(file, mapid) {
 
 
 function tryWrapCatch(src, msg) {
+	//*
+	return src;
+	/*/
 	return "try {\n"+
 		src +
 	"\n} catch (e) {\n" +
 	'\tconsole.error("'+msg+'", e, e.stack);\n' +
-	"}";
+	"}"; //*/
 }
 
 

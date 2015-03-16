@@ -92,7 +92,7 @@ SoundManager.on("unloaded-music", function(id){
 function loadSong(id) {
 	SoundManager.loadMusic(id, 
 		extend({
-			url: "/tools/music/"+id+".mp3",
+			url: BASEURL+"/tools/music/"+id+".mp3",
 		}, KNOWN_SONGS[id])
 	);
 }

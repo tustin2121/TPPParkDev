@@ -39,14 +39,14 @@ module.exports = {
 						{ d: "idle0", trans: true, },
 						{ d: "idle1", trans: true, },
 						{ d: "idle2", trans: true, },
-						{ d: "idle1", trans: true, },
+						{ d: "idle1", trans: true, loopTo: 0, },
 					]),
 					"speak": new SpriteAnimation({ singleDir: "d", frameLength: 5, }, [
 						{ d: "close0", },
 						{ d: "close1", },
 						{ d: "talk",  pause: true, },
-						{ d: "close0", },
-						{ d: "close1", trans: true, },
+						{ d: "open0", },
+						{ d: "open1", trans: true, },
 					]),
 				},
 			};

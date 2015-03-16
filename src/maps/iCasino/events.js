@@ -1,10 +1,279 @@
 // iCasino/events.js
 // 
 
+var inherits = require("inherits");
+var extend = require("extend");
+
 var Event = require("tpp-event");
 var Sign = require("tpp-sign");
 var Warp = require("tpp-warp");
 var CameraTrigger = require("tpp-cameratrigger");
+
+
+//////////////////////////// Volumetric Spotlights /////////////////////////////
+// Adapted from https://github.com/jeromeetienne/threex.volumetricspotlight
+// In turn from http://stemkoski.blogspot.fr/2013/07/shaders-in-threejs-glow-and-halo.html
+/*
+function VolumetricSpotLightMaterial(opts) {
+	if (!(this instanceof VolumetricSpotLightMaterial)) {
+		return new VolumetricSpotLightMaterial(opts);
+	}
+	
+	var params = this._createMatParams(opts);
+	THREE.ShaderMaterial.call(this, params);
+	this.type = "VolumetricSpotLightMaterial";
+	
+	this.transparent = true;
+	this.depthWrite = false;
+}
+inherits(VolumetricSpotLightMaterial, THREE.ShaderMaterial);
+extend(VolumetricSpotLightMaterial.prototype, {
+	
+	_createMatParams : function() {
+		return {
+			uniforms: { 
+				attenuation	: {
+					type	: "f",
+					value	: 10,//5.0
+				},
+				anglePower	: {
+					type	: "f",
+					value	: 3.3,//1.2
+				},
+				spotPosition		: {
+					type	: "v3",
+					value	: new THREE.Vector3( 0, 0, 0 )
+				},
+				lightColor	: {
+					type	: "c",
+					value	: new THREE.Color(0xFFFFFF)
+				},
+			},
+			vertexShader	: this._vertShader,
+			fragmentShader	: this._fragShader,
+			// side		: THREE.DoubleSide,
+			// blending	: THREE.AdditiveBlending,
+		};
+	},
+	
+	_vertShader: [
+		'varying vec3 vNormal;',
+		'varying vec3 vWorldPosition;',
+		
+		'void main(){',
+			'// compute intensity',
+			'vNormal		= normalize( normalMatrix * normal );',
+
+			'vec4 worldPosition	= modelMatrix * vec4( position, 1.0 );',
+			'vWorldPosition		= worldPosition.xyz;',
+
+			'// set gl_Position',
+			'gl_Position	= projectionMatrix * modelViewMatrix * vec4( position, 1.0 );',
+		'}',
+	].join( '\n' ),
+	
+	_fragShader: [
+		'varying vec3		vNormal;',
+		'varying vec3		vWorldPosition;',
+
+		'uniform vec3		lightColor;',
+
+		'uniform vec3		spotPosition;',
+
+		'uniform float		attenuation;',
+		'uniform float		anglePower;',
+
+		'void main(){',
+			'float intensity;',
+
+			// distance attenuation
+			'intensity	= distance(vWorldPosition, spotPosition)/attenuation;',
+			'intensity	= 1.0 - clamp(intensity, 0.0, 1.0);',
+
+			// intensity on angle
+			'vec3 normal	= vec3(vNormal.x, vNormal.y, abs(vNormal.z));',
+			'float angleIntensity	= pow( dot(normal, vec3(0.0, 0.0, 1.0)), anglePower );',
+			'intensity	= intensity * angleIntensity;',		
+			// 'gl_FragColor	= vec4( lightColor, intensity );',
+
+			// set the final color
+			'gl_FragColor	= vec4( lightColor, intensity);',
+		'}',
+	].join( '\n' ),
+});
+
+
+function VolumetricSpotlightMesh(spot) {
+	this.spotlight = spot;
+	
+	var geometry	= new THREE.CylinderGeometry(0.0, 5.5, 5, 32*1, 10, true);
+	geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, -geometry.height/2, 0 ) );
+	geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -Math.PI / 2 ) );
+	
+	var material	= new VolumetricSpotLightMaterial()
+	
+	THREE.Mesh.call(this, geometry, material);
+	this.type = "VolumetricSpotlightMesh";
+}
+inherits(VolumetricSpotlightMesh, THREE.Mesh);
+extend(VolumetricSpotlightMesh.prototype, {
+	update : function(){
+		//this.position.set(this.spotlight.position);
+		this.material.uniforms.spotPosition.value.set(this.spotlight.position);
+		this.lookAt(this.spotlight.target);
+		this.material.uniforms.lightColor.value	= this.spotlight.color;
+		
+		// set the world position of the spotPosition
+		this.updateMatrixWorld();
+		var matrixWorld	= this.matrixWorld;
+		var worldPos	= this.material.uniforms.spotPosition.value;
+		worldPos.setFromMatrixPosition(matrixWorld);
+	},
+});
+*/
+
+function SpotSmokeMaterial(opts) {
+	if (!(this instanceof SpotSmokeMaterial)) {
+		return new SpotSmokeMaterial(opts);
+	}
+	
+	var params = this._createMatParams(opts);
+	THREE.ShaderMaterial.call(this, params);
+	this.type = "SpotSmokeMaterial";
+	
+	this.transparent = true;
+	this.depthWrite = false;
+}
+inherits(SpotSmokeMaterial, THREE.ShaderMaterial);
+extend(SpotSmokeMaterial.prototype, {
+	
+	_createMatParams : function() {
+		return {
+			uniforms: { 
+				attenuation	: {
+					type	: "f",
+					value	: 20,//5.0
+				},
+				anglePower	: {
+					type	: "f",
+					value	: 1.7,//1.2
+				},
+				spotPosition: {
+					type	: "v3",
+					value	: new THREE.Vector3( 0, 0, 0 )
+				},
+				lightColor	: {
+					type	: "c",
+					value	: new THREE.Color(0xFFFFFF)
+				},
+			},
+			vertexShader	: this._vertShader,
+			fragmentShader	: this._fragShader,
+			// side		: THREE.DoubleSide,
+			// blending	: THREE.AdditiveBlending,
+		};
+	},
+	
+	_vertShader: [
+		'varying vec3 vNormal;',
+		'varying vec3 vWorldPosition;',
+		
+		'void main(){',
+			'// compute intensity',
+			'vNormal		= normalize( normalMatrix * normal );',
+
+			'vec4 worldPosition	= modelMatrix * vec4( position, 1.0 );',
+			'vWorldPosition		= worldPosition.xyz;',
+
+			'// set gl_Position',
+			'gl_Position	= projectionMatrix * modelViewMatrix * vec4( position, 1.0 );',
+		'}',
+	].join( '\n' ),
+	
+	_fragShader: [
+		'varying vec3		vNormal;',
+		'varying vec3		vWorldPosition;',
+
+		'uniform vec3		lightColor;',
+
+		'uniform vec3		spotPosition;',
+
+		'uniform float		attenuation;',
+		'uniform float		anglePower;',
+
+		'void main(){',
+			'float intensity;',
+
+			// distance attenuation
+			// 'intensity	= distance(vWorldPosition, spotPosition)/attenuation;',
+			'intensity	= distance(vWorldPosition, spotPosition)/attenuation;',
+			'intensity	= 1.0 - clamp(intensity, 0.0, 1.0);',
+
+			// intensity on angle
+			'vec3 normal	= vec3(vNormal.x, vNormal.y, abs(vNormal.z));',
+			'float angleIntensity	= pow( dot(normal, vec3(0.0, 0.0, 1.0)), anglePower );',
+			'intensity	= intensity * angleIntensity;',		
+			// 'gl_FragColor	= vec4( lightColor, intensity );',
+
+			// set the final color
+			'gl_FragColor	= vec4( lightColor, intensity);',
+		'}',
+	].join( '\n' ),
+});
+
+function SpotSmokeHelper(light) {
+	THREE.Object3D.call( this );
+	this.type = "SpotSmokeHelper";
+
+	this.light = light;
+	this.light.updateMatrixWorld();
+
+	this.matrix = light.matrixWorld;
+	this.matrixAutoUpdate = false;
+
+	var geometry = new THREE.CylinderGeometry( 0, 1, 1, 32, 20, true );
+
+	geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, - 0.5, 0 ) );
+	geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
+
+	// var material = new THREE.MeshBasicMaterial( { wireframe: false, fog: false } );
+	var material = new SpotSmokeMaterial();
+
+	this.cone = new THREE.Mesh( geometry, material );
+	this.add( this.cone );
+
+	this.update();
+}
+inherits(SpotSmokeHelper, THREE.Object3D);
+extend(SpotSmokeHelper.prototype, {
+	dispose : function () {
+		this.cone.geometry.dispose();
+		this.cone.material.dispose();
+	},
+	update : function () {
+		var vector = new THREE.Vector3();
+		var vector2 = new THREE.Vector3();
+
+		return function () {
+			var coneLength = this.light.distance ? this.light.distance : 30;
+			var coneWidth = coneLength * Math.tan( this.light.angle );
+
+			this.cone.scale.set( coneWidth, coneWidth, coneLength );
+
+			vector.setFromMatrixPosition( this.light.matrixWorld );
+			vector2.setFromMatrixPosition( this.light.target.matrixWorld );
+
+			this.cone.lookAt( vector2.sub( vector ) );
+
+			if (this.cone.material instanceof SpotSmokeMaterial) {
+				this.cone.material.uniforms.spotPosition.value.set(vector);
+				this.cone.material.uniforms.lightColor.value.set( this.light.color ).multiplyScalar( this.light.intensity );
+			} else {
+				this.cone.material.color.copy( this.light.color ).multiplyScalar( this.light.intensity );
+			}
+		};
+	}(),
+});
 
 ///////////////////////////////// Lights /////////////////////////////////////
 
@@ -15,6 +284,7 @@ $(function(){
 	{ //Red Light
 		var light = new THREE.SpotLight(0xFF2222);
 		light.name = "Red Light";
+		light.target.name = "Red Light Target";
 		light.position.set(10, 5, 10);
 		light.target.position.set(2, -2, 8);
 		light.intensity = 1.1;
@@ -23,13 +293,17 @@ $(function(){
 		node.add(light);
 		node.add(light.target);
 		
-		var helper = new THREE.SpotLightHelper(light);
-		DEBUG.updateFns.push(helper);
-		node.add(helper);
+		// var helper = new THREE.SpotLightHelper(light);
+		// DEBUG.updateFns.push(helper);
+		// node.add(helper);
+		var fog = new SpotSmokeHelper(light);
+		DEBUG.updateFns.push(fog);
+		node.add(fog);
 	}
 	{ //Green Light
 		var light = new THREE.SpotLight(0x22FF22);
 		light.name = "Green Light";
+		light.target.name = "Green Light Target";
 		light.position.set(2, 5, 2);
 		light.target.position.set(10, -2, 5);
 		light.intensity = 1.1;
@@ -38,13 +312,17 @@ $(function(){
 		node.add(light);
 		node.add(light.target);
 		
-		var helper = new THREE.SpotLightHelper(light);
-		DEBUG.updateFns.push(helper);
-		node.add(helper);
+		// var helper = new THREE.SpotLightHelper(light);
+		// DEBUG.updateFns.push(helper);
+		// node.add(helper);
+		var fog = new SpotSmokeHelper(light);
+		DEBUG.updateFns.push(fog);
+		node.add(fog);
 	}
 	{ //Blue Light
 		var light = new THREE.SpotLight(0x2222FF);
 		light.name = "Blue Light";
+		light.target.name = "Blue Light Target";
 		light.position.set(-1, 5, 9);
 		light.target.position.set(5, -2, 0);
 		light.intensity = 1.1;
@@ -53,13 +331,17 @@ $(function(){
 		node.add(light);
 		node.add(light.target);
 		
-		var helper = new THREE.SpotLightHelper(light);
-		DEBUG.updateFns.push(helper);
-		node.add(helper);
+		// var helper = new THREE.SpotLightHelper(light);
+		// DEBUG.updateFns.push(helper);
+		// node.add(helper);
+		var fog = new SpotSmokeHelper(light);
+		DEBUG.updateFns.push(fog);
+		node.add(fog);
 	}
 	{ //Card Table Light
 		var light = new THREE.SpotLight(0xFFFFFF);
 		light.name = "Card Table Light";
+		light.target.name = "Card Table Light Target";
 		light.position.set(-9, 5, -1);
 		light.target.position.set(-10, -2, 5);
 		light.intensity = 0.9;
@@ -68,14 +350,18 @@ $(function(){
 		node.add(light);
 		node.add(light.target);
 		
-		var helper = new THREE.SpotLightHelper(light);
-		DEBUG.updateFns.push(helper);
-		node.add(helper);
+		// var helper = new THREE.SpotLightHelper(light);
+		// DEBUG.updateFns.push(helper);
+		// node.add(helper);
+		var fog = new SpotSmokeHelper(light);
+		DEBUG.updateFns.push(fog);
+		node.add(fog);
 	}
 	
 	{ //Lobby Light
 		var light = new THREE.SpotLight(0xFFFFFF);
 		light.name = "Lobby Light";
+		light.target.name = "Lobby Light Target";
 		light.position.set(23, 4, -3);
 		light.target.position.set(20, 0, -3);
 		light.intensity = 1;
@@ -85,9 +371,12 @@ $(function(){
 		node.add(light);
 		node.add(light.target);
 		
-		var helper = new THREE.SpotLightHelper(light);
-		DEBUG.updateFns.push(helper);
-		node.add(helper);
+		// var helper = new THREE.SpotLightHelper(light);
+		// DEBUG.updateFns.push(helper);
+		// node.add(helper);
+		var fog = new SpotSmokeHelper(light);
+		DEBUG.updateFns.push(fog);
+		node.add(fog);
 	}
 	
 	currentMap.scene.add(node);
@@ -181,3 +470,4 @@ add(new Event({
 		interacted: function() { reelgame.emit("interacted"); },
 	},
 }))
+

@@ -159,3 +159,38 @@ extend(Meander.prototype, {
 });
 module.exports.Meander = Meander;
 
+
+
+/** 
+* Moves this actor to a location via the most direct route. 
+* Good for short distances only: will get stuck for lack of a more complex route.
+*/
+function MoveToDirect(opts) {
+	Behavior.call(this, opts);
+}
+inherits(MoveToDirect, Behavior);
+extend(MoveToDirect.prototype, {
+	dest_x: null,
+	dest_y: null,
+	tick: function(me, delta) {
+		if (me._initPathingState().moving) return;
+		
+		if (me.location.y != this.dest_y) {
+			// If we aren't on the same Y level as the destination
+			if (me.location.y > this.dest_y) {
+				me.moveDir("u"); //-1
+			} else if (me.location.y < this.dest_y) {
+				me.moveDir("d"); //+1
+			}
+		} else if (me.location.x != this.dest_x) {
+			if (me.location.x > this.dest_x) {
+				me.moveDir("l"); //-1
+			} else if (me.location.x < this.dest_x) {
+				me.moveDir("r"); //+1
+			}
+		} else {
+			me.behaviorStack.pop();
+		}
+	},
+});
+module.exports.MoveToDirect = MoveToDirect;

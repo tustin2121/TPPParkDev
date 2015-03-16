@@ -424,6 +424,8 @@ extend(Actor.prototype, {
 	pathTo : function(x, y) {
 		var state = this._initPathingState();
 		
+		
+		
 		console.error(this.id, ": Pathing has not been implemented yet!");
 	},
 	

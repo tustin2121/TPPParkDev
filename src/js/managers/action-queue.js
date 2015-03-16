@@ -6,16 +6,35 @@ var extend = require("extend");
 
 function ActionQueueItem() {}
 extend(ActionQueueItem.prototype, {
+	previous: null,
+	next: null,
+	
 	run: function() {
 		//Needs to be overridden in subclasses
 	},
-	_complete: function() {},
+	_complete: function() {
+		if (this.next) {
+			var n = this.next;
+			setTimeout(function(){
+				n.run();
+			}, 0);
+		}
+	},
 	
 	start: function() {
-		this.run();
+		if (this.previous) this.previous.start();
+		else {
+			var self = this;
+			setTimeout(function(){
+				self.run();
+			}, 0);
+		}
 	},
 	then: function(item) {
+		if ((item instanceof ActionQueueItem)) 
+			throw new Error("Must pass an ActionQueueItem to then!");
 		
+		this.next = item;
 	},
 });
 module.exports.ActionQueueItem = ActionQueueItem;
@@ -41,5 +60,6 @@ extend(ShowTextBoxQI.prototype, {
 		UIManager.showTextBox.apply(UIManager, this.args);
 	},
 });
+
 
 
