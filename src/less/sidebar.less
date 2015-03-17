@@ -1,19 +1,70 @@
-// chat.less
+// sidebar.less (formerly chat.less)
+
+@chat-width: 400px;
+@chat-width-min: 280px;
+
+@head-height: 40px;
+
+/*
+#left-sidebar {
+	float: left;
+	width: @chat-width;
+	max-width: @chat-width;
+	min-width: @chat-width-min;
+} 
+*/
+
+#right-sidebar {
+	// background-color: blue;
+	background-color: #F2F2F2;
+	width: @chat-width;
+	min-width: @chat-width-min;
+	
+	.wrapper {
+		position: relative;
+		height: 100%;
+		font: 12px/1.5 "Helvetica Neue",Helvetica,Arial,sans-serif;
+	}
+	
+	.header {
+		position: absolute;
+		top: 0; left: 15px; right: 15px;
+		font-size: 0px;
+		background-color: #F2F2F2;
+		box-shadow: 0px -1px 0px 0px rgba(0, 0, 0, 0.2) inset;
+		z-index: 10;
+		// height: @head-height;
+		
+		.tab {
+			display: inline-block;
+			padding: 10px 14px;
+			margin: 0 6px;
+			font-size: 14px;
+			border-right: 1px rgba(0, 0, 0, 0.2) solid;
+			border-left: 1px rgba(0, 0, 0, 0.2) solid;
+			cursor: pointer;
+			
+			&.selected {
+				color: #FFFFFF;
+				background-color: #6441A5;
+			}
+			
+			&:first-child {
+				margin-left: 0;
+			}
+		}
+	}
+	
+	.tabcontainer {
+		display: none;
+		position: relative;
+		background-color: #F2F2F2;
+		padding: 0px 15px;
+		height: 100%;
+	}
+}
 
 #chat-container {
-	position: relative;
-	background-color: #F2F2F2;
-	padding: 0px 15px;
-	height: 100%;
-	font: 12px/1.5 "Helvetica Neue",Helvetica,Arial,sans-serif;
-	
-	@head-height: 20px;
-	.header {
-		padding: 10px 0px;
-		font-size: 14px;
-		box-shadow: 0px -1px 0px 0px rgba(0, 0, 0, 0.2) inset;
-		height: @head-height;
-	}
 	
 	@foot-height: 110px;
 	.interface {
@@ -98,6 +149,36 @@
 		
 		.message {
 			color: #666666;
+		}
+	}
+}
+
+#dex-container {
+	
+	.omnibar {
+		position: absolute;
+		top: @head-height;
+		left: 0px; right: 0px;
+		height: 20px;
+		padding: 5px;
+		
+		button, input {
+			padding: 3px;
+			font-size: 14px;
+		}
+		.search input {
+			width: 100%;
+		}
+		.float-right {
+			display: inline-block;
+			float: right;
+		}
+		.float-left {
+			display: inline-block;
+			float: left;
+		}
+		.clear {
+			clear: both;
 		}
 	}
 }

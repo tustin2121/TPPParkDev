@@ -4,9 +4,6 @@
 @game-height: 500px;
 @status-height: 16px;
 
-@chat-width: 400px;
-@chat-width-min: 280px;
-
 html {
 	margin: 0;
 	background-color: #000000;
@@ -24,8 +21,6 @@ body { margin: 0; }
 	src: url("pkmndpb.ttf");
 	font-weight: bold;
 }
-
-@import "chat";
 
 .canvas-wrap {
 	width: @game-width;
@@ -86,19 +81,7 @@ body { margin: 0; }
 	z-index: -10;
 }
 
-#right-sidebar {
-	// float: right;
-	// width: @chat-width;
-	background-color: blue;
-	width: @chat-width;
-	min-width: @chat-width-min;
-}
-#left-sidebar {
-	float: left;
-	width: @chat-width;
-	max-width: @chat-width;
-	min-width: @chat-width-min;
-}
+@import "sidebar";
 
 #statusbar {
 	float: left;

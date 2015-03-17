@@ -97,11 +97,6 @@ extend(UIManager.prototype, {
 	},
 	
 	
-	openInfodexPage : function(pageid) {
-		
-	},
-	
-	
 	getEmoteBubble : function() {
 		var self = this;
 		var emote = this.bubblePool.unshift();
@@ -300,6 +295,40 @@ extend(UIManager.prototype, {
 		}
 	},
 	
+});
+
+//////////////////////////////////////////////////////////////////////
+// Sidebar DOM
+
+UIManager.prototype.showChatTab = function(){
+	if ($("#tab-chat").hasClass("selected")) return;
+	
+	$("#right-sidebar .tab").removeClass("selected");
+	$("#tab-chat").addClass("selected");
+	
+	$("#right-sidebar .tabcontainer").hide();
+	$("#chat-container").show();
+};
+
+UIManager.prototype.showInfodexTab = function(){
+	if ($("#tab-dex").hasClass("selected")) return;
+	
+	$("#right-sidebar .tab").removeClass("selected");
+	$("#tab-dex").addClass("selected");
+	
+	$("#right-sidebar .tabcontainer").hide();
+	$("#dex-container").show();
+};
+
+UIManager.prototype.openInfodexPage = function(pageid) {
+	
+};
+
+$(function(){ // On Ready Setup
+	$("#tab-chat").click(UIManager.prototype.showChatTab);
+	$("#tab-dex").click(UIManager.prototype.showInfodexTab);
+	
+	UIManager.prototype.showChatTab();
 });
 
 //////////////////////////////////////////////////////////////////////

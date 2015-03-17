@@ -14,8 +14,6 @@
 	<script>zip.workerScriptsPath = "{{ baseurl }}/js/zip/";</script>
 	<script src="{{ baseurl }}/js/preload.js"></script>
 	
-	<link href="OrbitControls.js" rel="subresource"></link><!-- TEMP -->
-	
 	<link href="{{ baseurl }}/js/eventlib.js" rel="subresource"></link>
 	<link href="{{ baseurl }}/js/game.js" rel="subresource"></link>
 	
@@ -24,9 +22,8 @@
 	var num = 0;
 	[
 		"{{ baseurl }}/js/three.min.js",
-		"OrbitControls.js",
 		"{{ baseurl }}/js/eventlib.js",
-		"game.js"
+		"{{ baseurl }}/js/game.js"
 	].forEach(function(src) {
 		var script = document.createElement('script');
 		script.src = src;
@@ -51,36 +48,61 @@
 			<div class="canvas-wrap">
 				<div id="canvas-ui">
 					<canvas id="gamescreen"></canvas>
+					<div id="preloadScreen">
+						<h3>Downloading data... one moment please...</h3>
+						<progress />
+					</div>
 				</div>
 				<div id="statusbar">Click off the chat message box to resume direct control of the game.</div>
 				<div id="padding"></div>
 			</div>
 		</td>
 		<td id="right-sidebar">
-			<div id="chat-container">
-				<div class="header">TPP Park</div>
-				<div class="messages">
-					<ul class="chat-lines" id="chat-lines">
-						<li class="chat-line admin">
-							<span class="message">Welcome to the chat room!</span>
-						</li>
-						<!--<li class="chat-line">
-							<span class="badges"></span>
-							<span class="from" style="color:#008000">Tustin2121</span><span class="colon">:</span><span class="message">Hello World Kappa</span>
-						</li>
-						<li class="chat-line">
-							<span class="badges"></span>
-							<span class="from" style="color:#B22222">Tustin2121</span>
-							<span class="colon">:</span>
-							<span class="message">Hello World Kappa</span>
-						</li>-->
-					</ul>
+			<div class="wrapper">
+				<div class="header">
+					<div class="tab" id="tab-chat">Park Chat</div>
+					<div class="tab" id="tab-dex" >Infodex</div>
 				</div>
-				<div class="interface">
-					<div class="more-messages">More messages below.</div>
-					<textarea id="chatbox" class="chatbox"></textarea>
-					<div class="chat-buttons">
-						<button class="send-chat-button">Chat</button>
+				<div class="tabcontainer" id="chat-container">
+					<div class="messages">
+						<ul class="chat-lines" id="chat-lines">
+							<li class="chat-line admin">
+								<span class="message">Welcome to the chat room!</span>
+							</li>
+							<!--<li class="chat-line">
+								<span class="badges"></span>
+								<span class="from" style="color:#008000">Tustin2121</span><span class="colon">:</span><span class="message">Hello World Kappa</span>
+							</li>
+							<li class="chat-line">
+								<span class="badges"></span>
+								<span class="from" style="color:#B22222">Tustin2121</span>
+								<span class="colon">:</span>
+								<span class="message">Hello World Kappa</span>
+							</li>-->
+						</ul>
+					</div>
+					<div class="interface">
+						<div class="more-messages">More messages below.</div>
+						<textarea id="chatbox" class="chatbox"></textarea>
+						<div class="chat-buttons">
+							<button class="send-chat-button">Chat</button>
+						</div>
+					</div>
+				</div>
+				<div class="tabcontainer" id="dex-container">
+					<div class="omnibar">
+						<div class="float-left">
+							<button>&lt;</button>
+							<button>&gt;</button>
+						</div>
+						<div class="float-right">
+							<button>Go</button>
+						</div>
+						<div class="search">
+							<input type="text" class="search" />
+						</div>
+						
+						<div class="clear"></div>
 					</div>
 				</div>
 			</div>
