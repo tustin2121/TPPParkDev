@@ -5,6 +5,23 @@
 
 @head-height: 40px;
 
+@twitchgrey: #F2F2F2;
+@twitchpurple: #6441A5;
+
+@infodexred: #B52323;
+
+.box-sizing(@type) {
+	-moz-box-sizing: @type;
+	-webkit-box-sizing: @type;
+	box-sizing: @type;
+}
+
+.border-radius (@tl: 5px, @tr: 5px, @br: 5px, @bl: 5px) {
+    -webkit-border-radius: @tl @tr @br @bl;
+    -moz-border-radius: @tl @tr @br @bl;
+    border-radius: @tl @tr @br @bl;
+}
+
 /*
 #left-sidebar {
 	float: left;
@@ -16,7 +33,7 @@
 
 #right-sidebar {
 	// background-color: blue;
-	background-color: #F2F2F2;
+	background-color: @twitchgrey;
 	width: @chat-width;
 	min-width: @chat-width-min;
 	
@@ -29,11 +46,21 @@
 	.header {
 		position: absolute;
 		top: 0; left: 15px; right: 15px;
+		// top: 0; left: 0px; right: 0px; padding: 0 15px;
 		font-size: 0px;
-		background-color: #F2F2F2;
+		background-color: @twitchgrey;
 		box-shadow: 0px -1px 0px 0px rgba(0, 0, 0, 0.2) inset;
 		z-index: 10;
 		// height: @head-height;
+		
+		&:before, &:after {
+			content: "";
+			position: absolute;
+			top: 0; bottom: 0; width: 15px;
+			background-color: @twitchgrey;
+		}
+		&:before { left: -15px; }
+		&:after { right: -15px; }
 		
 		.tab {
 			display: inline-block;
@@ -46,19 +73,23 @@
 			
 			&.selected {
 				color: #FFFFFF;
-				background-color: #6441A5;
+				background-color: @twitchpurple;
 			}
 			
 			&:first-child {
 				margin-left: 0;
 			}
 		}
+		
+		#tab-dex.selected {
+			background-color: @infodexred;
+		}
 	}
 	
 	.tabcontainer {
 		display: none;
 		position: relative;
-		background-color: #F2F2F2;
+		background-color: @twitchgrey;
 		padding: 0px 15px;
 		height: 100%;
 	}
@@ -153,7 +184,16 @@
 	}
 }
 
-#dex-container {
+#dex-container.tabcontainer {
+	background-color: @infodexred;
+	@omni-height: 20px;
+	
+	@bc-height: 26px;
+	@bc-arrowWidth: 8px;
+	@bc-arrowStroke: 3px;
+	// @bc-color: darken(@twitchgrey, 10%);
+	@bc-color: #FFF373;
+	@bc-hilight: lighten(@infodexred, 10%);
 	
 	.omnibar {
 		position: absolute;
@@ -163,11 +203,15 @@
 		padding: 5px;
 		
 		button, input {
-			padding: 3px;
+			padding: 3px 8px;
 			font-size: 14px;
 		}
-		.search input {
-			width: 100%;
+		.search {
+			overflow: hidden;
+			
+			input {
+				width: 100%;
+			}
 		}
 		.float-right {
 			display: inline-block;
@@ -180,6 +224,106 @@
 		.clear {
 			clear: both;
 		}
+		
+	}
+	
+	.breadcrumb {
+		font-size: 14px;
+		list-style:none;
+		display: inline-block;
+		margin: 4px 0;
+		padding: 0px;
+		height: @bc-height; width: 100%;
+		overflow: hidden;
+		.border-radius(4px, 4px, 4px, 4px);
+		direction: rtl;
+		
+		li {
+			display: table-cell;
+			
+			a {
+				color: #000000;
+				display:block;
+				background: @bc-color;
+				text-decoration: none;
+				position:relative;
+				height: @bc-height;
+				line-height: @bc-height;
+				padding: 0 5px 0 5px;
+				text-align: center;
+				margin-right: (@bc-arrowWidth + @bc-arrowStroke);
+			}
+			
+			// &:nth-last-child(-n+3) a {
+			// 	font-size: 0px;
+			// }
+			&:only-child {
+				display: block;
+			}
+			
+			&:last-child { //Actually the first element in the breadcrumb
+				a {
+					padding-left: (@bc-arrowWidth + @bc-arrowStroke);
+					// .border-radius(4px, 0, 0, 4px);
+					
+					&:before {
+						border:none;
+					 }
+				}
+			}
+			&:first-child { //Actually the last element in the breadcrumb
+				width: 100%;
+				a {
+					padding-right: (@bc-arrowWidth + @bc-arrowStroke);
+					// .border-radius(0, 4px, 4px, 0);
+					margin-right: 0px;
+					
+					&:after {
+						border:none;
+					}
+				}
+			}
+			
+			a {
+				&:before, &:after {
+					content: "";
+					position: absolute;
+					top: 0;
+					border:0 solid @bc-color;
+					border-width: (@bc-height/2) 0px (@bc-height/2) @bc-arrowWidth;
+					width: 0;
+					height: 0;
+				}
+				&:before {
+					left: -@bc-arrowWidth;
+					border-left-color: transparent;
+				}
+				&:after {
+					left: 100%;
+					border-color: transparent;
+					border-left-color: @bc-color;
+				}
+				&:hover, &.selected {
+					color: #FFFFFF;
+					background-color: @bc-hilight;
+					
+					&:before {
+						border-color: @bc-hilight;
+						border-left-color:transparent;
+					 }
+					&:after {
+						border-left-color: @bc-hilight;
+					}
+				}
+			}
+		}
+	}
+	
+	.content {
+		position: absolute;
+		left: 0; right: 0; bottom: 0; 
+		top: @head-height + @omni-height + @bc-height;
+		margin: 4px;
 	}
 }
 
