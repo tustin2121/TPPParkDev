@@ -20,7 +20,7 @@ extend(Warp.prototype, {
 	sound: "exit_walk",
 	exit_to: null,
 	
-	onTriggerEnter : function(dir) {
+	onEntered : function(dir) {
 		SoundManager.playSound(this.sound);
 		if (!this.exit_to) return;
 		MapManager.transitionTo(this.exit_to.map, this.exit_to.warp);
