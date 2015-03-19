@@ -322,8 +322,11 @@
 	.content {
 		position: absolute;
 		left: 0; right: 0; bottom: 0; 
-		top: @head-height + @omni-height + @bc-height;
-		margin: 4px;
+		top: @head-height + @omni-height + @bc-height + 16px;
+		margin: 3px;
+		background-color: @twitchgrey;
+		border: 2px inset @infodexred;
+		overflow-y: scroll;
 	}
 }
 
