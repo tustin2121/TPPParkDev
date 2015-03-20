@@ -53,6 +53,7 @@ global.EVENT_DIRS = [
 	"src/events/s2.intermission/",
 	"src/events/s2.anired/",
 ];
+global.INFODEX_DIR = "src/infodex/";
 
 global.nextTick = function() {
 	var fiber = Fiber.current;
@@ -74,6 +75,7 @@ const findGlobalEvents = require("./event-compiler.js").findGlobalEvents;
 const checkSyntax = require("./syntax-check.js");
 const uniqueCheckGlobalEvents = require("./event-compiler.js").uniqueCheckGlobalEvents;
 const createEventLibraryBundle = require("./event-compiler.js").createEventLibraryBundle;
+const compileInfodex = require("./infodex-compiler.js");
 
 const ByLineReader = require("./transform-streams").ByLineReader;
 const ProcessorTransform = require("./transform-streams").ProcessorTransform;
@@ -103,8 +105,12 @@ function build(){
 	createEventLibraryBundle();
 	
 	//Compile every map in the source directory
-	findMaps();
+	// findMaps();
 	
+	//Compile the infodex zip
+	compileInfodex();
+	
+	console.log("");
 	//Browserify the source code
 	bundle("game");
 	bundle("characterSelect", {
