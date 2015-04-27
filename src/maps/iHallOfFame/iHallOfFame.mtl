@@ -1,0 +1,48 @@
+# Blender MTL File: 'iHallOfFame.blend'
+# Material Count: 5
+
+newmtl Blackout
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.000234 0.000234 0.000234
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+
+newmtl Brass
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.382198 0.361462 0.454754
+Ks 0.645833 0.645833 0.645833
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl Material.001
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.208333 0.208333 0.208333
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\tpittman\github-projects\TPPParkDev\res\img\missing_tex.png
+
+newmtl None
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd C:\Users\tpittman\github-projects\TPPParkDev\res\img\missing_tex.png
+
+newmtl Rope
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.311614 0.001338 0.000000
+Ks 0.010000 0.010000 0.010000
+Ni 1.000000
+d 1.000000
+illum 2
