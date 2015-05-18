@@ -1,0 +1,52 @@
+{
+	"areaname" : "The Hall of Fame",
+	"domain" : "interior",
+	"layers" : [
+		{ "layer" : 1, "3d" : [1, 0, 0, -7.5,   0, 1, 0, -2,   0, 0, 1, -7.5,   0, 0, 0, 1] },
+		{ "layer" : 2, "3d" : [1, 0, 0, 2.5,   0, 1, 0, 10,   0, 0, 1, -11.5,   0, 0, 0, 1] }
+	],
+	"warps" : [
+		{ "layer": 1, "camera": "0" },
+		{ "layer": 1, "camera": "0" },
+		{ "layer": 1, "camera": "0" },
+		{ "layer": 1, "camera": "0" },
+		{ "layer": 2, "camera": "hallway_2" },
+		{ "layer": 2, "camera": "hallway_1" },
+		{ "layer": 2, "camera": "hallway_3" }
+	],
+	"heightstep" : 0.5,
+	
+	"cameras": {
+		"hallway_1": {
+			"position": [0, 2.6, 4],
+			"lookat": [0, 2, 0],
+			"behavior": "softFollowZTiltOpposite",
+			"fov": 65,
+			"xaxis": 8, "dev": 2, "lookrange": 4
+		},
+		"hallway_2": {
+			"position": [0, 2.6, 4],
+			"lookat": [0, 2, 0],
+			"behavior": "softFollowZTilt",
+			"fov": 65,
+			"xaxis": -3, "dev": 2, "lookrange": 4
+		},
+		"hallway_3": {
+			"position": [0, 2.6, 4],
+			"lookat": [0, 2, 0],
+			"behavior": "softFollowZTilt",
+			"fov": 65,
+			"xaxis": 19, "dev": 2, "lookrange": 4
+		},
+		"0": {}
+	},
+	"lighting" : {
+		"type": "int",
+		"lights" : []
+	},
+	"shadowmap": {
+		"width": 512, "height": 1024,
+		"top": 60, "bottom": -10, "left": -10, "right": 25,
+		"near": 1, "far": 150
+	}
+}

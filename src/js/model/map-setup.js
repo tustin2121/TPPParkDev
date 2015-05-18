@@ -115,6 +115,7 @@ var camBehaviors = {
 	none: function(){},
 	followPlayer : function(cdef, cam, camRoot) {
 		return function(delta) {
+			// if (!player || !player.avatar_node) return;
 			camRoot.position.set(player.avatar_node.position);
 			//TODO negate moving up and down with jumping
 		};
@@ -129,7 +130,141 @@ var camBehaviors = {
 			camRoot.position.y = player.avatar_node.position.y;
 			camRoot.position.z = zaxis;
 		};
-	}
+	},
+	followPlayerZ: function(cdef, came, camRoot) {
+		var xaxis = cdef["xaxis"] || 0;
+		var zmax = cdef["zmax"] || 1000;
+		var zmin = cdef["zmin"] || -1000;
+		
+		return function(delta) {
+			camRoot.position.x = xaxis;
+			camRoot.position.y = player.avatar_node.position.y;
+			camRoot.position.z = Math.max(zmin, Math.min(zmax, player.avatar_node.position.z));
+		};
+	},
+	
+	softFollowZ: function(cdef, came, camRoot) {
+		var xaxis = cdef["xaxis"] || 0; //axis along which to keep the camera
+		var dev = cdef["dev"] || 5; //max deviation of the cam position from this axis
+		var lookrange = cdef["lookrange"] || 10; //max deviation of the lookat position from this axis
+		
+		var zmax = cdef["zmax"] || 1000;
+		var zmin = cdef["zmin"] || -1000;
+		
+		return function(delta) {
+			var offpercent = (player.avatar_node.position.x - xaxis) / lookrange;
+			
+			camRoot.position.x = xaxis + (offpercent * dev);
+			camRoot.position.y = player.avatar_node.position.y;
+			camRoot.position.z = Math.max(zmin, Math.min(zmax, player.avatar_node.position.z));
+		};
+	},
+	
+	// Follow along an axis, tilt to look at the player as they move off the center line
+	softFollowZYTilt: function(cdef, came, camRoot) {
+		var xaxis = cdef["xaxis"] || 0; //axis along which to keep the camera
+		var dev = cdef["dev"] || 5; //max deviation of the cam position from this axis
+		var lookrange = cdef["lookrange"] || 10; //max deviation of the lookat position from this axis
+		var notilt = cdef["notilt"] || 0; //deviation of cam position that doesn't tilt
+		var lookoff = cdef["lookat"] || [0, 0.8, 0];
+		
+		var zmax = cdef["zmax"] || 1000;
+		var zmin = cdef["zmin"] || -1000;
+		var ymax = cdef["y@zmax"] || 2;
+		var ymin = cdef["y@zmin"] || 4;
+		
+		return function(delta) {
+			var yper = (camRoot.position.z - zmin) / (zmax - zmin);
+			
+			if (player.avatar_node.position.x < xaxis + notilt 
+				&& player.avatar_node.position.x > xaxis - notilt) 
+			{
+				camRoot.position.x = player.avatar_node.position.x;
+				camRoot.position.y = (ymin + (ymax-ymin)*yper) + player.avatar_node.position.y;
+				console.log(yper, camRoot.position.y);
+				camRoot.position.z = Math.max(zmin, Math.min(zmax, player.avatar_node.position.z));
+				
+				var lx = lookoff[0];
+				var ly = lookoff[1];
+				var lz = lookoff[2];
+				came.lookAt(new THREE.Vector3(-lx, ly, lz));
+			}
+			else
+			{
+				var baseaxis = (player.avatar_node.position.x > xaxis)? xaxis+notilt : xaxis-notilt;
+				var offpercent = (player.avatar_node.position.x - baseaxis) / lookrange;
+				
+				camRoot.position.x = baseaxis + (offpercent * dev);
+				camRoot.position.y = (ymin - (ymax-ymin)*yper) + player.avatar_node.position.y;
+				camRoot.position.z = Math.max(zmin, Math.min(zmax, player.avatar_node.position.z));
+				
+				var lx = camRoot.position.x - player.avatar_node.position.x + lookoff[0];
+				var ly = camRoot.position.y - player.avatar_node.position.y + lookoff[1];
+				var lz = camRoot.position.z - player.avatar_node.position.z + lookoff[2];
+				came.lookAt(new THREE.Vector3(-lx, -ly, lz));
+			}
+		};
+	},
+	
+	// Follow along an axis, tilt to look at the player as they move off the center line
+	softFollowZTilt: function(cdef, came, camRoot) {
+		var xaxis = cdef["xaxis"] || 0; //axis along which to keep the camera
+		var dev = cdef["dev"] || 5; //max deviation of the cam position from this axis
+		var lookrange = cdef["lookrange"] || 10; //max deviation of the lookat position from this axis
+		var notilt = cdef["notilt"] || 0; //deviation of cam position that doesn't tilt
+		var lookoff = cdef["lookat"] || [0, 0.8, 0];
+		
+		var zmax = cdef["zmax"] || 1000;
+		var zmin = cdef["zmin"] || -1000;
+		
+		return function(delta) {
+			if (player.avatar_node.position.x < xaxis + notilt 
+				&& player.avatar_node.position.x > xaxis - notilt) 
+			{
+				camRoot.position.x = player.avatar_node.position.x;
+				camRoot.position.y = player.avatar_node.position.y;
+				camRoot.position.z = Math.max(zmin, Math.min(zmax, player.avatar_node.position.z));
+			}
+			else
+			{
+				var baseaxis = (player.avatar_node.position.x > xaxis)? xaxis+notilt : xaxis-notilt;
+				var offpercent = (player.avatar_node.position.x - baseaxis) / lookrange;
+				
+				camRoot.position.x = baseaxis + (offpercent * dev);
+				camRoot.position.y = player.avatar_node.position.y;
+				camRoot.position.z = Math.max(zmin, Math.min(zmax, player.avatar_node.position.z));
+				
+				var lx = camRoot.position.x - player.avatar_node.position.x + lookoff[0];
+				var ly = camRoot.position.y - player.avatar_node.position.y + lookoff[1];
+				var lz = camRoot.position.z - player.avatar_node.position.z + lookoff[2];
+				came.lookAt(new THREE.Vector3(-lx, ly, lz));
+			}
+		};
+	},
+	
+	// Follow along an axis, tilt the opposite direction the player has gone
+	softFollowZTiltOpposite: function(cdef, came, camRoot) {
+		var xaxis = cdef["xaxis"] || 0; //axis along which to keep the camera
+		var dev = cdef["dev"] || 5; //max deviation of the cam position from this axis
+		var lookrange = cdef["lookrange"] || 10; //max deviation of the lookat position from this axis
+		var lookoff = cdef["lookat"] || [0, 0.8, 0];
+		
+		var zmax = cdef["zmax"] || 1000;
+		var zmin = cdef["zmin"] || -1000;
+		
+		return function(delta) {
+			var offpercent = (player.avatar_node.position.x - xaxis) / lookrange;
+			
+			camRoot.position.x = xaxis - (offpercent * dev);
+			camRoot.position.y = player.avatar_node.position.y;
+			camRoot.position.z = Math.max(zmin, Math.min(zmax, player.avatar_node.position.z));
+			
+			var lx = camRoot.position.x - player.avatar_node.position.x + lookoff[0];
+			var ly = camRoot.position.y - player.avatar_node.position.y + lookoff[1];
+			var lz = camRoot.position.z - player.avatar_node.position.z + lookoff[2];
+			came.lookAt(new THREE.Vector3(-lx, ly, lz));
+		};
+	},
 };
 
 function setupCameras(map, camlist) {
@@ -184,6 +319,10 @@ function setupCameras(map, camlist) {
 		}
 		
 		var cb = camlist[cname].behavior || "followPlayer";
+		if (!camBehaviors[cb]) {
+			console.error("Invalid Camera Behavior Defined! ", cb);
+			cb = "followPlayer";
+		}
 		var cb = camBehaviors[cb].call(map, camlist[cname], c, croot);
 		if (cb) {
 			map.cameraLogics.push(cb);

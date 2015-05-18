@@ -11,7 +11,20 @@
 	"heightstep" : 0.25,
 	
 	"cameras": {
-		"0": {}
+		"0": {
+			"position": [0, 3, 5],
+			"lookat": [0, 1.4, 0],
+			"behavior": "softFollowZTilt",
+			"xaxis": -0.5, "dev": 4.5, "lookrange": 7, "notilt": 3
+		},
+		"1": {
+			"position": [0, 3, 5],
+			"lookat": [0, 1.4, 0],
+			"behavior": "softFollowZYTilt",
+			"xaxis": -0.5, "dev": 4.5, "lookrange": 7, "notilt": 3,
+			"zmin": -2, "y@zmin": 3,
+			"zmax": 10, "y@zmax": 0.8
+		}
 	},
 	"lighting" : {
 		"type": "int",

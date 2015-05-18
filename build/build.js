@@ -105,7 +105,7 @@ function build(){
 	createEventLibraryBundle();
 	
 	//Compile every map in the source directory
-	// findMaps();
+	findMaps();
 	
 	//Compile the infodex zip
 	compileInfodex();
