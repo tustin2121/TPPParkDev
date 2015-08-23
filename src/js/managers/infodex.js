@@ -24,6 +24,8 @@ function Infodex() {
 	
 	this.history_back = [];
 	this.history_fwd = [];
+	
+	
 }
 extend(Infodex.prototype, {
 	history_back: null,

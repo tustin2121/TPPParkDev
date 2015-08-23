@@ -360,6 +360,7 @@ function buildDevTools() {
 		copyFileWithJekyllPrepend("src/tools/ledgesim.html", BUILD_OUT+"tools/ledgesim.html");
 		copyFileWithJekyllPrepend("src/tools/chatot.html", BUILD_OUT+"tools/chatot.html");
 		copyFileWithJekyllPrepend("src/tools/music-test.html", BUILD_OUT+"tools/music-test.html");
+		copyFileWithJekyllPrepend("src/tools/casino.html", BUILD_OUT+"tools/casino.html");
 	});
 	var l = sync.await();
 	console.log("[Copy ] Copied", l.length, "dev tools files.");
@@ -394,6 +395,10 @@ function buildDevTools() {
 	
 	bundle("tools/music-test", { 
 		dest:BUILD_OUT+"tools/music-test.js", appcache:false, 
+	});
+	
+	bundle("tools/casino", { 
+		dest:BUILD_OUT+"tools/casino.js", appcache:false, 
 	});
 }
 

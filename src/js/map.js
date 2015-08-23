@@ -299,9 +299,11 @@ extend(Map.prototype, {
 			});
 		}
 		
-		self.queueForMapStart(function(){
-			SoundManager.playMusic(musicdef[0].id);
-		});
+		if (!musicdef["dontAutoplay"]) {
+			self.queueForMapStart(function(){
+				SoundManager.playMusic(musicdef[0].id);
+			});
+		}
 		
 		return;
 		

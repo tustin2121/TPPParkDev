@@ -9,128 +9,9 @@ var Sign = require("tpp-sign");
 var Warp = require("tpp-warp");
 var CameraTrigger = require("tpp-cameratrigger");
 
-
 //////////////////////////// Volumetric Spotlights /////////////////////////////
 // Adapted from https://github.com/jeromeetienne/threex.volumetricspotlight
 // In turn from http://stemkoski.blogspot.fr/2013/07/shaders-in-threejs-glow-and-halo.html
-/*
-function VolumetricSpotLightMaterial(opts) {
-	if (!(this instanceof VolumetricSpotLightMaterial)) {
-		return new VolumetricSpotLightMaterial(opts);
-	}
-	
-	var params = this._createMatParams(opts);
-	THREE.ShaderMaterial.call(this, params);
-	this.type = "VolumetricSpotLightMaterial";
-	
-	this.transparent = true;
-	this.depthWrite = false;
-}
-inherits(VolumetricSpotLightMaterial, THREE.ShaderMaterial);
-extend(VolumetricSpotLightMaterial.prototype, {
-	
-	_createMatParams : function() {
-		return {
-			uniforms: { 
-				attenuation	: {
-					type	: "f",
-					value	: 10,//5.0
-				},
-				anglePower	: {
-					type	: "f",
-					value	: 3.3,//1.2
-				},
-				spotPosition		: {
-					type	: "v3",
-					value	: new THREE.Vector3( 0, 0, 0 )
-				},
-				lightColor	: {
-					type	: "c",
-					value	: new THREE.Color(0xFFFFFF)
-				},
-			},
-			vertexShader	: this._vertShader,
-			fragmentShader	: this._fragShader,
-			// side		: THREE.DoubleSide,
-			// blending	: THREE.AdditiveBlending,
-		};
-	},
-	
-	_vertShader: [
-		'varying vec3 vNormal;',
-		'varying vec3 vWorldPosition;',
-		
-		'void main(){',
-			'// compute intensity',
-			'vNormal		= normalize( normalMatrix * normal );',
-
-			'vec4 worldPosition	= modelMatrix * vec4( position, 1.0 );',
-			'vWorldPosition		= worldPosition.xyz;',
-
-			'// set gl_Position',
-			'gl_Position	= projectionMatrix * modelViewMatrix * vec4( position, 1.0 );',
-		'}',
-	].join( '\n' ),
-	
-	_fragShader: [
-		'varying vec3		vNormal;',
-		'varying vec3		vWorldPosition;',
-
-		'uniform vec3		lightColor;',
-
-		'uniform vec3		spotPosition;',
-
-		'uniform float		attenuation;',
-		'uniform float		anglePower;',
-
-		'void main(){',
-			'float intensity;',
-
-			// distance attenuation
-			'intensity	= distance(vWorldPosition, spotPosition)/attenuation;',
-			'intensity	= 1.0 - clamp(intensity, 0.0, 1.0);',
-
-			// intensity on angle
-			'vec3 normal	= vec3(vNormal.x, vNormal.y, abs(vNormal.z));',
-			'float angleIntensity	= pow( dot(normal, vec3(0.0, 0.0, 1.0)), anglePower );',
-			'intensity	= intensity * angleIntensity;',		
-			// 'gl_FragColor	= vec4( lightColor, intensity );',
-
-			// set the final color
-			'gl_FragColor	= vec4( lightColor, intensity);',
-		'}',
-	].join( '\n' ),
-});
-
-
-function VolumetricSpotlightMesh(spot) {
-	this.spotlight = spot;
-	
-	var geometry	= new THREE.CylinderGeometry(0.0, 5.5, 5, 32*1, 10, true);
-	geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, -geometry.height/2, 0 ) );
-	geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -Math.PI / 2 ) );
-	
-	var material	= new VolumetricSpotLightMaterial()
-	
-	THREE.Mesh.call(this, geometry, material);
-	this.type = "VolumetricSpotlightMesh";
-}
-inherits(VolumetricSpotlightMesh, THREE.Mesh);
-extend(VolumetricSpotlightMesh.prototype, {
-	update : function(){
-		//this.position.set(this.spotlight.position);
-		this.material.uniforms.spotPosition.value.set(this.spotlight.position);
-		this.lookAt(this.spotlight.target);
-		this.material.uniforms.lightColor.value	= this.spotlight.color;
-		
-		// set the world position of the spotPosition
-		this.updateMatrixWorld();
-		var matrixWorld	= this.matrixWorld;
-		var worldPos	= this.material.uniforms.spotPosition.value;
-		worldPos.setFromMatrixPosition(matrixWorld);
-	},
-});
-*/
 
 function SpotSmokeMaterial(opts) {
 	if (!(this instanceof SpotSmokeMaterial)) {
@@ -211,7 +92,7 @@ extend(SpotSmokeMaterial.prototype, {
 
 			// intensity on angle
 			'vec3 normal	= vec3(vNormal.x, vNormal.y, abs(vNormal.z));',
-			'float angleIntensity	= pow( dot(normal, vec3(0.0, 0.0, 1.0)), anglePower );',
+			'float angleIntensity	= pow( abs(dot(normal, vec3(0.0, 0.0, 1.0))), anglePower );',
 			'intensity	= intensity * angleIntensity;',		
 			// 'gl_FragColor	= vec4( lightColor, intensity );',
 
@@ -274,6 +155,7 @@ extend(SpotSmokeHelper.prototype, {
 		};
 	}(),
 });
+
 
 ///////////////////////////////// Lights /////////////////////////////////////
 
@@ -362,8 +244,8 @@ $(function(){
 		var light = new THREE.SpotLight(0xFFFFFF);
 		light.name = "Lobby Light";
 		light.target.name = "Lobby Light Target";
-		light.position.set(23, 4, -3);
-		light.target.position.set(20, 0, -3);
+		light.position.set(23, 6, -4);
+		light.target.position.set(20, 1, -4);
 		light.intensity = 1;
 		light.exponent = 3;
 		light.distance = 20;
@@ -375,6 +257,8 @@ $(function(){
 		// DEBUG.updateFns.push(helper);
 		// node.add(helper);
 		var fog = new SpotSmokeHelper(light);
+		fog.cone.material.uniforms.anglePower.value = 8;
+		fog.cone.material.uniforms.attenuation.value = 10;
 		DEBUG.updateFns.push(fog);
 		node.add(fog);
 	}
@@ -394,11 +278,13 @@ $(function(){
 	}, 100);
 });
 
-////////////////////////// Model Modifications ///////////////////////////
+
+////////////////////////// Model Modifications //////////////////////////////
 $(function() {
 	var ModelMods = require("tpp-model-mods");
 	
 	ModelMods.renderDepthFix.name = ["ElevatorGlass"];
+	ModelMods.doubleSided.name = ["Railings"];
 	// ModelMods.refreshMaterials.all = true;
 	
 	ModelMods.modify();
@@ -459,7 +345,7 @@ add(new CameraTrigger({
 
 
 /////////////////////////////// Reel Minigame /////////////////////////////////
-
+/*
 var reelgame;
 add(reelgame = require("./event_slotmachine.js"));
 
@@ -470,4 +356,5 @@ add(new Event({
 		interacted: function() { reelgame.emit("interacted"); },
 	},
 }))
+//*/
 

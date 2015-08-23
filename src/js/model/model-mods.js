@@ -108,6 +108,12 @@ module.exports = {
 		}
 	}),
 	
+	doubleSided : new Modification(function(obj){
+		for (var j = 0; j < obj.children.length; j++) {
+			obj.children[j].material.side = THREE.DoubleSide;
+		}
+	}),
+	
 	renderDepthFix: new Modification(function(obj){
 		for (var j = 0; j < obj.children.length; j++) {
 			obj.children[j].renderDepth = -50;

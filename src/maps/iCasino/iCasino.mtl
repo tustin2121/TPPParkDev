@@ -1,5 +1,5 @@
 # Blender MTL File: 'iCasino.blend'
-# Material Count: 13
+# Material Count: 33
 
 newmtl Blackness
 Ns 96.078431
@@ -9,6 +9,76 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 1
+
+newmtl CounterGlass
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 0.989583
+illum 2
+map_Kd textures\counter_glass.png
+
+newmtl CounterItems
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd textures\counter_items.png
+
+newmtl CounterTops
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd textures\colors.png
+
+newmtl Countertop
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd textures\counter.png
+
+newmtl CourtOfSunArms
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 0.989583
+illum 1
+map_Kd textures\court_arms.png
+
+newmtl CourtOfTheSunLong
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 0.989583
+illum 1
+map_Kd textures\court_arms_2.png
+
+newmtl DanceFloor
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.197917 0.197917 0.197917
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd textures\dance_floor.png
 
 newmtl ElevatorInt
 Ns 92.156863
@@ -30,7 +100,7 @@ d 1.000000
 illum 2
 map_Kd C:\Users\Tim\github-projects\TPPParkDev\_work-files\Maps\_Objects\Elevator\elevatorTex.png
 
-newmtl Glass
+newmtl Glass.001
 Ns 96.078431
 Ka 0.000000 0.000000 0.000000
 Kd 1.000000 1.000000 1.000000
@@ -56,6 +126,16 @@ Kd 0.8 0.8 0.8
 Ks 0.8 0.8 0.8
 d 1
 illum 2
+
+newmtl Railings
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.002668 0.002668 0.002668
+Ni 1.000000
+d 0.989583
+illum 2
+map_Kd textures\rails_cream.png
 
 newmtl Reel
 Ns 96.078431
@@ -126,3 +206,132 @@ Ks 0.002668 0.002668 0.002668
 Ni 1.000000
 d 1.000000
 illum 2
+map_Kd textures\wall_cream.png
+
+newmtl cashier01_lm1
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.627440 0.627440 0.627440
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd textures\cashier01_lm1.png
+
+newmtl desk_book01_1
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.627440 0.627440 0.627440
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon White\Buildings\IntMisc\desks\desk_book01_1.png
+map_d C:\\Users\\Tim\\Dropbox\\Apps\\Emulator\\Pokemon White\\Buildings\\IntMisc\\desks\\desk_book01_1.png
+
+newmtl desk_book02_1
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.627440 0.627440 0.627440
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon White\Buildings\IntMisc\desks\desk_book02_1.png
+map_d C:\\Users\\Tim\\Dropbox\\Apps\\Emulator\\Pokemon White\\Buildings\\IntMisc\\desks\\desk_book02_1.png
+
+newmtl in48_isu01
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.784300 0.784300 0.784300
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd textures\cardTable_seat.png
+map_d C:\\Users\\Tim\\Dropbox\\Apps\\Emulator\\Pokemon White\\BuildingInteriors\\Villia\\in48_isu01.png
+
+newmtl in48_table01
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.784300 0.784300 0.784300
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd textures\cardTable_table.png
+map_d C:\\Users\\Tim\\Dropbox\\Apps\\Emulator\\Pokemon White\\BuildingInteriors\\Villia\\in48_table01.png
+
+newmtl in48_table03
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.784300 0.784300 0.784300
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon White\BuildingInteriors\Villia\in48_table03.png
+
+newmtl in55_isu02
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.784300 0.784300 0.784300
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon White\BuildingInteriors\UniLobby\in55_isu02.png
+
+newmtl lambert2.001
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.784300 0.784300 0.784300
+Ks 0.250000 0.250000 0.250000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd textures\lockers.png
+map_d C:\\Users\\Tim\\Dropbox\\Apps\\Emulator\\Pokemon White\\Buildings\\IntMisc\\lockers\\lambert2.png
+
+newmtl pc_desk02_1
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.627440 0.627440 0.627440
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon White\Buildings\IntMisc\desks\pc_desk02_1.png
+map_d C:\\Users\\Tim\\Dropbox\\Apps\\Emulator\\Pokemon White\\Buildings\\IntMisc\\desks\\pc_desk02_1.png
+
+newmtl pcdesk02_pc_1
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.627440 0.627440 0.627440
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon White\Buildings\IntMisc\desks\pcdesk02_pc_1.png
+map_d C:\\Users\\Tim\\Dropbox\\Apps\\Emulator\\Pokemon White\\Buildings\\IntMisc\\desks\\pcdesk02_pc_1.png
+
+newmtl piano01_lm1
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.784300 0.784300 0.784300
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd C:\Users\Tim\Dropbox\Apps\Emulator\Pokemon White\Buildings\IntMisc\piano\piano01_lm1.png
+map_d C:\\Users\\Tim\\Dropbox\\Apps\\Emulator\\Pokemon White\\Buildings\\IntMisc\\piano\\piano01_lm1.png
+
+newmtl plantLambert
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.784300 0.784300 0.784300
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 0.989583
+illum 1
+map_Kd textures\plantLambert.png

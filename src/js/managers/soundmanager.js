@@ -497,15 +497,20 @@ function createAudio_WebAPI(id, info) {
 	sobj.__gainCtrl.connect(sobj.__muteCtrl);
 	//TODO
 	
+	var finalNode = sobj.__muteCtrl;
+	if (DEBUG.setupAdditionalAudioFilters) {
+		finalNode = DEBUG.setupAdditionalAudioFilters(id, audioContext, finalNode);
+	}
+	
 	if (DEBUG.soundAnalyzer) {
 		var da = sobj.__debugAnalyser = audioContext.createAnalyser();
 		da.fftSize = 1024;//2048;
 		this.emit("DEBUG-AnalyserCreated", id, da);
 		
-		sobj.__muteCtrl.connect(da);
+		finalNode.connect(da);
 		da.connect(audioContext.destination);
 	} else {
-		sobj.__muteCtrl.connect(audioContext.destination);
+		finalNode.connect(audioContext.destination);
 	}
 	
 	return sobj;

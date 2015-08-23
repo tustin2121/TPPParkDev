@@ -40,5 +40,13 @@
 		"width": 512, "height": 512,
 		"top": 10, "bottom": -10, "left": -10, "right": 10,
 		"near": 1, "far": 150
-	}
+	},
+	
+	"bgmusic" : [
+		{
+			"id": "m_gamecorner",
+			"loopStart": 18.61, 
+			"loopEnd": 79.010
+		}
+	]
 }
