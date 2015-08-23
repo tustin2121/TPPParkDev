@@ -2,11 +2,11 @@
 //
 
 //$ PackConfig
-{ "sprites" : [ "base.png" ] }
+{ "sprites" : [ "newbase.png", "dragoon.png" ] }
 //$!
 module.exports = {
 	id: "Deadinsky66.updater",
-	sprite: "base.png",
+	sprite: "newbase.png",
 	sprite_format: "hg_vertmix-32",
 	//TODO: also a moderator
 	

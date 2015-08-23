@@ -4,6 +4,8 @@
 //var $ = require("jquery");
 //var zip = zip.js
 
+var inherits = require("inherits");
+var extend = require("extend");
 var raf = require("raf");
 
 require("../polyfill.js");
@@ -20,6 +22,8 @@ window.ac = {
 	AnalyzerNode: null,
 	AnalyzerCanvas: null,
 	
+	Dancers: [null], //null to reserve a location for the player
+	
 	_songOffset: 0,
 	_loopStart: 0,
 	_loopEnd: 0,
@@ -32,7 +36,7 @@ window.ac = {
 	getSteadyJump: function(x) {
 		if (!this.Context) return 0;
 		if (!x) x = (this.Context.currentTime - this._loopStart - this._songOffset);
-		return Math.abs( Math.sin(x * Math.PI/this.BEAT_SPEED) );
+		return Math.abs( Math.cos(x * Math.PI/this.BEAT_SPEED) );
 	},
 /*	getSectionJump: function(x) {
 		var spdMul = this.getSongLoopBeatSpeedMul();
@@ -138,9 +142,9 @@ DEBUG.runOnMapReady = function(){
 			if (!DEBUG.updateFns[i].update) continue;
 			DEBUG.updateFns[i].update();
 		}
-		$("#statusbar").text(
-			"Song Section: "+ ac.getSongLoopBeatSection()
-		);
+		// $("#statusbar").text(
+		// 	"Song Section: "+ ac.getSongLoopBeatSection()
+		// );
 		oldlogic.call(map, delta);
 	};
 }; 
@@ -220,3 +224,95 @@ function drawWaveforms(forceDraw) {
 ac.drawWaveforms = drawWaveforms;
 
 ac.stopWaveforms = function(){ _rafHandle = null; };
+
+////////////////////////////////////// Actor Behavior /////////////////////////////////////////
+
+var Actor = require("tpp-actor");
+var Behavior = require("tpp-behavior");
+var FaceDirection = require("tpp-behavior").FaceDirection;
+var LookAround    = require("tpp-behavior").LookAround;
+var TalkingBehav  = require("tpp-behavior").Talking;
+var MeanderBehav  = require("tpp-behavior").Meander;
+
+function ActorCasino(base, ext) {
+	ext = extend({
+		
+		behaviorStack: [new MeanderBehav()],
+		shouldAppear: function() { return true; },
+	}, ext);
+	Actor.call(this, base, ext);
+	
+	this.on("interacted", this.onInteracted);
+}
+inherits(ActorCasino, Actor);
+extend(ActorCasino.prototype, {
+	location: "rand",
+	
+	dialog_type: "text",
+	dialog: null,
+	
+	spawnLocationSet: function() {
+		// console.log("Spawn set!", this.id);
+		//(14, 20) < (27, 29) == on dance floor
+		if (this.location.x > 14 && this.location.x < 27 &&
+			this.location.y > 20 && this.location.y < 29) 
+		{ // We're on the dance floor!
+			console.log("On dance floor!", this.id);
+			if (window.ac) ac.Dancers.push(this);
+			this.dancing = true;
+			this.behaviorStack.push(new DancingBehav());
+		}
+	},
+	onInteracted: function(from) {
+		if (this.dancing) return;
+		
+		var self = this;
+		var dlog = this.dialog || [ ""+this.name+": ヽ༼ຈل͜ຈ༽ﾉ DANCE RIOT ヽ༼ຈل͜ຈ༽ﾉ " ];
+		// $("#statusbar").html("This is "+this.name+"! ("+this.id+")<br/>This sprite was created by "+this.sprite_creator+"!");
+		
+		self.behaviorStack.push(new TalkingBehav({
+			dialog: dlog,
+			dialog_type: this.dialog_type,
+			owner: self,
+		}));
+	},
+});
+window.ActorCasino = ActorCasino;
+
+
+function DancingBehav(opts) {
+	Behavior.call(this, opts);
+}
+inherits(DancingBehav, Behavior);
+extend(DancingBehav.prototype, {
+	stored_y : 0,
+	lastUpdate : 0,
+	waitTime : 0, //waiting to move, but not to turn
+	
+	tick: function(me, delta) {
+		if (!this.stored_y) this.stored_y = me.avatar_node.position.y;
+		if (ac._songOffset == 0) return;
+		var bc = Math.floor(ac.getBeatCount() + 100);
+		
+		if (bc > this.lastUpdate) {
+			this.waitTime -= delta;
+			
+			switch( Math.floor(Math.random()*8) ) {
+				case 0: me.facing.set( 1,0, 0); break;
+				case 1: me.facing.set(-1,0, 0); break;
+				case 2: me.facing.set( 0,0, 1); break;
+				case 3: me.facing.set( 0,0,-1); break;
+				case 4: if (!me._initPathingState().moving) me.moveDir("d"); break;
+				case 5: if (!me._initPathingState().moving) me.moveDir("u"); break;
+				case 6: if (!me._initPathingState().moving) me.moveDir("l"); break;
+				case 7: if (!me._initPathingState().moving) me.moveDir("r"); break;
+			}
+			this.lastUpdate = bc;
+			if (this.waitTime < 0)
+				this.waitTime = (Math.random() * 3) + 3;
+		}
+		me.avatar_node.position.setY( this.stored_y + (ac.getSteadyJump()*0.2) );
+	},
+});
+Behavior.DancingBehav = DancingBehav;
+

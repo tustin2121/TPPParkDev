@@ -51,7 +51,7 @@ module.exports = {
 				},
 			};
 		} else {
-			return Actor.prototype.getSpriteFormat("hg_pokecol-64x32");
+			return Actor.prototype.getSpriteFormat("hg_pokecol-32x32");
 		}
 	},
 };

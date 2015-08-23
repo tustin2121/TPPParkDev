@@ -252,6 +252,9 @@ extend(Actor.prototype, {
 		return getSpriteFormat(format);
 	},
 	
+	// Override this function to allow the actor to respond to random spawn locations
+	spawnLocationSet: function() {},
+	
 	/////////////////// Animation //////////////////////
 	_animationState : null,
 	facing : null,
@@ -600,6 +603,8 @@ extend(Actor.prototype, {
 		if (this.location == "rand") {
 			//Place this actor in a designated random location
 			this.location = currentMap.getRandomNPCSpawnPoint();
+			// console.log("spawn-location-set", this.id, this.location);
+			this.spawnLocationSet(); //This isn't an event (though it should be) because events aren't yet registered
 			return;
 		}
 		

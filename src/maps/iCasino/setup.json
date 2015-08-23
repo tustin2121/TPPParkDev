@@ -38,7 +38,7 @@
 	},
 	"shadowmap": {
 		"width": 512, "height": 512,
-		"top": 10, "bottom": -10, "left": -10, "right": 10,
+		"top": 15, "bottom": -15, "left": -16, "right": 28,
 		"near": 1, "far": 150
 	},
 	

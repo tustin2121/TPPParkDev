@@ -1,0 +1,13 @@
+// C3.pokemon/iCasino.js
+// Defines the event for this character in Napoleon's casino
+
+var base = require("./base.js");
+var Actor = require("tpp-actor");
+var ActorCasino = window.ActorCasino || Actor; //defined in the casino.js file
+
+add(new ActorCasino(base, {
+	dialog: [
+		function(){ this.showEmote(":(", 3); },
+		"C3: That horrible Pikachu is at this party, as usual. She follows me everywhere, I swear!",
+	],
+}));

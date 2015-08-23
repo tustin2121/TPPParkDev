@@ -11,7 +11,7 @@ add(new Actor(base, {
 	onEvents: {
 		interacted: function(from) {
 			var self = this;
-			if (this.divideFacing(from) == "d") return; //ignore talking from below the glass
+			if (this.divideFacing(from) == "n") return; //ignore talking from below the glass
 			// $("#statusbar").html("This is "+this.name+"! ("+this.id+")<br/>This sprite was created by "+this.sprite_creator+"!");
 			
 			self.behaviorStack.push(new TalkingBehav({

@@ -17,7 +17,7 @@ add(new Actor(base, {
 				dialog: [ 
 					"Tustin2121: Hey, welcome to Napoleon's preview dance party!",
 					"I'm not really one to dance, or, you know, go to parties in the first place.",
-					"But I founded Surldab City, so it's kind of reuired that I attend.",
+					"But I founded Surldab City, so it's kind of required that I attend.",
 				],
 				dialog_type: "text",
 				owner: self,
