@@ -24,6 +24,11 @@ window.ac = {
 	_loopStart: 0,
 	_loopEnd: 0,
 	
+	getBeatCount: function() {
+		if (!this.Context) return 0;
+		var x = (this.Context.currentTime - this._loopStart - this._songOffset);
+		return x / this.BEAT_SPEED;
+	},
 	getSteadyJump: function(x) {
 		if (!this.Context) return 0;
 		if (!x) x = (this.Context.currentTime - this._loopStart - this._songOffset);
@@ -51,7 +56,7 @@ window.ac = {
 					% (this._loopEnd - this._loopStart)) + this._loopStart;
 	},
 	
-	BEAT_SPEED : 0.384, //speed of the beat in the casino music, 156 BPM
+	BEAT_SPEED : 60/154.8, //speed of the beat in the casino music, 155 BPM
 	BEAT_TABLE : [
 		{ spd: 0.00,  until:  0.000, section: "ramp" },
 		{ spd: 0.00,  until:  3.570, section: "ramp" },
@@ -99,7 +104,7 @@ $(function(){
 	
 	renderLoop.start({
 		clearColor: 0x000000,
-		ticksPerSecond : 20,
+		ticksPerSecond : 30,
 	});
 	
 	ac.AnalyzerCanvas = $("#musicscreen").attr({

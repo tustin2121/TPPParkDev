@@ -1,5 +1,5 @@
 // Nippleon.trainer/base.js
-// Defines the base event for Nippleon Downs
+// Defines the base event for Nippleon
 
 //$ PackConfig
 { "sprites" : [ "base.png", "bike.png", "tuxedo.png" ] }

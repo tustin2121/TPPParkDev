@@ -161,7 +161,9 @@ extend(Event.prototype, {
 					if (typeof l[i][j] != "number")
 						throw new Error("Could not normalize location(s) of "+this.id+"!");
 				}
-				n.push(__parseAsNumberArray(l[i]));
+				var m = __parseAsNumberArray(l[i]);
+				for (var mi = 0; mi < m.length; mi++)
+					n.push(m[mi]);
 			}
 			return n;
 		}

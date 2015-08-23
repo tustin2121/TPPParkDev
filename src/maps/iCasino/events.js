@@ -7,6 +7,7 @@ var extend = require("extend");
 var Event = require("tpp-event");
 var Sign = require("tpp-sign");
 var Warp = require("tpp-warp");
+var Trigger = require("tpp-trigger");
 var CameraTrigger = require("tpp-cameratrigger");
 
 //////////////////////////// Volumetric Spotlights /////////////////////////////
@@ -159,9 +160,15 @@ extend(SpotSmokeHelper.prototype, {
 
 ///////////////////////////////// Lights /////////////////////////////////////
 
+var LIGHT_COLORS = [ 0xFF2222, 0x22FF22, 0x2222FF, 0xFFFF22, 0x22FFFF, 0xFF22FF ];
+var objectsOffInLobby = [];
+var objectsOffOutLobby = [];
+
 $(function(){
 	var node = new THREE.Object3D();
 	node.name = "Dance Lighting Rig";
+	
+	var colorLights = [];
 	
 	{ //Red Light
 		var light = new THREE.SpotLight(0xFF2222);
@@ -169,11 +176,17 @@ $(function(){
 		light.target.name = "Red Light Target";
 		light.position.set(10, 5, 10);
 		light.target.position.set(2, -2, 8);
+		light.target._spiralPath = {
+			center : new THREE.Vector3(2, -2, 8),
+			xfn : function(t){ return Math.cos(t)*6; },
+			yfn : function(t){ return Math.sin(2*t)*5; },
+		};
 		light.intensity = 1.1;
 		light.exponent = 0;
 		light.angle = 20 * (Math.PI/180);
 		node.add(light);
 		node.add(light.target);
+		colorLights.push(light);
 		
 		// var helper = new THREE.SpotLightHelper(light);
 		// DEBUG.updateFns.push(helper);
@@ -188,11 +201,17 @@ $(function(){
 		light.target.name = "Green Light Target";
 		light.position.set(2, 5, 2);
 		light.target.position.set(10, -2, 5);
+		light.target._spiralPath = {
+			center : new THREE.Vector3(5.5, -2, 2),
+			xfn: function(t){ return Math.sin(2*t)*4; },
+			yfn: function(t){ return Math.cos(t)*7; },
+		};
 		light.intensity = 1.1;
 		light.exponent = 0;
 		light.angle = 20 * (Math.PI/180);
 		node.add(light);
 		node.add(light.target);
+		colorLights.push(light);
 		
 		// var helper = new THREE.SpotLightHelper(light);
 		// DEBUG.updateFns.push(helper);
@@ -207,11 +226,18 @@ $(function(){
 		light.target.name = "Blue Light Target";
 		light.position.set(-1, 5, 9);
 		light.target.position.set(5, -2, 0);
+		light.target._spiralPath = {
+			center : new THREE.Vector3(5, -2, 0),
+			xfn: function(t){ return Math.cos(2*t)*7; },
+			yfn: function(t){ return Math.sin(t)*7; },
+		};
 		light.intensity = 1.1;
 		light.exponent = 0;
 		light.angle = 20 * (Math.PI/180);
 		node.add(light);
 		node.add(light.target);
+		colorLights.push(light);
+		objectsOffInLobby.push(light);
 		
 		// var helper = new THREE.SpotLightHelper(light);
 		// DEBUG.updateFns.push(helper);
@@ -219,6 +245,7 @@ $(function(){
 		var fog = new SpotSmokeHelper(light);
 		DEBUG.updateFns.push(fog);
 		node.add(fog);
+		objectsOffInLobby.push(fog);
 	}
 	{ //Card Table Light
 		var light = new THREE.SpotLight(0xFFFFFF);
@@ -252,6 +279,7 @@ $(function(){
 		light.angle = 45 * (Math.PI/180);
 		node.add(light);
 		node.add(light.target);
+		objectsOffOutLobby.push(light); light.visible = false;
 		
 		// var helper = new THREE.SpotLightHelper(light);
 		// DEBUG.updateFns.push(helper);
@@ -261,6 +289,7 @@ $(function(){
 		fog.cone.material.uniforms.attenuation.value = 10;
 		DEBUG.updateFns.push(fog);
 		node.add(fog);
+		objectsOffOutLobby.push(fog); fog.visible = false;
 	}
 	
 	currentMap.scene.add(node);
@@ -276,7 +305,28 @@ $(function(){
 			}
 		}
 	}, 100);
+	
+	if (window.ac){
+		DEBUG.updateFns.push({ update: function(){
+			if (ac._songOffset == 0) return;
+			var bc = ac.getBeatCount() + 100;
+			for (var i = 0; i < colorLights.length; i++) {
+				colorLights[i].color.setHex( LIGHT_COLORS[(Math.floor(bc)+i)%LIGHT_COLORS.length] );
+				
+				var target = colorLights[i].target;
+				var targs = target._spiralPath;
+				var t = ac.Context.currentTime * 1.2;
+				var x = targs.xfn(t) + targs.center.x;
+				var y = targs.yfn(t) + targs.center.z;
+				target.position.set(x, targs.center.y, y);
+			}
+		}});
+	}
 });
+
+/////////////////////////// Dance Sprite Node ///////////////////////////////
+
+
 
 
 ////////////////////////// Model Modifications //////////////////////////////
@@ -291,7 +341,7 @@ $(function() {
 });
 
 ////////////////////////////////// Warps /////////////////////////////////////
-
+/*
 add(new Warp({
 	id: "EXIT_SurldabW",
 	locations: [10, 33, 2, 1],
@@ -303,42 +353,152 @@ add(new Warp({
 	locations: [43, 13, 1, 2],
 	exit_to: { map: "eSouthSurldab", warp: 0x13 },
 }));
+//*/
+
+add(new Sign({
+	id: "EXIT_SurldabW",
+	locations: [10, 33, 2, 2],
+	
+	text: "This leads outside to Surldab City. But the party's rocking in here; why would you want to leave?",
+	readOnlyFacing: false,
+	canWalkOn: function(){ return true; },
+	
+	onEvents: {
+		"entered-tile": function(from) {
+			var d = this.divideFacing(from);
+			if (d == "s") {
+				this.onInteract(from);
+			}
+		},
+	},
+}));
+
+add(new Sign({
+	id: "EXIT_SurldabS",
+	locations: [43, 13, 2, 2],
+	
+	text: "This leads outside to Surldab City. But the party's rocking in here; why would you want to leave?",
+	readOnlyFacing: false,
+	canWalkOn: function(){ return true; },
+	
+	onEvents: {
+		"entered-tile": function(from) {
+			var d = this.divideFacing(from);
+			if (d == "e") {
+				this.onInteract(from);
+			}
+		},
+	},
+}));
+
+///////////////////////////////// Filters //////////////////////////////////////
+
+function SoundFilterTrigger(base, opts) {
+	Trigger.call(this, base, opts);
+}
+inherits(SoundFilterTrigger, Trigger);
+extend(SoundFilterTrigger.prototype, {
+	filterLevel: undefined, //Camera to be triggered when stepping on this event
+	nFilterLevel: undefined, //Cameras to be triggered when stepping off this event in a direction
+	wFilterLevel: undefined,
+	sFilterLevel: undefined,
+	eFilterLevel: undefined,
+	
+	onEntered : function(dir) {
+		if (!window.ac) return;
+		if (this.filterLevel !== undefined) {
+			// Use this only for the elevators easter egg
+			ac.FilterNode.frequency.setValueAtTime(this.filterLevel, ac.Context.currentTime);
+			ac.FilterNode.type = "highpass";
+		}
+	},
+	onLeaving : function(dir) {
+		if (!window.ac) return;
+		var d = this.divideFacing(dir);
+		if (this[d+"FilterLevel"] !== undefined) {
+			// Going up sounds like it takes effect a lot faster than going down in freq
+			var spd = (ac.FilterNode.frequency < this[d+"FilterLevel"])? 5.0 : 0.7;
+			ac.FilterNode.frequency.setTargetAtTime(this[d+"FilterLevel"], ac.Context.currentTime, spd);
+		}
+	},
+});
 
 ////////////////////////////////// Camera //////////////////////////////////////
 
 add(new CameraTrigger({
-	id: "CAMERA_lobbyEntrance",
+	id: "CAMERA_gameRoom_lobby",
 	locations: [30, 29, 1, 3],
 	eCameraId: "lobby",
 	wCameraId: "0",
 }));
+add(new SoundFilterTrigger({
+	id: "SOUND_gameRoom_lobby",
+	locations: [31, 29, 1, 3],
+	eFilterLevel: 2000, 
+	wFilterLevel: 999999, //max
+}));
+add(new Trigger({
+	id: "LightSwitch_gameRoom_lobby",
+	locations: [[30, 29, 1, 3], [29, 5, 1, 2]],
+	onLeaving: function(dir) {
+		var d = this.divideFacing(dir);
+		var isInLobby = false;
+		switch (d) {
+			case "e": isInLobby = true; break; //into lobby
+			case "w": isInLobby = false; break; //into game room
+			default: return; //do nothing
+		}
+		
+		for (var i = 0; i < objectsOffOutLobby.length; i++) {
+			objectsOffOutLobby[i].visible = isInLobby;
+		}
+		for (var i = 0; i < objectsOffInLobby.length; i++) {
+			objectsOffInLobby[i].visible = !isInLobby;
+		}
+	},
+}));
 
 add(new CameraTrigger({
-	id: "CAMERA_lobbyHallway",
+	id: "CAMERA_lobby_hallway",
 	locations: [29, 5, 1, 2],
 	eCameraId: "lobby",
 	wCameraId: "hallway",
 }));
+add(new SoundFilterTrigger({
+	id: "SOUND_lobby_hallway",
+	locations: [30, 5, 1, 2],
+	eFilterLevel: 2000,
+	wFilterLevel:  800, 
+}));
 
-// add(new CameraTrigger({
-// 	id: "CAMERA_elevatorRight",
-// 	locations: [21, 5, 1, 2],
-// 	wCameraId: "0",
-// 	cameraId: "hallway",
-// }));
+add(new SoundFilterTrigger({
+	id: "SOUND_elevators",
+	locations: [13, 3, 6, 1],
+	filterLevel:  2500, 
+	sFilterLevel: 800,
+	
+	onLeaving : function(dir) {
+		if (!window.ac) return;
+		var d = this.divideFacing(dir);
+		if (this[d+"FilterLevel"] !== undefined) {
+			ac.FilterNode.frequency.setValueAtTime(this[d+"FilterLevel"], ac.Context.currentTime);
+			ac.FilterNode.type = "lowpass";
+		}
+	},
+}));
 
-// add(new CameraTrigger({
-// 	id: "CAMERA_elevatorLeft",
-// 	locations: [10, 5, 1, 2],
-// 	eCameraId: "0",
-// 	cameraId: "hallway",
-// }));
 
 add(new CameraTrigger({
-	id: "CAMERA_gameRoomElevator",
+	id: "CAMERA_gameRoom_hallway",
 	locations: [2, 7, 2, 1],
 	cameraId: "0",
 	nCameraId: "hallway",
+}));
+add(new SoundFilterTrigger({
+	id: "SOUND_gameRoom_hallway",
+	locations: [2, 7, 2, 1],
+	nFilterLevel:  800, 
+	sFilterLevel: 999999, //max
 }));
 
 
