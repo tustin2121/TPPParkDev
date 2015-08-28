@@ -485,7 +485,7 @@ extend(Map.prototype, {
 		}
 		
 		var canWalk = true; //Assume we can travel between until proven otherwise.
-		var mustJump, mustSwim, mustTransition;
+		var mustJump, mustSwim, mustTransition, mustBePlayer;
 		
 		var dir = (function(){
 			switch (1) {

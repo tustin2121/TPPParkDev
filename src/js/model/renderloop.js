@@ -32,7 +32,9 @@ module.exports = {
 			_renderHandle = raf(renderLoop);
 		}
 		
-		initGameLoop(30);
+		if (!opts_disableGameLoop) {
+			initGameLoop(30);
+		}
 		
 	},
 	

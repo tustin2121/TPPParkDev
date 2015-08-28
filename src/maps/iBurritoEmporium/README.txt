@@ -187,3 +187,86 @@ But also I forgot to send you the kilozombie fics I wanted. I asked AOM for his 
 And that's it. Woot!
 
 -----------------------------------------------------------------
+
+
+8/28/2015
+-----------------------------------------------------------------
+Yay this thing!
+
+[Link](/2unu8f) - Red Rewind: The Dark Tunnel - /u/SlowpokeIsAGamer
+
+[Link](/2vx9uf) - Red Rewind: Operation Yellow Thunder - /u/Iwamiger
+
+[Link](/2v4cts) [2](/2v7zpd) - Red Rewind: To Break Silence - /u/kilozombie
+
+[Link](/32ks3m) - Red Rewind: The Road To Greatness - /u/abiyoru
+
+[Link](/32x9co) - Red Rewind: Journey's End - /u/ColeWalski
+
+[Link](/29jbwd) - A Game of Chess Part 2 - En Passant - /u/cicman
+
+[Link](/2udzh2) - A Mission of Their Own: The Complete Story - /u/crimsonburn27 (warning super long, maybe take an excerpt idk)
+
+[Link](/3dmpiw) - Under Cover's Nose Part 3 - /u/Sereg5
+
+[Link](/3drdk0) - Under Cover's Nose Part 4 - /u/Sereg5
+
+[Link](/30btil) - I have no idea what you're talking about... (10) - /u/RBio77
+
+[Link](/34nvc0) - I will live... (15 Part 2) - /u/RBio77
+
+[Link](/36sq2c) - Panic (I... Sequel Emotion Prologue 3)
+
+[Link](/39qjrz) - Anticipation (Emotion, Musical Arc 5 Final) - /u/RBio77
+
+[Link](/3f40e5) - Disappointment (Emotion, Picnic Arc 4) - /u/RBio77
+
+[Link](/2zqk74) - [Mom] A Dream...? - /u/Lycaa
+
+[Link](/32q8n1) - [Mom] Rumours (Pt.6) - /u/Lycaa
+
+[Link](/34v5w4) - [Baba - 10] Trashy Woman - /u/Lycaa
+
+[Link](/3af66y) - [Baba - 19] Deku the Courier - /u/Lycaa
+
+[Link](/3h4120) - [Baba - 31] Happenings - /u/Lycaa
+
+[Link](/3fnajx) - [Slice of Life] Effie  - /u/Lycaa
+
+[Link](/3ibs7n) - Gods of TPP: Sancta Simplicitas (A Tale of Lady Root and Ziggy) - /u/ColeWalski
+
+[Link](/3axpmu) - Gods of TPP: Ding Dong, The Modbot's Dead - /u/ColeWalski
+
+[Link](/37uk31) - Code OMG: Bill and Cirno's Excellent Adventure - /u/ColeWalski
+
+[Link](/3ae34w) - Code OMG/Gods of TPP: Conflict Resolutions - /u/ColeWalski
+
+[Link](/3dhzq6) - Project Wavestorm: An All-New Archie - /u/ColeWalski
+
+[Link](/2z3x0m) - The Leech King's Greatest Battle - /u/Iwamiger
+
+[Link](/306mzq) - There Must Always Be A Leech King - /u/Iwamiger
+
+[Link](/3dg2mv) - R-Ceus's Hope - /u/Iwamiger
+
+[Link](https://docs.google.com/document/d/1IyIacmv-6ByxP2J4406NQpEKzN-UmUYs4lojrZvNb-k/edit?usp=sharing) - Dusk Key (Full) - /u/N8-disciple-of-foot (Note there are like 20 or so parts I just put together in one package)
+
+[Link](/3cnu8q) - RAS: The Coming Storm - /u/Asiruki
+
+[Link](/2zcx91) - To Finish What We Started - /u/Hajimeilosukna
+
+[Link](/3fbadl) - Our hearts have wings: Flygon story - /u/abiyoru
+
+[Link](/2znmo5) - Crack Romance(?) Story: ICU X ??? - /u/abiyoru
+
+[Link](/2wxvku) - [TPPR2 Pt. 9] 'M - /u/SlowpokeIsAGamer
+
+[Link](/30m358) - [TPPR2 Parts 17 &amp; 18] Two-Part Finale! Their Greatest Foe and Abe, Pokemon Master. - /u/SlowpokeIsAGamer
+
+[Link](/3fh86x) - [TPPAS Pt.5] Magma, Aqua, and Meteors. - /u/SlowpokeIsAGamer
+
+[Link](http://amber-apostle.tumblr.com/Pantheon) - Some of the Pantheon comics? (I'm going to ask amber which ones I should transcribe but this is here as a reminder. - /u/amber-apostle
+
+[Link](#kappa) - Same with some mesamus stuff, maybe HedgeMaze idk - /u/mesamus, /u/hedgemazeexpo
+
+Also I need to do another part maybe where I go back to some of the older stuff and pick up a few things that I missed. Also my battery is at 7% wheeeeeee
