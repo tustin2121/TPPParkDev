@@ -144,6 +144,12 @@ function drawWaveforms() {
 
 
 var KNOWN_SONGS = {
+	"go_gotcha":		{ "loopStart": 26.855,"loopEnd": 55.309 },
+	"go_encounter":		{ "loopStart": 0.440, "loopEnd": 39.970 },
+	"go_title":			{}, //No loop points
+	"go_welcome":		{ "loopStart": 0.073, "loopEnd": 27.471 },
+	"go_evolution":		{ },//"loopStart": 21.007,"loopEnd": 27.900 }, //Looping is horrible
+	"go_walk":			{ "loopStart": 33.613,"loopEnd": 141.792 },
 	"m_welcomexy":		{ "loopStart": 5.374, "loopEnd": 41.354 },
 	"m_spearpillar":	{ "loopStart": 2.492, "loopEnd": 43.884 },
 	"m_gallery": 		{ "loopStart": 0.773, "loopEnd": 89.554 },
